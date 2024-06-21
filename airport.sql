@@ -2,7 +2,7 @@ CREATE DATABASE airport;
 USE airport;
 
 CREATE TABLE documenttype(
-    idDocument INT AUTO_INCREMENT NOT NULL,
+    id INT AUTO_INCREMENT NOT NULL,
     name VARCHAR(40) NOT NULL,
     CONSTRAINT pk_documenttypes PRIMARY KEY(id)
 ) ENGINE=InnoDB;
@@ -18,7 +18,8 @@ CREATE TABLE customer (
 
 CREATE TABLE flightfare (
     id INT AUTO_INCREMENT NOT NULL,
-    description TEXT NOT NULL,
+    description VARCHAR(20) NOT NULL,
+    details TEXT NULL,
     value DOUBLE(7,3) NOT NULL,
     CONSTRAINT pk_flightfares PRIMARY KEY(id)
 ) ENGINE=InnoDB;
@@ -41,7 +42,7 @@ CREATE TABLE country (
     CONSTRAINT pk_countries PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE cities (
+CREATE TABLE city (
     id VARCHAR(5) NOT NULL,
     name VARCHAR(30) NOT NULL,
     idCountry VARCHAR(5) NOT NULL,
@@ -74,7 +75,7 @@ CREATE TABLE airport (
     name VARCHAR(30) NOT NULL,
     idCity VARCHAR(5) NOT NULL,
     CONSTRAINT pk_airports PRIMARY KEY(id),
-    CONSTRAINT fk_airports_cities FOREIGN KEY (idCity) REFERENCES cities(id)
+    CONSTRAINT fk_airports_cities FOREIGN KEY (idCity) REFERENCES city(id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE gate (
@@ -88,16 +89,16 @@ CREATE TABLE gate (
 CREATE TABLE trip (
     id INT AUTO_INCREMENT NOT NULL,
     tripDate DATE NOT NULL,
-    priceTripe DOUBLE NOT NULL,
+    priceTrip DOUBLE NOT NULL,
     CONSTRAINT pk_trips PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE tripbooking (
     id INT AUTO_INCREMENT NOT NULL,
     date DATE NOT NULL,
-    idTrips INT NOT NULL,
+    idTrip INT NOT NULL,
     CONSTRAINT pk_tripbooking PRIMARY KEY(id),
-    CONSTRAINT fk_tripbooking_trips FOREIGN KEY (idTrips) REFERENCES trip(id)
+    CONSTRAINT fk_tripbooking_trips FOREIGN KEY (idTrip) REFERENCES trip(id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE tripbookingdetail (

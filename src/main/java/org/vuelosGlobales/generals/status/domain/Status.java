@@ -1,13 +1,13 @@
-package org.vuelosGlobales.systemAdministrator.document.domain;
+package org.vuelosGlobales.generals.status.domain;
 
-public class Document {
+public class Status {
     private int id;
     private String name;
 
-    public Document() {
+    public Status() {
     }
 
-    public Document(int id, String name) {
+    public Status(int id, String name) {
         this.id = id;
         this.name = name;
     }

@@ -1,15 +1,15 @@
-package org.vuelosGlobales.systemAdministrator.document.domain;
+package org.vuelosGlobales.systemAdministrator.airline.domain;
 
-public class Document {
+public class Airline {
     private int id;
     private String name;
 
-    public Document() {
+    public Airline() {
     }
 
-    public Document(int id, String name) {
+    public Airline(int id, String nombre) {
         this.id = id;
-        this.name = name;
+        this.name = nombre;
     }
 
     public int getId() {
@@ -24,7 +24,7 @@ public class Document {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String nombre) {
+        this.name = nombre;
     }
 }

@@ -1,30 +1,30 @@
-package org.vuelosGlobales.systemAdministrator.document.adapter.out;
+package org.vuelosGlobales.systemAdministrator.airline.adapter.out;
 
-import org.vuelosGlobales.systemAdministrator.document.domain.Document;
-import org.vuelosGlobales.systemAdministrator.document.infrastructure.DocumentRepository;
+import org.vuelosGlobales.systemAdministrator.airline.domain.Airline;
+import org.vuelosGlobales.systemAdministrator.airline.infrastructure.AirlineRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DocumentMySQLRepository implements DocumentRepository {
-    
+public class AirlineMySQLRepository implements AirlineRepository {
     private final String url;
     private final String user;
     private final String password;
 
-    public DocumentMySQLRepository(String url, String user, String password) {
+    public AirlineMySQLRepository(String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;
     }
+
     @Override
-    public void save(Document document) {
+    public void save(Airline airline) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "INSERT INTO documenttype (name) VALUES (?)";
+            String query = "INSERT INTO airline (name) VALUES (?)";
             try (PreparedStatement stm = conn.prepareStatement(query)){
-                stm.setString(1, document.getName());
+                stm.setString(1, airline.getName());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -33,12 +33,12 @@ public class DocumentMySQLRepository implements DocumentRepository {
     }
 
     @Override
-    public void update(Document document) {
+    public void update(Airline airline) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE documenttype SET name = ? WHERE id = ?";
+            String query = "UPDATE airline SET name = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
-                stm.setString(1, document.getName());
-                stm.setInt(2, document.getId());
+                stm.setString(1, airline.getName());
+                stm.setInt(2, airline.getId());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -47,14 +47,14 @@ public class DocumentMySQLRepository implements DocumentRepository {
     }
 
     @Override
-    public Optional<Document> findById(int id) {
+    public Optional<Airline> findById(int id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, name FROM documenttype WHERE id = ?";
+            String query = "SELECT id, name FROM airline WHERE id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setInt(1, id);
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
-                        Document obj = new Document(resultSet.getInt("id"), resultSet.getString("name"));
+                        Airline obj = new Airline(resultSet.getInt("id"), resultSet.getString("name"));
                         return Optional.of(obj);
                     }
                 }
@@ -66,15 +66,15 @@ public class DocumentMySQLRepository implements DocumentRepository {
     }
 
     @Override
-    public List<Document> findAll() {
-        List<Document> objects = new ArrayList<>();
+    public List<Airline> findAll() {
+        List<Airline> objects= new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, name FROM documenttype";
+            String query = "SELECT id, name FROM airline";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
-                    Document document = new Document(resultSet.getInt("id"), resultSet.getString("name"));
-                    objects.add(document);
+                    Airline airline = new Airline(resultSet.getInt("id"), resultSet.getString("name"));
+                    objects.add(airline);
                 }
             }
         } catch (SQLException e) {
@@ -86,7 +86,7 @@ public class DocumentMySQLRepository implements DocumentRepository {
     @Override
     public void delete(int id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "DELETE FROM documenttype WHERE id = ?";
+            String query = "DELETE FROM airline WHERE id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setInt(1, id);
                 stm.executeUpdate();

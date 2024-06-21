@@ -94,5 +94,5 @@ public class CountryMySQLRepository implements CountryRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        }
+    }
 }
