@@ -1,5 +1,6 @@
 package org.vuelosGlobales.generals.city.adapter.out;
 
+import org.vuelosGlobales.generals.city.domain.CityCountryDTO;
 import org.vuelosGlobales.generals.city.infrastructure.CityRepository;
 import org.vuelosGlobales.generals.city.domain.City;
 
@@ -98,5 +99,23 @@ public class CityMySQLRepository implements CityRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<CityCountryDTO> cityWithCountry() {
+        List<CityCountryDTO> objects = new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT c.id AS 'idCity', c.name AS 'Ciudad', p.name AS 'Pais' FROM city c INNER JOIN country p ON p.id = c.idCountry";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    CityCountryDTO cityCountryDTO = new CityCountryDTO(resultSet.getString("idCity"), resultSet.getString("Ciudad"), resultSet.getString("Pais"));
+                    objects.add(cityCountryDTO);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return objects;
     }
 }

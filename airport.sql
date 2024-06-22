@@ -187,3 +187,6 @@ CREATE TABLE tripcrew (
     CONSTRAINT fk_tripcrews_connections FOREIGN KEY (idConection) REFERENCES flightconnection(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+SELECT c.id, c.name AS 'Ciudad', p.name AS 'Pais' FROM city c
+INNER JOIN country p ON p.id = c.idCountry
+WHERE c.id = "BUC";

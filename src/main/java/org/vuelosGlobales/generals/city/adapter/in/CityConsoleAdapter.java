@@ -2,6 +2,7 @@ package org.vuelosGlobales.generals.city.adapter.in;
 
 import org.vuelosGlobales.generals.city.application.CityService;
 import org.vuelosGlobales.generals.city.domain.City;
+import org.vuelosGlobales.generals.city.domain.CityCountryDTO;
 import org.vuelosGlobales.generals.country.domain.Country;
 import org.vuelosGlobales.shared.Console;
 import org.vuelosGlobales.shared.CuadroDeTexto;
@@ -88,13 +89,13 @@ public class CityConsoleAdapter {
     }
 
     public void showCities(){
-        List<City> cityList = cityService.getAllCities();
+        List<CityCountryDTO> cityList = cityService.getCityWithCountry();
         System.out.println("Listado de ciudades:");
-        CuadroDeTexto.drawHorizontal(28, "-");
-        System.out.println(String.format("\n| %-6s | %-17s |", "ID", "CIUDAD"));
+        CuadroDeTexto.drawHorizontal(50, "-");
+        System.out.println(String.format("\n| %-6s | %-17s | %-17s |", "ID", "CIUDAD", "PAIS"));
         cityList.forEach(city -> {
-            CuadroDeTexto.drawHorizontal(28, "-");
-            System.out.println(String.format("\n| %-6s | %-17s |", city.getId(), city.getName()));
+            CuadroDeTexto.drawHorizontal(50, "-");
+            System.out.println(String.format("\n| %-6s | %-17s | %-17s |", city.getId(), city.getNameCity(), city.getNameCountry()));
         });
         System.out.println();
     }

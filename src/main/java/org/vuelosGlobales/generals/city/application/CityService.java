@@ -1,5 +1,6 @@
 package org.vuelosGlobales.generals.city.application;
 
+import org.vuelosGlobales.generals.city.domain.CityCountryDTO;
 import org.vuelosGlobales.generals.city.infrastructure.CityRepository;
 import org.vuelosGlobales.generals.city.domain.City;
 import org.vuelosGlobales.generals.country.application.CountryService;
@@ -36,6 +37,10 @@ public class CityService {
 
     public void deleteCity(String id){
         this.cityRepository.delete(id);
+    }
+
+    public List<CityCountryDTO> getCityWithCountry(){
+        return cityRepository.cityWithCountry();
     }
 
     public Optional<Country> getCountryById(String id){
