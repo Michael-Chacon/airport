@@ -4,6 +4,7 @@ import org.vuelosGlobales.generals.country.application.CountryService;
 import org.vuelosGlobales.generals.country.domain.Country;
 import org.vuelosGlobales.shared.Console;
 import org.vuelosGlobales.shared.CuadroDeTexto;
+import org.vuelosGlobales.shared.Helpers;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +38,9 @@ public class CountryConsoleAdapter {
                 case 2:
                     CuadroDeTexto.dibujarCuadroDeTexto("Actualizar información de un país", "*");
                     showCountries();
-                    Country countrySelect = transformAndValidateObj();
+                    Country countrySelect = Helpers.transformAndValidateObj(
+                            () -> countryService.getCountryById(console.stringNotNull("Seleccione el pais por el id: ").toUpperCase())
+                    );
                     CuadroDeTexto.dibujarCuadroDeTexto("Actualizar datos de " + countrySelect.getName(), "*");
                     String newName = console.stringNotNull("Nuevo nombre del pais: ");
                     countrySelect.setName(newName);
@@ -49,7 +52,9 @@ public class CountryConsoleAdapter {
                     CuadroDeTexto.dibujarCuadroDeTexto("Mostrar info de un país", "*");
                     System.out.println();
                     showCountries();
-                    Country showCountry = transformAndValidateObj();
+                    Country showCountry = Helpers.transformAndValidateObj(
+                            () -> countryService.getCountryById(console.stringNotNull("Seleccione el pais por el id: ").toUpperCase())
+                    );
                     System.out.println(showCountry);
                     CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
                     break;
@@ -57,7 +62,10 @@ public class CountryConsoleAdapter {
                 case 4:
                     CuadroDeTexto.dibujarCuadroDeTexto("Eliminar un pais", "*");
                     showCountries();
-                    String countryDelete = transformAndValidateObj().getId();
+                    Country showCountryF = Helpers.transformAndValidateObj(
+                            () -> countryService.getCountryById(console.stringNotNull("Seleccione el pais por el id: ").toUpperCase())
+                    );
+                    String countryDelete = showCountryF.getId();
                     countryService.deleteCountry(countryDelete);
                     CuadroDeTexto.dibujarCuadroDeTexto("Pais eliminado con éxito", null);
                     break;
@@ -85,17 +93,17 @@ public class CountryConsoleAdapter {
         System.out.println();
     }
 
-    public Country transformAndValidateObj(){
-        Country countrySelect = null;
-        while (true){
-            String countryx = console.stringNotNull("Seleccione el pais por el id: ");
-            Optional<Country> getCountry = countryService.getCountryById(countryx.toUpperCase());
-            if(!getCountry.isEmpty()){
-                System.out.println();
-                return countrySelect = getCountry.get();
-            }else {
-                System.out.println("El id no existe");
-            }
-        }
-    }
+//    public Country transformAndValidateObj(){
+//        Country countrySelect = null;
+//        while (true){
+//            String countryx = console.stringNotNull("Seleccione el país por el id: ");
+//            Optional<Country> getCountry = countryService.getCountryById(countryx.toUpperCase());
+//            if(!getCountry.isEmpty()){
+//                System.out.println();
+//                return countrySelect = getCountry.get();
+//            }else {
+//                System.out.println("El id no existe");
+//            }
+//        }
+//    }
 }

@@ -6,7 +6,7 @@ import org.vuelosGlobales.generals.city.domain.CityCountryDTO;
 import org.vuelosGlobales.generals.country.domain.Country;
 import org.vuelosGlobales.shared.Console;
 import org.vuelosGlobales.shared.CuadroDeTexto;
-import org.w3c.dom.ls.LSOutput;
+import org.vuelosGlobales.shared.Helpers;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +33,12 @@ public class CityConsoleAdapter {
                 case 1:
                     CuadroDeTexto.dibujarCuadroDeTexto("Registrar ciudad", "*");
                     showCountries();
-                    String idCountry = transformAndValidateObj().getId();
+
+                    Country getObj = Helpers.transformAndValidateObj(
+                            () -> cityService.getCountryById(console.stringNotNull("A que país pertenece la ciudad, seleccione por el por el id xxx: ").toUpperCase())
+                    );
+
+                    String idCountry = getObj.getId();
                     String name = console.stringNotNull("Nombre del ciudad: ");
                     String idCity = console.stringWithLeght("Ingrese el id del ciudad, debe ser alfanumérico de máximo 5 caracteres: ", 5);
                     cityService.createCity(new City(idCity.toUpperCase(), name, idCountry));
@@ -43,14 +48,21 @@ public class CityConsoleAdapter {
                 case 2:
                     CuadroDeTexto.dibujarCuadroDeTexto("Actualizar información de una ciudad", "*");
                     showCities();
-                    City citySelect = transformAndValidateCity();
+
+                    City citySelect = Helpers.transformAndValidateObj(
+                            () -> cityService.getCityById(console.stringNotNull("Seleccione la ciudad por el id: ").toUpperCase())
+                    );
+
                     CuadroDeTexto.dibujarCuadroDeTexto("Actualizar datos de " + citySelect.getName(), "*");
                     String newName = console.stringNotNull("Nuevo nombre del ciudad: ");
                     String idCountryCity;
                     String validate = console.stringNotNull("Quiere cambiar el país al que pertenece la ciudad? (y/n)");
                     if (validate.equals("y")){
                         showCountries();
-                        idCountryCity = transformAndValidateObj().getId();
+                        Country getObjP = Helpers.transformAndValidateObj(
+                                () -> cityService.getCountryById(console.stringNotNull("A que país pertenece la ciudad, seleccione por el por el id: ").toUpperCase())
+                        );
+                        idCountryCity = getObjP.getId();
                     }else {
                         idCountryCity = citySelect.getIdCountry();
                     }
@@ -64,7 +76,9 @@ public class CityConsoleAdapter {
                     CuadroDeTexto.dibujarCuadroDeTexto("Mostrar info de una ciudad", "*");
                     System.out.println();
                     showCities();
-                    City showCity = transformAndValidateCity();
+                    City showCity = Helpers.transformAndValidateObj(
+                        () -> cityService.getCityById(console.stringNotNull("Seleccione la ciudad por el id: ").toUpperCase())
+                    );
                     System.out.println(showCity);
                     CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
                     break;
@@ -72,7 +86,10 @@ public class CityConsoleAdapter {
                 case 4:
                     CuadroDeTexto.dibujarCuadroDeTexto("Eliminar un ciudad", "*");
                     showCities();
-                    String cityDelete = transformAndValidateCity().getId();
+                    City showCityD = Helpers.transformAndValidateObj(
+                            () -> cityService.getCityById(console.stringNotNull("Seleccione la ciudad por el id: ").toUpperCase())
+                    );
+                    String cityDelete = showCityD.getId();
                     cityService.deleteCity(cityDelete);
                     CuadroDeTexto.dibujarCuadroDeTexto("Ciudad eliminado con éxito", null);
                     break;
@@ -112,31 +129,4 @@ public class CityConsoleAdapter {
         System.out.println();
     }
 
-    public City transformAndValidateCity(){
-        City citySelect = null;
-        while (true){
-            String idCity = console.stringNotNull("Seleccione la ciudad por el id: ");
-            Optional<City> getCity = cityService.getCityById(idCity.toUpperCase());
-            if(!getCity.isEmpty()){
-                System.out.println();
-                return citySelect = getCity.get();
-            }else {
-                System.out.println("El id no existe");
-            }
-        }
-    }
-
-    public Country transformAndValidateObj(){
-        Country countrySelect = null;
-        while (true){
-            String countryx = console.stringNotNull("A que país pertenece la ciudad, seleccione por el por el id: ");
-            Optional<Country> getCountry = cityService.getCountryById(countryx.toUpperCase());
-            if(!getCountry.isEmpty()){
-                System.out.println();
-                return countrySelect = getCountry.get();
-            }else {
-                System.out.println("El id no existe");
-            }
-        }
-    }
 }

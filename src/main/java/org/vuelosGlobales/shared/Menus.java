@@ -16,8 +16,8 @@ public class Menus {
         CityMySQLRepository cityOut = new CityMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         CityService cityService = new CityService(cityOut, countryOut);
         CityConsoleAdapter cityIn = new CityConsoleAdapter(cityService);
-        cityIn.crudCity();
-//        countryIn.crudCountry();
+//        cityIn.crudCity();
+        countryIn.crudCountry();
     }
 
 }
