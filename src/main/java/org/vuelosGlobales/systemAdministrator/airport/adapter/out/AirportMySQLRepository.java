@@ -35,10 +35,11 @@ public class AirportMySQLRepository implements AirportRepository {
     @Override
     public void update(Airport airport) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE airport SET name = ? WHERE id = ?";
+            String query = "UPDATE airport SET name = ?, idCity = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, airport.getName());
-                stm.setInt(2, airport.getId());
+                stm.setString(2, airport.getIdCity());
+                stm.setInt(3, airport.getId());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -55,7 +56,7 @@ public class AirportMySQLRepository implements AirportRepository {
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
                         Airport obj = new Airport(resultSet.getInt("id"), resultSet.getString("name"),
-                                resultSet.getInt("idCity"));
+                                resultSet.getString("idCity"));
                         return Optional.of(obj);
                     }
                 }
@@ -75,7 +76,7 @@ public class AirportMySQLRepository implements AirportRepository {
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
                     Airport airport = new Airport(resultSet.getInt("id"), resultSet.getString("name"),
-                            resultSet.getInt("idCity"));
+                            resultSet.getString("idCity"));
                     objects.add(airport);
                 }
             }

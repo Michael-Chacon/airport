@@ -39,12 +39,14 @@ public class PlaneMySQLRepository implements PlaneRepository {
     @Override
     public void update(Plane plane) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE plane SET plates = ?, capacity = ?, fabricationDate = ? WHERE id = ?";
+            String query = "UPDATE plane SET plates = ?, capacity = ?, fabricationDate = ?, idStatus = ?, idModel = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, plane.getPlates());
                 stm.setInt(2, plane.getCapacity());
                 stm.setString(3, plane.getFabricationDate());
-                stm.setInt(4, plane.getId());
+                stm.setInt(4, plane.getIdStatus());
+                stm.setInt(5, plane.getIdModel());
+                stm.setInt(6, plane.getId());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {

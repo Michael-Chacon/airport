@@ -35,9 +35,10 @@ public class FlightResMySQLRepository implements FlightResRepository {
     @Override
     public void update(FlightRes flightRes) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE tripbooking SET date = ? WHERE id = ?";
+            String query = "UPDATE tripbooking SET date = ?, idTrip = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, flightRes.getDate());
+                stm.setInt(2, flightRes.getIdTrip());
                 stm.setInt(2, flightRes.getId());
                 stm.executeUpdate();
             }

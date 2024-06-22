@@ -1,17 +1,19 @@
 package org.vuelosGlobales.generals.employee.domain;
 
+import com.mysql.cj.util.StringInspector;
+
 public class Employee {
     private String id;
     private String nombre;
     private String ingressDate;
     private int idRol;
     private int idAirline;
-    private int idAirport;
+    private String idAirport;
 
     public Employee() {
     }
 
-    public Employee(String id, String nombre, String ingressDate, int idRol, int idAirline, int idAirport) {
+    public Employee(String id, String nombre, String ingressDate, int idRol, int idAirline, String idAirport) {
         this.id = id;
         this.nombre = nombre;
         this.ingressDate = ingressDate;
@@ -60,11 +62,11 @@ public class Employee {
         this.idAirline = idAirline;
     }
 
-    public int getIdAirport() {
+    public String getIdAirport() {
         return idAirport;
     }
 
-    public void setIdAirport(int idAirport) {
+    public void setIdAirport(String idAirport) {
         this.idAirport = idAirport;
     }
 }

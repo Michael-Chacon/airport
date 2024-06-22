@@ -37,10 +37,11 @@ public class CityMySQLRepository implements CityRepository {
     @Override
     public void update(City city) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE city SET name = ? WHERE id = ?";
+            String query = "UPDATE city SET name = ?, idCountry = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, city.getName());
-                stm.setString(2, city.getId());
+                stm.setString(2, city.getIdCountry());
+                stm.setString(3, city.getId());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {

@@ -1,24 +1,24 @@
 package org.vuelosGlobales.systemAdministrator.airport.domain;
 
 public class Airport {
-    private int id;
+    private String id;
     private String name;
-    private int idCity;
+    private String idCity;
 
     public Airport() {
     }
 
-    public Airport(int id, String name, int idCity) {
+    public Airport(String id, String name, String idCity) {
         this.id = id;
         this.name = name;
         this.idCity = idCity;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -30,11 +30,11 @@ public class Airport {
         this.name = name;
     }
 
-    public int getIdCity() {
+    public String getIdCity() {
         return idCity;
     }
 
-    public void setIdCity(int idCity) {
+    public void setIdCity(String idCity) {
         this.idCity = idCity;
     }
 }

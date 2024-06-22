@@ -5,12 +5,12 @@ public class Connections {
     private String connectionNumber;
     private int idTrip;
     private int idPlane;
-    private int idAriport;
+    private String idAriport;
 
     public Connections() {
     }
 
-    public Connections(int id, String connectionNumber, int idTrip, int idPlane, int idAriport) {
+    public Connections(int id, String connectionNumber, int idTrip, int idPlane, String idAriport) {
         this.id = id;
         this.connectionNumber = connectionNumber;
         this.idTrip = idTrip;
@@ -50,11 +50,11 @@ public class Connections {
         this.idPlane = idPlane;
     }
 
-    public int getIdAriport() {
+    public String getIdAriport() {
         return idAriport;
     }
 
-    public void setIdAriport(int idAriport) {
+    public void setIdAriport(String idAriport) {
         this.idAriport = idAriport;
     }
 }

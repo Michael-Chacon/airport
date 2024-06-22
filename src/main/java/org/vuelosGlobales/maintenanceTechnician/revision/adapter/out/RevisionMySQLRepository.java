@@ -22,9 +22,11 @@ public class RevisionMySQLRepository implements RevisionRepository {
     @Override
     public void save(Revision revision) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "INSERT INTO revision (revisionDate) VALUES (?)";
+            String query = "INSERT INTO revision (revisionDate, idPlane, description) VALUES (?,?,?)";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, revision.getRevisionDate());
+                stm.setInt(2, revision.getIdPlane());
+                stm.setString(3, revision.getDescription());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -35,10 +37,12 @@ public class RevisionMySQLRepository implements RevisionRepository {
     @Override
     public void update(Revision revision) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE revision SET revisionDate = ? WHERE id = ?";
+            String query = "UPDATE revision SET revisionDate = ?, idPlane = ?, description = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, revision.getRevisionDate());
-                stm.setInt(2, revision.getId());
+                stm.setInt(2, revision.getIdPlane());
+                stm.setString(3, revision.getDescription());
+                stm.setInt(4, revision.getId());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {

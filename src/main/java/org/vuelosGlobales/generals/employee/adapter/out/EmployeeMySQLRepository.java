@@ -30,7 +30,7 @@ public class EmployeeMySQLRepository implements EmployeeRepository {
                 stm.setString(2, employee.getIngressDate());
                 stm.setInt(3, employee.getIdRol());
                 stm.setInt(4, employee.getIdAirline());
-                stm.setInt(5, employee.getIdAirport());
+                stm.setString(5, employee.getIdAirport());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -41,7 +41,7 @@ public class EmployeeMySQLRepository implements EmployeeRepository {
     @Override
     public void update(Employee employee) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE employee SET name = ?, ingressDate = ? WHERE id = ?";
+            String query = "UPDATE employee SET name = ?, ingressDate = ?, idRol = ?, idAirline = ?, idAirport = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, employee.getNombre());
                 stm.setString(2, employee.getIngressDate());
@@ -63,7 +63,7 @@ public class EmployeeMySQLRepository implements EmployeeRepository {
                     if (resultSet.next()){
                         Employee obj = new Employee(resultSet.getString("id"), resultSet.getString("name"),
                                 resultSet.getString("ingressDAte"), resultSet.getInt("idRol"),
-                                resultSet.getInt("idAirline"), resultSet.getInt("idAirport"));
+                                resultSet.getInt("idAirline"), resultSet.getString("idAirport"));
                         return Optional.of(obj);
                     }
                 }
@@ -84,7 +84,7 @@ public class EmployeeMySQLRepository implements EmployeeRepository {
                 while (resultSet.next()){
                     Employee employee = new Employee(resultSet.getString("id"), resultSet.getString("name"),
                             resultSet.getString("ingressDAte"), resultSet.getInt("idRol"),
-                            resultSet.getInt("idAirline"), resultSet.getInt("idAirport"));
+                            resultSet.getInt("idAirline"), resultSet.getString("idAirport"));
                     objects.add(employee);
                 }
             }

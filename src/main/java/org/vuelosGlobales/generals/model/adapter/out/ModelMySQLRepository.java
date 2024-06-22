@@ -35,10 +35,11 @@ public class ModelMySQLRepository implements ModelRepository {
     @Override
     public void update(Model model) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE model SET name = ? WHERE id = ?";
+            String query = "UPDATE model SET name = ?, manufacturerId = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, model.getName());
-                stm.setInt(2, model.getId());
+                stm.setInt(2, model.getManufacturerId());
+                stm.setInt(3, model.getId());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {

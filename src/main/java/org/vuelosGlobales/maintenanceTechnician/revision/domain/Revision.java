@@ -4,14 +4,16 @@ public class Revision {
     private int id;
     private String revisionDate;
     private int idPlane;
+    private String description;
 
     public Revision() {
     }
 
-    public Revision(int id, String revisionDate, int idPlane) {
+    public Revision(int id, String revisionDate, int idPlane, String description) {
         this.id = id;
         this.revisionDate = revisionDate;
         this.idPlane = idPlane;
+        this.description = description;
     }
 
     public int getId() {
@@ -36,5 +38,13 @@ public class Revision {
 
     public void setIdPlane(int idPlane) {
         this.idPlane = idPlane;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

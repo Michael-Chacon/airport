@@ -27,7 +27,7 @@ public class ConnectionMySQLRepository implements ConnectionRepository {
                 stm.setString(1, connections.getConnectionNumber());
                 stm.setInt(2, connections.getIdTrip());
                 stm.setInt(3, connections.getIdPlane());
-                stm.setInt(4, connections.getIdAriport());
+                stm.setString(4, connections.getIdAriport());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -38,9 +38,12 @@ public class ConnectionMySQLRepository implements ConnectionRepository {
     @Override
     public void update(Connections connections) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE flightconnection SET connectionNumber = ? WHERE id = ?";
+            String query = "UPDATE flightconnection SET connectionNumber = ?, idTrip = ?, idPlane = ?, idAirport = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, connections.getConnectionNumber());
+                stm.setInt(2, connections.getIdTrip());
+                stm.setInt(3, connections.getIdPlane());
+                stm.setString(4, connections.getIdAriport()); // posible error de tipo, debe ser String no int
                 stm.setInt(2, connections.getId());
                 stm.executeUpdate();
             }
@@ -58,7 +61,7 @@ public class ConnectionMySQLRepository implements ConnectionRepository {
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
                         Connections obj = new Connections(resultSet.getInt("id"), resultSet.getString("connectionNumber"),
-                                resultSet.getInt("idTrip"), resultSet.getInt("idPlane"), resultSet.getInt("idAirplane"));
+                                resultSet.getInt("idTrip"), resultSet.getInt("idPlane"), resultSet.getString("idAirplane"));
                         return Optional.of(obj);
                     }
                 }
@@ -78,7 +81,7 @@ public class ConnectionMySQLRepository implements ConnectionRepository {
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
                     Connections connections = new Connections(resultSet.getInt("id"), resultSet.getString("connectionNumber"),
-                            resultSet.getInt("idTrip"), resultSet.getInt("idPlane"), resultSet.getInt("idAirplane"));
+                            resultSet.getInt("idTrip"), resultSet.getInt("idPlane"), resultSet.getString("idAirplane"));
                     objects.add(connections);
                 }
             }
