@@ -1,4 +1,103 @@
 package org.vuelosGlobales.generals.connection.adapter.out;
 
-public class ConnectionMySQLRepository {
+import org.vuelosGlobales.generals.connection.domain.Connections;
+import org.vuelosGlobales.generals.connection.infrastructure.ConnectionRepository;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+public class ConnectionMySQLRepository implements ConnectionRepository {
+    private final String url;
+    private final String user;
+    private final String password;
+
+    public ConnectionMySQLRepository(String url, String user, String password) {
+        this.url = url;
+        this.user = user;
+        this.password = password;
+    }
+
+    @Override
+    public void save(Connections connections) {
+        try (Connection conn = DriverManager.getConnection(url,user, password)){
+            String query = "INSERT INTO flightconnection (connectionNumber, idTrip, idPlane, idAirport) VALUES (?,?,?,?)";
+            try (PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setString(1, connections.getConnectionNumber());
+                stm.setInt(2, connections.getIdTrip());
+                stm.setInt(3, connections.getIdPlane());
+                stm.setInt(4, connections.getIdAriport());
+                stm.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void update(Connections connections) {
+        try (Connection conn = DriverManager.getConnection(url,user, password)){
+            String query = "UPDATE flightconnection SET connectionNumber = ? WHERE id = ?";
+            try (PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setString(1, connections.getConnectionNumber());
+                stm.setInt(2, connections.getId());
+                stm.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Optional<Connections> findById(int id) {
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT id, connectionNumber, idTrip, idPlane, idAirplane FROM flightconnection WHERE id = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, id);
+                try(ResultSet resultSet = stm.executeQuery()){
+                    if (resultSet.next()){
+                        Connections obj = new Connections(resultSet.getInt("id"), resultSet.getString("connectionNumber"),
+                                resultSet.getInt("idTrip"), resultSet.getInt("idPlane"), resultSet.getInt("idAirplane"));
+                        return Optional.of(obj);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Connections> findAll() {
+        List<Connections> objects= new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT id, connectionNumber, idTrip, idPlane, idAirplane FROM flightconnection";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    Connections connections = new Connections(resultSet.getInt("id"), resultSet.getString("connectionNumber"),
+                            resultSet.getInt("idTrip"), resultSet.getInt("idPlane"), resultSet.getInt("idAirplane"));
+                    objects.add(connections);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return objects;
+    }
+
+    @Override
+    public void delete(int id) {
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "DELETE FROM flightconnection WHERE id = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, id);
+                stm.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

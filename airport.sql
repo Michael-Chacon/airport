@@ -1,28 +1,28 @@
 CREATE DATABASE airport;
 USE airport;
 
-CREATE TABLE documenttype(
-    id INT AUTO_INCREMENT NOT NULL,
-    name VARCHAR(40) NOT NULL,
-    CONSTRAINT pk_documenttypes PRIMARY KEY(id)
-) ENGINE=InnoDB;
+--CREATE TABLE documenttype(
+--    id INT AUTO_INCREMENT NOT NULL,
+--    name VARCHAR(40) NOT NULL,
+--    CONSTRAINT pk_documenttypes PRIMARY KEY(id)
+--) ENGINE=InnoDB;
+--
+--CREATE TABLE customer (
+--    id INT AUTO_INCREMENT NOT NULL,
+--    name VARCHAR(30) NOT NULL,
+--    age INT NOT NULL,
+--    idDocument INT NOT NULL,
+--    CONSTRAINT pk_customers PRIMARY KEY(id),
+--    CONSTRAINT fk_customers_documenttypes FOREIGN KEY (idDocument) REFERENCES documenttype(id)
+--) ENGINE=InnoDB;
 
-CREATE TABLE customer (
-    id INT AUTO_INCREMENT NOT NULL,
-    name VARCHAR(30) NOT NULL,
-    age INT NOT NULL,
-    idDocument INT NOT NULL,
-    CONSTRAINT pk_customers PRIMARY KEY(id),
-    CONSTRAINT fk_customers_documenttypes FOREIGN KEY (idDocument) REFERENCES documenttype(id)
-) ENGINE=InnoDB;
-
-CREATE TABLE flightfare (
-    id INT AUTO_INCREMENT NOT NULL,
-    description VARCHAR(20) NOT NULL,
-    details TEXT NULL,
-    value DOUBLE(7,3) NOT NULL,
-    CONSTRAINT pk_flightfares PRIMARY KEY(id)
-) ENGINE=InnoDB;
+--CREATE TABLE flightfare (
+--    id INT AUTO_INCREMENT NOT NULL,
+--    description VARCHAR(20) NOT NULL,
+--    details TEXT NULL,
+--    value DOUBLE(7,3) NOT NULL,
+--    CONSTRAINT pk_flightfares PRIMARY KEY(id)
+--) ENGINE=InnoDB;
 
 CREATE TABLE airline (
     id INT AUTO_INCREMENT NOT NULL,
@@ -90,27 +90,31 @@ CREATE TABLE trip (
     id INT AUTO_INCREMENT NOT NULL,
     tripDate DATE NOT NULL,
     priceTrip DOUBLE NOT NULL,
-    CONSTRAINT pk_trips PRIMARY KEY(id)
+    idOrigin VARCHAR(5) NOT NULL,
+    idDestination VARCHAR(5) NOT NULL,
+    CONSTRAINT pk_trips PRIMARY KEY(id),
+    CONSTRAINT pk_origin_airport FOREIGN KEY (idOrigin) REFERENCES airport(id),
+    CONSTRAINT pk_destination_airport FOREIGN KEY (idDestination) REFERENCES airport(id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE tripbooking (
-    id INT AUTO_INCREMENT NOT NULL,
-    date DATE NOT NULL,
-    idTrip INT NOT NULL,
-    CONSTRAINT pk_tripbooking PRIMARY KEY(id),
-    CONSTRAINT fk_tripbooking_trips FOREIGN KEY (idTrip) REFERENCES trip(id)
-) ENGINE=InnoDB;
+--CREATE TABLE tripbooking (
+--    id INT AUTO_INCREMENT NOT NULL,
+--    date DATE NOT NULL,
+--    idTrip INT NOT NULL,
+--    CONSTRAINT pk_tripbooking PRIMARY KEY(id),
+--    CONSTRAINT fk_tripbooking_trips FOREIGN KEY (idTrip) REFERENCES trip(id)
+--) ENGINE=InnoDB;
 
-CREATE TABLE tripbookingdetail (
-    id INT AUTO_INCREMENT NOT NULL,
-    idTripBooking INT NOT NULL,
-    idCustomers VARCHAR(20) NOT NULL,
-    idFares INT NOT NULL,
-    CONSTRAINT pk_tripbookingdetails PRIMARY KEY(id),
-    CONSTRAINT fk_tripbookingdetails_tripbooking FOREIGN KEY (idTripBooking) REFERENCES tripbooking(id),
-    CONSTRAINT fk_tripbookingdetails_customers FOREIGN KEY (idCustomers) REFERENCES customer(id),
-    CONSTRAINT fk_tripbookingdetails_fares FOREIGN KEY (idFares) REFERENCES flightfare(id)
-) ENGINE=InnoDB;
+--CREATE TABLE tripbookingdetail (
+--    id INT AUTO_INCREMENT NOT NULL,
+--    idTripBooking INT NOT NULL,
+--    idCustomers VARCHAR(20) NOT NULL,
+--    idFares INT NOT NULL,
+--    CONSTRAINT pk_tripbookingdetails PRIMARY KEY(id),
+--    CONSTRAINT fk_tripbookingdetails_tripbooking FOREIGN KEY (idTripBooking) REFERENCES tripbooking(id),
+--    CONSTRAINT fk_tripbookingdetails_customers FOREIGN KEY (idCustomers) REFERENCES customer(id),
+--    CONSTRAINT fk_tripbookingdetails_fares FOREIGN KEY (idFares) REFERENCES flightfare(id)
+--) ENGINE=InnoDB;
 
 CREATE TABLE plane (
     id INT AUTO_INCREMENT NOT NULL,
@@ -140,6 +144,7 @@ CREATE TABLE revision (
     id INT AUTO_INCREMENT NOT NULL,
     revisionDate DATE NOT NULL,
     idPlane INT NOT NULL,
+    description TEXT NOT NULL,
     CONSTRAINT pk_revisions PRIMARY KEY(id),
     CONSTRAINT fk_revisions_planes FOREIGN KEY (idPlane) REFERENCES plane(id)
 ) ENGINE=InnoDB;
@@ -147,8 +152,8 @@ CREATE TABLE revision (
 CREATE TABLE employee (
     id VARCHAR(20) NOT NULL,
     name VARCHAR(40) NOT NULL,
+    ingressDate DATE NOT NULL,
     idRol INT NOT NULL,
-    ingresesate DATE NOT NULL,
     idAirline INT NOT NULL,
     idAirport VARCHAR(5) NOT NULL,
     CONSTRAINT pk_employees PRIMARY KEY(id),
@@ -157,19 +162,18 @@ CREATE TABLE employee (
     CONSTRAINT fk_employees_airports FOREIGN KEY (idAirport) REFERENCES airport(id)
 ) ENGINE=InnoDB;
 
-/* COLOQUÉ LA DESCRIPCIÓN DE LA REVISION EN LA TABLA revemployee, no creé la table revision_details 
-CREATE TABLE airport.revision_details (
-    id INT NOT NULL,
-    description TEXT NOT NULL,
-    id_employee VARCHAR(20) NOT NULL,
-    CONSTRAINT pk_revision_details PRIMARY KEY(id),
-    CONSTRAINT fk_revision_details_employees FOREIGN KEY (id_employee) REFERENCES airport.employee(id)
-) ENGINE=InnoDB;
-*/
+--/* COLOQUÉ LA DESCRIPCIÓN DE LA REVISION EN LA TABLA revemployee, no creé la table revision_details
+--CREATE TABLE airport.revision_details (
+--    id INT NOT NULL,
+--    description TEXT NOT NULL,
+--    id_employee VARCHAR(20) NOT NULL,
+--    CONSTRAINT pk_revision_details PRIMARY KEY(id),
+--    CONSTRAINT fk_revision_details_employees FOREIGN KEY (id_employee) REFERENCES airport.employee(id)
+--) ENGINE=InnoDB;
+--*/
 CREATE TABLE revemployee (
-    idEmployee VARCHAR(20) NOT NULL,
     idRevision INT NOT NULL,
-    description TEXT NOT NULL,
+    idEmployee VARCHAR(20) NOT NULL,
     CONSTRAINT pk_revemployee PRIMARY KEY (idEmployee, idRevision),
     CONSTRAINT fk_revemployee_employees FOREIGN KEY (idEmployee) REFERENCES employee(id),
     CONSTRAINT fk_revemployee_revisions FOREIGN KEY (idRevision) REFERENCES revision(id)

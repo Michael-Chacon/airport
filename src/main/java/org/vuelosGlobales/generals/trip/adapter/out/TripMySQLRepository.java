@@ -22,10 +22,12 @@ public class TripMySQLRepository implements TripRepository {
     @Override
     public void save(Trip trip) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "INSERT INTO trip (tripDate, priceTripe) VALUES (?, ?)";
+            String query = "INSERT INTO trip (tripDate, priceTripe, idOrigin, idDestination) VALUES (?,?,?,?)";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, trip.getTripDate());
                 stm.setDouble(2, trip.getPriceTrip());
+                stm.setString(3, trip.getIdOrigin());
+                stm.setString(4, trip.getIdDestination());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -36,11 +38,13 @@ public class TripMySQLRepository implements TripRepository {
     @Override
     public void update(Trip trip) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE trip SET tripDate = ?, priceTrip = ? WHERE id = ?";
+            String query = "UPDATE trip SET tripDate = ?, priceTrip = ?, idOrigin = ?, idDestination = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, trip.getTripDate());
                 stm.setDouble(2, trip.getPriceTrip());
-                stm.setInt(3, trip.getId());
+                stm.setString(3, trip.getIdOrigin());
+                stm.setString(4, trip.getIdDestination());
+                stm.setInt(5, trip.getId());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -51,13 +55,14 @@ public class TripMySQLRepository implements TripRepository {
     @Override
     public Optional<Trip> findById(int id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, tripDate, priceTripe FROM trip WHERE id = ?";
+            String query = "SELECT id, tripDate, priceTripe, idOrigin, idDestination FROM trip WHERE id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setInt(1, id);
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
                         Trip obj = new Trip(resultSet.getInt("id"), resultSet.getString("tripDate"),
-                                resultSet.getDouble("priceTripe"));
+                                resultSet.getDouble("priceTripe"), resultSet.getString("idOrigin"),
+                                resultSet.getString("idDestination"));
                         return Optional.of(obj);
                     }
                 }
@@ -72,12 +77,13 @@ public class TripMySQLRepository implements TripRepository {
     public List<Trip> findAll() {
         List<Trip> objects= new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, id, tripDate, priceTripe FROM trip";
+            String query = "SELECT id, tripDate, priceTripe, idOrigin, idDestination FROM trip";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
                     Trip trip = new Trip(resultSet.getInt("id"), resultSet.getString("tripDate"),
-                            resultSet.getDouble("priceTripe"));
+                            resultSet.getDouble("priceTripe"), resultSet.getString("idOrigin"),
+                            resultSet.getString("idDestination"));
                     objects.add(trip);
                 }
             }
