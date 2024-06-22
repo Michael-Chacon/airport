@@ -37,4 +37,9 @@ public class City {
     public void setIdCountry(String idCountry) {
         this.idCountry = idCountry;
     }
+
+    @Override
+    public String toString() {
+        return "id: " + id + ", name: " + name + ", idCountry: " + idCountry;
+    }
 }

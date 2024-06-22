@@ -23,10 +23,11 @@ public class CityMySQLRepository implements CityRepository {
     @Override
     public void save(City city) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "INSERT INTO city (name, idCountry) VALUES (?, ?)";
+            String query = "INSERT INTO city (id, name, idCountry) VALUES (?,?,?)";
             try (PreparedStatement stm = conn.prepareStatement(query)){
-                stm.setString(1, city.getName());
-                stm.setString(2, city.getIdCountry());
+                stm.setString(1, city.getId());
+                stm.setString(2, city.getName());
+                stm.setString(3, city.getIdCountry());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
