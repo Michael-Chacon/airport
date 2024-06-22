@@ -22,9 +22,10 @@ public class CountryMySQLRepository implements CountryRepository {
     @Override
     public void save(Country country) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "INSERT INTO country (name) VALUES (?)";
+            String query = "INSERT INTO country (id, name) VALUES (?,?)";
             try (PreparedStatement stm = conn.prepareStatement(query)){
-                stm.setString(1, country.getName());
+                stm.setString(1, country.getId());
+                stm.setString(2, country.getName());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {

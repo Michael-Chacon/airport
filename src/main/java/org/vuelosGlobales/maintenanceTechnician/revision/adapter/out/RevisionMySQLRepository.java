@@ -59,7 +59,7 @@ public class RevisionMySQLRepository implements RevisionRepository {
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
                         Revision obj = new Revision(resultSet.getInt("id"), resultSet.getString("revisionDate"),
-                                resultSet.getInt("idPlane"));
+                                resultSet.getInt("idPlane"), resultSet.getString("description"));
                         return Optional.of(obj);
                     }
                 }
@@ -79,7 +79,7 @@ public class RevisionMySQLRepository implements RevisionRepository {
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
                     Revision revision = new Revision(resultSet.getInt("id"), resultSet.getString("revisionDate"),
-                            resultSet.getInt("idPlane"));
+                            resultSet.getInt("idPlane"), resultSet.getString("description"));
                     objects.add(revision);
                 }
             }

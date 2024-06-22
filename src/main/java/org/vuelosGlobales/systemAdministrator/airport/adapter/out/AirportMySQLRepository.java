@@ -39,7 +39,7 @@ public class AirportMySQLRepository implements AirportRepository {
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, airport.getName());
                 stm.setString(2, airport.getIdCity());
-                stm.setInt(3, airport.getId());
+                stm.setString(3, airport.getId());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -55,7 +55,7 @@ public class AirportMySQLRepository implements AirportRepository {
                 stm.setInt(1, id);
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
-                        Airport obj = new Airport(resultSet.getInt("id"), resultSet.getString("name"),
+                        Airport obj = new Airport(resultSet.getString("id"), resultSet.getString("name"),
                                 resultSet.getString("idCity"));
                         return Optional.of(obj);
                     }
@@ -75,7 +75,7 @@ public class AirportMySQLRepository implements AirportRepository {
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
-                    Airport airport = new Airport(resultSet.getInt("id"), resultSet.getString("name"),
+                    Airport airport = new Airport(resultSet.getString("id"), resultSet.getString("name"),
                             resultSet.getString("idCity"));
                     objects.add(airport);
                 }
