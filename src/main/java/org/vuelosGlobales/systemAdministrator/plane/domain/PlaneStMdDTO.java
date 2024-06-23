@@ -1,0 +1,82 @@
+package org.vuelosGlobales.systemAdministrator.plane.domain;
+
+public class PlaneStMdDTO {
+    private int id;
+    private String plates;
+    private int capacity;
+    private String fabricationDate;
+    private String nameStatus;
+    private String nameModel;
+
+    public PlaneStMdDTO() {
+    }
+
+    public PlaneStMdDTO(int id, String plates, int capacity, String fabricationDate, String nameStatus, String nameModel) {
+        this.id = id;
+        this.plates = plates;
+        this.capacity = capacity;
+        this.fabricationDate = fabricationDate;
+        this.nameStatus = nameStatus;
+        this.nameModel = nameModel;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getPlates() {
+        return plates;
+    }
+
+    public void setPlates(String plates) {
+        this.plates = plates;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public String getFabricationDate() {
+        return fabricationDate;
+    }
+
+    public void setFabricationDate(String fabricationDate) {
+        this.fabricationDate = fabricationDate;
+    }
+
+    public String getNameStatus() {
+        return nameStatus;
+    }
+
+    public void setNameStatus(String nameStatus) {
+        this.nameStatus = nameStatus;
+    }
+
+    public String getNameModel() {
+        return nameModel;
+    }
+
+    public void setNameModel(String nameModel) {
+        this.nameModel = nameModel;
+    }
+
+    @Override
+    public String toString() {
+        return "PlaneStMdDTO{" +
+                "id=" + id +
+                ", plates='" + plates + '\'' +
+                ", capacity=" + capacity +
+                ", fabricationDate='" + fabricationDate + '\'' +
+                ", nameStatus='" + nameStatus + '\'' +
+                ", nameModel='" + nameModel + '\'' +
+                '}';
+    }
+}
