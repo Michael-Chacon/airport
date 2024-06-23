@@ -27,4 +27,9 @@ public class Airline {
     public void setName(String nombre) {
         this.name = nombre;
     }
+
+    @Override
+    public String toString() {
+        return "id: " + id + ", name: " + name;
+    }
 }

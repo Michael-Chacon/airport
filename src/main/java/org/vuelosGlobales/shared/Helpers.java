@@ -10,7 +10,6 @@ public class Helpers {
         while (true) {
             Optional<T> objetoOpcional = supplier.get();
             if (objetoOpcional.isPresent()) {
-                System.out.println();
                 return objetoSeleccionado = objetoOpcional.get();
             } else {
                 System.out.println("El id no existe");

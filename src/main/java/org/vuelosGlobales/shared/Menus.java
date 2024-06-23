@@ -15,6 +15,10 @@ import org.vuelosGlobales.generals.model.application.ModelService;
 import org.vuelosGlobales.generals.status.adapter.in.StatusConsoleAdapter;
 import org.vuelosGlobales.generals.status.adapter.out.StatusMySQLRepository;
 import org.vuelosGlobales.generals.status.application.StatusService;
+import org.vuelosGlobales.systemAdministrator.airline.adapter.in.AirlineConsoleAdap;
+import org.vuelosGlobales.systemAdministrator.airline.adapter.out.AirlineMySQLRepository;
+import org.vuelosGlobales.systemAdministrator.airline.application.AirlineService;
+import org.vuelosGlobales.systemAdministrator.airline.domain.Airline;
 
 public class Menus {
     public static void main(String[] args) {
@@ -37,8 +41,13 @@ public class Menus {
         ModelMySQLRepository modelOut = new ModelMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         ModelService modelService = new ModelService(modelOut, manufacturerOut);
         ModelConsoleAdap modelIn = new ModelConsoleAdap(modelService);
+//        Airline
+        AirlineMySQLRepository airlineOut = new AirlineMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        AirlineService airlineService = new AirlineService(airlineOut);
+        AirlineConsoleAdap airlineIn = new AirlineConsoleAdap(airlineService);
 
-        modelIn.crudModel();
+        airlineIn.crudAirline();
+//        modelIn.crudModel();
 //        manufacturerIn.crudManufacturer();
 //        statusIn.crudStatus();
 //        cityIn.crudCity();
