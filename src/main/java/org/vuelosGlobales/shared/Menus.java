@@ -61,7 +61,7 @@ public class Menus {
         AirportService airportService = new AirportService(airportOtu, cityOut);
         AirportConsoleAdapter airportIn = new AirportConsoleAdapter(airportService);
 
-        airportIn.crudAirport();
+//        airportIn.crudAirport();
 //        roleIn.crudRole();
 //        airlineIn.crudAirline();
 //        modelIn.crudModel();

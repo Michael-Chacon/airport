@@ -1,6 +1,7 @@
 package org.vuelosGlobales.generals.trip.infrastructure;
 
 import org.vuelosGlobales.generals.trip.domain.Trip;
+import org.vuelosGlobales.generals.trip.domain.TripAirportDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,4 +13,6 @@ public interface TripRepository {
     Optional<Trip> findById(int id);
     List<Trip> findAll();
     void delete(int id);
+    List<TripAirportDTO> findAllTripAirport();
+    Optional<TripAirportDTO> findTripAirportById(int id);
 }
