@@ -22,7 +22,7 @@ public class RoleMySQLRepository implements RoleRepository {
     @Override
     public void save(Role role) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "INSERT INTO role (name) VALUES (?)";
+            String query = "INSERT INTO tripulationroles (name) VALUES (?)";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, role.getName());
                 stm.executeUpdate();
@@ -35,7 +35,7 @@ public class RoleMySQLRepository implements RoleRepository {
     @Override
     public void update(Role role) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE role SET name = ? WHERE id = ?";
+            String query = "UPDATE tripulationroles SET name = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, role.getName());
                 stm.setInt(2, role.getId());
@@ -49,7 +49,7 @@ public class RoleMySQLRepository implements RoleRepository {
     @Override
     public Optional<Role> findById(int id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, name FROM role WHERE id = ?";
+            String query = "SELECT id, name FROM tripulationroles WHERE id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setInt(1, id);
                 try(ResultSet resultSet = stm.executeQuery()){
@@ -69,7 +69,7 @@ public class RoleMySQLRepository implements RoleRepository {
     public List<Role> findAll() {
         List<Role> objects= new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, name FROM role";
+            String query = "SELECT id, name FROM tripulationroles";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
@@ -86,7 +86,7 @@ public class RoleMySQLRepository implements RoleRepository {
     @Override
     public void delete(int id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "DELETE FROM role WHERE id = ?";
+            String query = "DELETE FROM tripulationroles WHERE id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setInt(1, id);
                 stm.executeUpdate();
