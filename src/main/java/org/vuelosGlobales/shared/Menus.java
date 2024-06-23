@@ -6,6 +6,9 @@ import org.vuelosGlobales.generals.city.application.CityService;
 import org.vuelosGlobales.generals.country.adapter.in.CountryConsoleAdapter;
 import org.vuelosGlobales.generals.country.adapter.out.CountryMySQLRepository;
 import org.vuelosGlobales.generals.country.application.CountryService;
+import org.vuelosGlobales.generals.status.adapter.in.StatusConsoleAdapter;
+import org.vuelosGlobales.generals.status.adapter.out.StatusMySQLRepository;
+import org.vuelosGlobales.generals.status.application.StatusService;
 
 public class Menus {
     public static void main(String[] args) {
@@ -16,7 +19,13 @@ public class Menus {
         CityMySQLRepository cityOut = new CityMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         CityService cityService = new CityService(cityOut, countryOut);
         CityConsoleAdapter cityIn = new CityConsoleAdapter(cityService);
-        cityIn.crudCity();
+//        Status
+        StatusMySQLRepository statusOut = new StatusMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        StatusService statusService = new StatusService(statusOut);
+        StatusConsoleAdapter statusIn = new StatusConsoleAdapter(statusService);
+
+        statusIn.crudStatus();
+//        cityIn.crudCity();
 //        countryIn.crudCountry();
     }
 

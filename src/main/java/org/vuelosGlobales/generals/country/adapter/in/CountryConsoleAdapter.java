@@ -97,17 +97,17 @@ public class CountryConsoleAdapter {
         System.out.println();
     }
 
-    public Country transformAndValidateObj(){
-        Country countrySelect = null;
-        while (true){
-            String countryx = console.stringNotNull("Seleccione el país por el id: ");
-            Optional<Country> getCountry = countryService.getCountryById(countryx.toUpperCase());
-            if(!getCountry.isEmpty()){
-                System.out.println();
-                return countrySelect = getCountry.get();
-            }else {
-                System.out.println("El id no existe");
-            }
-        }
-    }
+//    public Country transformAndValidateObj(){
+//        Country countrySelect = null;
+//        while (true){
+//            String countryx = console.stringNotNull("Seleccione el país por el id: ");
+//            Optional<Country> getCountry = countryService.getCountryById(countryx.toUpperCase());
+//            if(!getCountry.isEmpty()){
+//                System.out.println();
+//                return countrySelect = getCountry.get();
+//            }else {
+//                System.out.println("El id no existe");
+//            }
+//        }
+//    }
 }
