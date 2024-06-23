@@ -104,7 +104,6 @@ public class CityConsoleAdapter {
                 case 6:
                     break menuCity;
             }
-            String option = console.stringNull("Algo: ");
         }
     }
 
@@ -117,6 +116,7 @@ public class CityConsoleAdapter {
             CuadroDeTexto.drawHorizontal(50, "-");
             System.out.println(String.format("\n| %-6s | %-17s | %-17s |", city.getId(), city.getNameCity(), city.getNameCountry()));
         });
+        CuadroDeTexto.drawHorizontal(50, "-");
         System.out.println();
     }
 
@@ -129,6 +129,7 @@ public class CityConsoleAdapter {
             CuadroDeTexto.drawHorizontal(27, "-");
             System.out.println(String.format("\n| %-4s | %-16s |", country.getId(), country.getName()));
         });
+        CuadroDeTexto.drawHorizontal(27, "-");
         System.out.println();
     }
 
