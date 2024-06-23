@@ -40,7 +40,10 @@ public class CityConsoleAdapter {
 
                     String idCountry = getObj.getId();
                     String name = console.stringNotNull("Nombre del ciudad: ");
-                    String idCity = console.stringWithLeght("Ingrese el id del ciudad, debe ser alfanumérico de máximo 5 caracteres: ", 5);
+                    String idCity = Helpers.validateExist(
+                            "Ingrese el id del ciudad, debe ser alfanumérico de máximo 5 caracteres: ",
+                            id -> cityService.getCityById(id)
+                    );
                     cityService.createCity(new City(idCity.toUpperCase(), name, idCountry));
                     CuadroDeTexto.dibujarCuadroDeTexto(null, null);
                     break;

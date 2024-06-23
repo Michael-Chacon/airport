@@ -30,7 +30,11 @@ public class CountryConsoleAdapter {
                 case 1:
                     CuadroDeTexto.dibujarCuadroDeTexto("Registrar pais", "*");
                     String name = console.stringNotNull("Nombre del pais: ");
-                    String idCountry = console.stringWithLeght("Ingrese el id del pais, debe ser alfanumerico de máximo 5 caracteres: ", 5);
+                    String idCountry = Helpers.validateExist(
+                        "Ingrese el id del pais, debe ser alfa",
+                        id -> countryService.getCountryById(id)
+                    );
+                    System.out.println(idCountry);
                     countryService.createCountry(new Country(idCountry.toUpperCase(),name));
                     CuadroDeTexto.dibujarCuadroDeTexto(null, null);
                     break;
@@ -93,17 +97,17 @@ public class CountryConsoleAdapter {
         System.out.println();
     }
 
-//    public Country transformAndValidateObj(){
-//        Country countrySelect = null;
-//        while (true){
-//            String countryx = console.stringNotNull("Seleccione el país por el id: ");
-//            Optional<Country> getCountry = countryService.getCountryById(countryx.toUpperCase());
-//            if(!getCountry.isEmpty()){
-//                System.out.println();
-//                return countrySelect = getCountry.get();
-//            }else {
-//                System.out.println("El id no existe");
-//            }
-//        }
-//    }
+    public Country transformAndValidateObj(){
+        Country countrySelect = null;
+        while (true){
+            String countryx = console.stringNotNull("Seleccione el país por el id: ");
+            Optional<Country> getCountry = countryService.getCountryById(countryx.toUpperCase());
+            if(!getCountry.isEmpty()){
+                System.out.println();
+                return countrySelect = getCountry.get();
+            }else {
+                System.out.println("El id no existe");
+            }
+        }
+    }
 }
