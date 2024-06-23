@@ -1,16 +1,21 @@
 package org.vuelosGlobales.generals.trip.application;
 
 import org.vuelosGlobales.generals.trip.domain.Trip;
+import org.vuelosGlobales.generals.trip.domain.TripAirportDTO;
 import org.vuelosGlobales.generals.trip.infrastructure.TripRepository;
+import org.vuelosGlobales.systemAdministrator.airport.domain.AirportCityDTO;
+import org.vuelosGlobales.systemAdministrator.airport.infrastructure.AirportRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 public class TripService {
     private final TripRepository tripRepository;
+    private final AirportRepository airportRepository;
 
-    public TripService(TripRepository tripRepository) {
+    public TripService(TripRepository tripRepository, AirportRepository airportRepository) {
         this.tripRepository = tripRepository;
+        this.airportRepository = airportRepository;
     }
 
     public void createTrip(Trip trip){
@@ -31,5 +36,20 @@ public class TripService {
 
     public void deleteTrip(int id){
         this.tripRepository.delete(id);
+    }
+    public List<AirportCityDTO> getAllAirportCity(){
+        return this.airportRepository.findAllAirportCity();
+    }
+
+    public Optional<AirportCityDTO> getAirportCityById(String id){
+        return this.airportRepository.findAirportCityById(id);
+    }
+
+    public List<TripAirportDTO> getAllTripAirp(){
+        return this.tripRepository.findAllTripAirport();
+    }
+
+    public Optional<TripAirportDTO> getTripAripById(int id){
+        return this.tripRepository.findTripAirportById(id);
     }
 }

@@ -67,7 +67,7 @@ public class Menus {
 //        modelIn.crudModel();
 //        manufacturerIn.crudManufacturer();
 //        statusIn.crudStatus();
-        cityIn.crudCity();
+//        cityIn.crudCity();
 //        countryIn.crudCountry();
     }
 

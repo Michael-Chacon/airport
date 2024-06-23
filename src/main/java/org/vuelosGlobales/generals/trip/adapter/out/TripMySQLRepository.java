@@ -1,6 +1,7 @@
 package org.vuelosGlobales.generals.trip.adapter.out;
 
 import org.vuelosGlobales.generals.trip.domain.Trip;
+import org.vuelosGlobales.generals.trip.domain.TripAirportDTO;
 import org.vuelosGlobales.generals.trip.infrastructure.TripRepository;
 
 import java.sql.*;
@@ -104,5 +105,53 @@ public class TripMySQLRepository implements TripRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<TripAirportDTO> findAllTripAirport() {
+        List<TripAirportDTO> objects= new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT t.id, t.tripDate, t.priceTrip, CONCAT_WS(' - ', co.name, ao.name) as 'origin', CONCAT_WS(' - ', cd.name, ad.name) as 'destination' FROM trip t" +
+                    "INNER JOIN airport ao on ao.id = t.idOrigin" +
+                    "INNER JOIN city co on co.id = ao.idCity" +
+                    "INNER JOIN airport ad on ad.id = t.idDestination" +
+                    "INNER JOIN city cd on cd.id = ad.idCity";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    TripAirportDTO trip = new TripAirportDTO(resultSet.getInt("id"), resultSet.getString("tripDate"),
+                            resultSet.getDouble("priceTripe"), resultSet.getString("origin"),
+                            resultSet.getString("destination"));
+                    objects.add(trip);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return objects;
+    }
+
+    @Override
+    public Optional<TripAirportDTO> findTripAirportById(int id) {
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT t.id, t.tripDate, t.priceTrip, CONCAT_WS(' - ', co.name, ao.name) as 'origin', CONCAT_WS(' - ', cd.name, ad.name) as 'destination' FROM trip t" +
+                    "INNER JOIN airport ao on ao.id = t.idOrigin" +
+                    "INNER JOIN city co on co.id = ao.idCity" +
+                    "INNER JOIN airport ad on ad.id = t.idDestination" +
+                    "INNER JOIN city cd on cd.id = ad.idCity WHERE t.id = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, id);
+                ResultSet resultSet = stm.executeQuery();
+                if (resultSet.next()){
+                    TripAirportDTO trip = new TripAirportDTO(resultSet.getInt("id"), resultSet.getString("tripDate"),
+                            resultSet.getDouble("priceTripe"), resultSet.getString("origin"),
+                            resultSet.getString("destination"));
+                    return Optional.of(trip);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
     }
 }
