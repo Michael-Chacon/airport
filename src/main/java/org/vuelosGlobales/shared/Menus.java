@@ -9,6 +9,9 @@ import org.vuelosGlobales.generals.country.application.CountryService;
 import org.vuelosGlobales.generals.manufacturer.adapter.in.ManufacturerConsoleAdap;
 import org.vuelosGlobales.generals.manufacturer.adapter.out.ManufacturerMySQLRepository;
 import org.vuelosGlobales.generals.manufacturer.application.ManufacturerService;
+import org.vuelosGlobales.generals.model.adapter.in.ModelConsoleAdap;
+import org.vuelosGlobales.generals.model.adapter.out.ModelMySQLRepository;
+import org.vuelosGlobales.generals.model.application.ModelService;
 import org.vuelosGlobales.generals.status.adapter.in.StatusConsoleAdapter;
 import org.vuelosGlobales.generals.status.adapter.out.StatusMySQLRepository;
 import org.vuelosGlobales.generals.status.application.StatusService;
@@ -30,8 +33,13 @@ public class Menus {
         ManufacturerMySQLRepository manufacturerOut = new ManufacturerMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         ManufacturerService manufacturerService = new ManufacturerService(manufacturerOut);
         ManufacturerConsoleAdap manufacturerIn = new ManufacturerConsoleAdap(manufacturerService);
+//      Model
+        ModelMySQLRepository modelOut = new ModelMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        ModelService modelService = new ModelService(modelOut, manufacturerOut);
+        ModelConsoleAdap modelIn = new ModelConsoleAdap(modelService);
 
-        manufacturerIn.crudManufacturer();
+        modelIn.crudModel();
+//        manufacturerIn.crudManufacturer();
 //        statusIn.crudStatus();
 //        cityIn.crudCity();
 //        countryIn.crudCountry();

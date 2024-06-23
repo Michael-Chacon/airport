@@ -37,4 +37,9 @@ public class Model {
     public void setManufacturerId(int manufacturerId) {
         this.manufacturerId = manufacturerId;
     }
+
+    @Override
+    public String toString() {
+        return "id: " + id + ", name: " + name + ", idManufacturer" + manufacturerId;
+    }
 }
