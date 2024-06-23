@@ -31,7 +31,7 @@ public class CountryConsoleAdapter {
                     CuadroDeTexto.dibujarCuadroDeTexto("Registrar pais", "*");
                     String name = console.stringNotNull("Nombre del pais: ");
                     String idCountry = Helpers.validateExist(
-                        "Ingrese el id del pais, debe ser alfa",
+                        "Ingrese el id del pais, debe ser alfanumerico de máximo 5 caracteres",
                         id -> countryService.getCountryById(id)
                     );
                     System.out.println(idCountry);

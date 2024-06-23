@@ -22,6 +22,10 @@ import org.vuelosGlobales.systemAdministrator.airline.adapter.in.AirlineConsoleA
 import org.vuelosGlobales.systemAdministrator.airline.adapter.out.AirlineMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.airline.application.AirlineService;
 import org.vuelosGlobales.systemAdministrator.airline.domain.Airline;
+import org.vuelosGlobales.systemAdministrator.airport.adapter.in.AirportConsoleAdapter;
+import org.vuelosGlobales.systemAdministrator.airport.adapter.out.AirportMySQLRepository;
+import org.vuelosGlobales.systemAdministrator.airport.application.AirportService;
+import org.vuelosGlobales.systemAdministrator.airport.domain.AirportCityDTO;
 
 public class Menus {
     public static void main(String[] args) {
@@ -52,9 +56,13 @@ public class Menus {
         RoleMySQLRepository roleOut = new RoleMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         RoleService roleService = new RoleService(roleOut);
         RoleConsoleAdap roleIn = new RoleConsoleAdap(roleService);
+//        Airport
+        AirportMySQLRepository airportOtu = new AirportMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        AirportService airportService = new AirportService(airportOtu, cityOut);
+        AirportConsoleAdapter airportIn = new AirportConsoleAdapter(airportService);
 
-
-        roleIn.crudRole();
+        airportIn.crudAirport();
+//        roleIn.crudRole();
 //        airlineIn.crudAirline();
 //        modelIn.crudModel();
 //        manufacturerIn.crudManufacturer();

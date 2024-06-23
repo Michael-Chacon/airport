@@ -1,6 +1,9 @@
 package org.vuelosGlobales.systemAdministrator.airport.application;
 
+import org.vuelosGlobales.generals.city.domain.City;
+import org.vuelosGlobales.generals.city.infrastructure.CityRepository;
 import org.vuelosGlobales.systemAdministrator.airport.domain.Airport;
+import org.vuelosGlobales.systemAdministrator.airport.domain.AirportCityDTO;
 import org.vuelosGlobales.systemAdministrator.airport.infrastructure.AirportRepository;
 
 import java.util.List;
@@ -8,9 +11,11 @@ import java.util.Optional;
 
 public class AirportService {
     private final AirportRepository airportRepository;
+    private final CityRepository cityRepository;
 
-    public AirportService(AirportRepository airportRepository) {
+    public AirportService(AirportRepository airportRepository, CityRepository cityRepository) {
         this.airportRepository = airportRepository;
+        this.cityRepository = cityRepository;
     }
 
     public void createAirport(Airport airport){
@@ -21,7 +26,7 @@ public class AirportService {
         this.airportRepository.update(airport);
     }
 
-    public Optional<Airport> getAirportById(int id){
+    public Optional<Airport> getAirportById(String id){
         return this.airportRepository.findById(id);
     }
 
@@ -29,7 +34,23 @@ public class AirportService {
         return this.airportRepository.findAll();
     }
 
-    public void deleteAirport(int id){
+    public void deleteAirport(String id){
         this.airportRepository.delete(id);
     }
+    public Optional<City> getCityById(String id){
+        return this.cityRepository.findById(id);
+    }
+
+    public List<City> getAllCities(){
+        return this.cityRepository.findAll();
+    }
+
+    public List<AirportCityDTO> getAllAirportCity(){
+        return this.airportRepository.findAllAirportCity();
+    }
+
+    public Optional<AirportCityDTO> getAirportCityById(String  id){
+        return this.airportRepository.findAirportCityById(id);
+    }
+
 }
