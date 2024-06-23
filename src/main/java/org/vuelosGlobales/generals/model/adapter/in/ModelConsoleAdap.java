@@ -3,6 +3,7 @@ package org.vuelosGlobales.generals.model.adapter.in;
 import org.vuelosGlobales.generals.manufacturer.domain.Manufacturer;
 import org.vuelosGlobales.generals.model.application.ModelService;
 import org.vuelosGlobales.generals.model.domain.Model;
+import org.vuelosGlobales.generals.model.domain.ModelManufacDTO;
 import org.vuelosGlobales.shared.Console;
 import org.vuelosGlobales.shared.CuadroDeTexto;
 import org.vuelosGlobales.shared.Helpers;
@@ -71,8 +72,8 @@ public class ModelConsoleAdap {
                     CuadroDeTexto.dibujarCuadroDeTexto("Mostrar info de un modelo", "*");
                     System.out.println();
                     showModeles();
-                    Model showModel = Helpers.transformAndValidateObj(
-                            () -> modelService.getModelById(console.readInt("Seleccione el modelo por el id: "))
+                    ModelManufacDTO showModel = Helpers.transformAndValidateObj(
+                            () -> modelService.getModelManufById(console.readInt("Seleccione el modelo por el id: "))
                     );
                     System.out.println(showModel);
                     CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
@@ -102,13 +103,13 @@ public class ModelConsoleAdap {
     }
 
     public void showModeles(){
-        List<Model> statuses = modelService.getAllModels();
+        List<ModelManufacDTO> models = modelService.getAllModelManuf();
         System.out.println("Listado de estados:");
-        CuadroDeTexto.drawHorizontal(27, "-");
-        System.out.println(String.format("\n| %-4s | %-16s |", "ID", "ESTADOS"));
-        statuses.forEach(country -> {
-            CuadroDeTexto.drawHorizontal(27, "-");
-            System.out.println(String.format("\n| %-4s | %-16s |", country.getId(), country.getName()));
+        CuadroDeTexto.drawHorizontal(45, "-");
+        System.out.println(String.format("\n| %-4s | %-16s | %-16s |", "ID", "MODELO", "FABRICANTE"));
+        models.forEach(model -> {
+            CuadroDeTexto.drawHorizontal(45, "-");
+            System.out.println(String.format("\n| %-4s | %-16s | %-16s |", model.getId(), model.getNameModel(), model.getNameManufac()));
         });
         System.out.println();
     }

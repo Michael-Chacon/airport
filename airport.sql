@@ -190,3 +190,7 @@ CREATE TABLE tripcrew (
 SELECT c.id, c.name AS 'Ciudad', p.name AS 'Pais' FROM city c
 INNER JOIN country p ON p.id = c.idCountry
 WHERE c.id = "BUC";
+
+SELECT m.id, m.name AS 'model', ma.name AS 'manufacturer' FROM model m
+INNER JOIN manufacturer ma ON ma.id = m.manufacturerId
+WHERE m.id = ?;

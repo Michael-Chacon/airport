@@ -1,6 +1,7 @@
 package org.vuelosGlobales.generals.model.adapter.out;
 
 import org.vuelosGlobales.generals.model.domain.Model;
+import org.vuelosGlobales.generals.model.domain.ModelManufacDTO;
 import org.vuelosGlobales.generals.model.infrastructure.ModelRepository;
 
 import java.sql.*;
@@ -77,6 +78,44 @@ public class ModelMySQLRepository implements ModelRepository {
                 while (resultSet.next()){
                     Model model = new Model(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("manufacturerId"));
                     objects.add(model);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return objects;
+    }
+
+    @Override
+    public Optional<ModelManufacDTO> findModelManufacById(int id){
+        try (Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT m.id, m.name AS 'model', ma.name AS 'manufacturer' FROM model m INNER JOIN manufacturer ma ON ma.id = m.manufacturerId WHERE m.id = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, id);
+                ResultSet resultSet = stm.executeQuery();
+                if (resultSet.next()){
+                    ModelManufacDTO obj = new ModelManufacDTO(resultSet.getInt("id"), resultSet.getString("model"),
+                            resultSet.getString("manufacturer"));
+                    return Optional.of(obj);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<ModelManufacDTO> allModelManufact(){
+        List<ModelManufacDTO> objects = new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT m.id, m.name AS 'model', ma.name AS 'manufacturer' FROM model m INNER JOIN manufacturer ma ON ma.id = m.manufacturerId";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    ModelManufacDTO obj = new ModelManufacDTO(resultSet.getInt("id"), resultSet.getString("model"),
+                            resultSet.getString("manufacturer"));
+                    objects.add(obj);
                 }
             }
         } catch (SQLException e) {

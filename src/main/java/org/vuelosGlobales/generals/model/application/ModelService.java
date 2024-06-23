@@ -3,6 +3,7 @@ package org.vuelosGlobales.generals.model.application;
 import org.vuelosGlobales.generals.manufacturer.domain.Manufacturer;
 import org.vuelosGlobales.generals.manufacturer.infrastructure.ManufacturerRepository;
 import org.vuelosGlobales.generals.model.domain.Model;
+import org.vuelosGlobales.generals.model.domain.ModelManufacDTO;
 import org.vuelosGlobales.generals.model.infrastructure.ModelRepository;
 
 import java.util.List;
@@ -42,5 +43,13 @@ public class ModelService {
 
     public Optional<Manufacturer> getManufacturerById(int id){
         return manufacturerRepository.findById(id);
+    }
+
+    public Optional<ModelManufacDTO> getModelManufById(int id){
+        return modelRepository.findModelManufacById(id);
+    }
+
+    public List<ModelManufacDTO> getAllModelManuf(){
+        return modelRepository.allModelManufact();
     }
 }
