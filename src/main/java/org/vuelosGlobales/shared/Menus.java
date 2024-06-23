@@ -26,6 +26,9 @@ import org.vuelosGlobales.systemAdministrator.airport.adapter.in.AirportConsoleA
 import org.vuelosGlobales.systemAdministrator.airport.adapter.out.AirportMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.airport.application.AirportService;
 import org.vuelosGlobales.systemAdministrator.airport.domain.AirportCityDTO;
+import org.vuelosGlobales.systemAdministrator.plane.adapter.in.PlaneConsoleAdapter;
+import org.vuelosGlobales.systemAdministrator.plane.adapter.out.PlaneMySQLRepository;
+import org.vuelosGlobales.systemAdministrator.plane.application.PlaneService;
 
 public class Menus {
     public static void main(String[] args) {
@@ -60,6 +63,12 @@ public class Menus {
         AirportMySQLRepository airportOtu = new AirportMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         AirportService airportService = new AirportService(airportOtu, cityOut);
         AirportConsoleAdapter airportIn = new AirportConsoleAdapter(airportService);
+//        Plane
+        PlaneMySQLRepository planeOut = new PlaneMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        PlaneService planeService = new PlaneService(planeOut, statusOut, modelOut);
+        PlaneConsoleAdapter planeIn = new PlaneConsoleAdapter(planeService);
+
+        planeIn.crudPlane();
 
 //        airportIn.crudAirport();
 //        roleIn.crudRole();

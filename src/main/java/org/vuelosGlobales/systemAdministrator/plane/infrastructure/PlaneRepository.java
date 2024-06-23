@@ -1,6 +1,7 @@
 package org.vuelosGlobales.systemAdministrator.plane.infrastructure;
 
 import org.vuelosGlobales.systemAdministrator.plane.domain.Plane;
+import org.vuelosGlobales.systemAdministrator.plane.domain.PlaneStMdDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,4 +12,6 @@ public interface PlaneRepository {
     Optional<Plane> findById(int id);
     List<Plane> findAll();
     void delete(int id);
+    List<PlaneStMdDTO> findAllPlaneStMd();
+    Optional<PlaneStMdDTO> findPlaneStMdById(int id);
 }

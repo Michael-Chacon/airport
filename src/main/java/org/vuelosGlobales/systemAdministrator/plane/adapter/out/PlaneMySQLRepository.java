@@ -1,6 +1,8 @@
 package org.vuelosGlobales.systemAdministrator.plane.adapter.out;
 
+import org.vuelosGlobales.systemAdministrator.plane.application.PlaneService;
 import org.vuelosGlobales.systemAdministrator.plane.domain.Plane;
+import org.vuelosGlobales.systemAdministrator.plane.domain.PlaneStMdDTO;
 import org.vuelosGlobales.systemAdministrator.plane.infrastructure.PlaneRepository;
 
 import java.sql.*;
@@ -106,5 +108,45 @@ public class PlaneMySQLRepository implements PlaneRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<PlaneStMdDTO> findAllPlaneStMd() {
+        List<PlaneStMdDTO> objects= new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT p.id, p.plates, p.capacity, p.fabricationDate, s.name AS 'status', m.name AS 'model' FROM plane p INNER JOIN statusA s ON  s.id = p.idStatus INNER JOIN model m ON m.id = p.idModel";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    PlaneStMdDTO plane = new PlaneStMdDTO(resultSet.getInt("id"), resultSet.getString("plates"),
+                            resultSet.getInt("capacity"), resultSet.getString("fabricationDate"),
+                            resultSet.getString("status"), resultSet.getString("model"));
+                    objects.add(plane);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return objects;
+    }
+
+    @Override
+    public Optional<PlaneStMdDTO> findPlaneStMdById(int id) {
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT p.id, p.plates, p.capacity, p.fabricationDate, s.name AS 'status', m.name AS 'model' FROM plane p INNER JOIN statusA s ON  s.id = p.idStatus INNER JOIN model m ON m.id = p.idModel WHERE p.id = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, id);
+                ResultSet resultSet = stm.executeQuery();
+                if (resultSet.next()){
+                    PlaneStMdDTO plane = new PlaneStMdDTO(resultSet.getInt("id"), resultSet.getString("plates"),
+                            resultSet.getInt("capacity"), resultSet.getString("fabricationDate"),
+                            resultSet.getString("status"), resultSet.getString("model"));
+                   return Optional.of(plane);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
     }
 }
