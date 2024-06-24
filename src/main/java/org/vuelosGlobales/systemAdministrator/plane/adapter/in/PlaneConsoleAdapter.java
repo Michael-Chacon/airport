@@ -1,6 +1,7 @@
 package org.vuelosGlobales.systemAdministrator.plane.adapter.in;
 
 import org.vuelosGlobales.generals.model.domain.Model;
+import org.vuelosGlobales.systemAdministrator.airline.domain.Airline;
 import org.vuelosGlobales.systemAdministrator.plane.domain.Plane;
 import org.vuelosGlobales.generals.status.domain.Status;
 import org.vuelosGlobales.shared.Console;
@@ -31,6 +32,11 @@ public class PlaneConsoleAdapter {
             switch (choice){
                 case 1:
                     CuadroDeTexto.dibujarCuadroDeTexto("Registrar un avión", "*");
+                    showAirlines();
+                    Airline airlineSelect = Helpers.transformAndValidateObj(
+                            () -> planeService.getAirlineById(console.readInt("Seleccione la aerolínea a la que pertenece el avión"))
+                    );
+                    int airlineId = airlineSelect.getId();
                     String plate = console.stringNotNull("Ingrese la placa del avión: ");
                     int capacity = console.readInt("Cual es la capacidad del avión: ");
                     String fabreicationDate = console.stringWithLeght("En que fecha se fabricó el avión, formato valido de fecha(YYYY-MM-DD): ", 10);
@@ -50,6 +56,7 @@ public class PlaneConsoleAdapter {
                     objPlane.setPlates(plate);
                     objPlane.setCapacity(capacity);
                     objPlane.setFabricationDate(fabreicationDate);
+                    objPlane.setIdAirline(airlineId);
                     objPlane.setIdStatus(idStatus);
                     objPlane.setIdModel(idModel);
                     planeService.createPlane(objPlane);
@@ -59,13 +66,24 @@ public class PlaneConsoleAdapter {
                 case 2:
                     CuadroDeTexto.dibujarCuadroDeTexto("Actualizar información de una avión", "*");
                     showPlanes();
-
                     Plane planeSelect = Helpers.transformAndValidateObj(
                             () -> planeService.getPlaneById(console.readInt("Seleccione el avión por el id: "))
                     );
 
                     CuadroDeTexto.dibujarCuadroDeTexto("Actualizar datos del avión con las placas " + planeSelect.getPlates(), "*");
                     int updateCapacity = console.readInt("Nueva capacidad: ");
+
+                    int idAirlineUp;
+                    String validate1 = console.stringNotNull("Quiere cambiar la aerolínea del avión? (y/n): ");
+                    if (validate1.equals("y")){
+                        showAirlines();
+                        Airline getAirlineUp = Helpers.transformAndValidateObj(
+                                () -> planeService.getAirlineById(console.readInt("Seleccione el nuevo estado en que se encuentra el avión: "))
+                        );
+                        idAirlineUp = getAirlineUp.getId();
+                    }else {
+                        idAirlineUp = planeSelect.getIdStatus();
+                    }
 
                     int idStatusUp;
                     String validate = console.stringNotNull("Quiere cambiar el estado del avión? (y/n): ");
@@ -91,6 +109,7 @@ public class PlaneConsoleAdapter {
                     }
 
                     planeSelect.setCapacity(updateCapacity);
+                    planeSelect.setIdAirline(idAirlineUp);
                     planeSelect.setIdStatus(idStatusUp);
                     planeSelect.setIdModel(idModelUp);
                     planeService.updatePlane(planeSelect);
@@ -105,9 +124,9 @@ public class PlaneConsoleAdapter {
                             () -> planeService.getPlaneStMdById(console.readInt("Seleccione el avión por el id: "))
                     );
                     System.out.println(showPlane);
-                    System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-20s | %-20s |", "ID", "PLACA", "CAPACIDAD", "FECHAFAB", "ESTADO", "MODELO"));
+                    System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-20s | %-20s | %-20s |", "ID", "PLACA", "CAPACIDAD", "FECHAFAB", "AEROLÍNEA", "ESTADO", "MODELO"));
                     CuadroDeTexto.drawHorizontal(100, "-");
-                    System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-20s | %-20s |", showPlane.getId(), showPlane.getPlates(), showPlane.getCapacity(), showPlane.getFabricationDate(), showPlane.getNameStatus(), showPlane.getNameModel()));
+                    System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-20s | %-20s | %-20s |", showPlane.getId(), showPlane.getPlates(), showPlane.getCapacity(), showPlane.getFabricationDate(),showPlane.getNameAirline(), showPlane.getNameStatus(), showPlane.getNameModel()));
                     CuadroDeTexto.drawHorizontal(100, "-");
                     System.out.println();
                     CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
@@ -137,16 +156,28 @@ public class PlaneConsoleAdapter {
     public void showPlanes(){
         List<PlaneStMdDTO> planeList = planeService.getAllPlaneStMd();
         System.out.println("Listado de aviones:");
-        CuadroDeTexto.drawHorizontal(100, "-");
-        System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-20s | %-20s |", "ID", "PLACA", "CAPACIDAD", "FECHAFAB", "ESTADO", "MODELO"));
+        CuadroDeTexto.drawHorizontal(110, "-");
+        System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-25s | %-20s | %-20s |", "ID", "PLACA", "CAPACIDAD", "FECHAFAB", "AEROLÍNEA", "ESTADO", "MODELO"));
         planeList.forEach(plane -> {
-            CuadroDeTexto.drawHorizontal(100, "-");
-            System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-20s | %-20s |", plane.getId(), plane.getPlates(), plane.getCapacity(), plane.getFabricationDate(), plane.getNameStatus(), plane.getNameModel()));
+            CuadroDeTexto.drawHorizontal(105, "-");
+            System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-25s | %-20s | %-20s |", plane.getId(), plane.getPlates(), plane.getCapacity(), plane.getFabricationDate(), plane.getNameAirline(), plane.getNameStatus(), plane.getNameModel()));
         });
-        CuadroDeTexto.drawHorizontal(100, "-");
+        CuadroDeTexto.drawHorizontal(107, "-");
         System.out.println();
     }
 
+    public void showAirlines(){
+        List<Airline> airlineList = planeService.getAllAirlines();
+        System.out.println("Listado de aerolíneas:");
+        CuadroDeTexto.drawHorizontal(27, "-");
+        System.out.println(String.format("\n| %-4s | %-16s |", "ID", "NOMBRE"));
+        airlineList.forEach(airline -> {
+            CuadroDeTexto.drawHorizontal(27, "-");
+            System.out.println(String.format("\n| %-4s | %-16s |", airline.getId(), airline.getName()));
+        });
+        CuadroDeTexto.drawHorizontal(27, "-");
+        System.out.println();
+    }
     public void showModel(){
         List<Model> modelList = planeService.getAllModels();
         System.out.println("Listado de modelos:");

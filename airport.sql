@@ -121,9 +121,11 @@ CREATE TABLE plane (
     plates VARCHAR(30) NOT NULL,
     capacity INT NOT NULL,
     fabricationDate DATE NOT NULL,
+    idAirline INT NOT NULL,
     idStatus INT NOT NULL,
     idModel INT NOT NULL,
     CONSTRAINT pk_planes PRIMARY KEY(id),
+    CONSTRAINT fk_planes_airline FOREIGN KEY (idAirline) REFERENCES airline(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_planes_status FOREIGN KEY (idStatus) REFERENCES statusA(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_planes_models FOREIGN KEY (idModel) REFERENCES model(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;

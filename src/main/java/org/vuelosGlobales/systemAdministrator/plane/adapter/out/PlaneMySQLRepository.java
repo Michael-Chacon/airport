@@ -1,6 +1,5 @@
 package org.vuelosGlobales.systemAdministrator.plane.adapter.out;
 
-import org.vuelosGlobales.systemAdministrator.plane.application.PlaneService;
 import org.vuelosGlobales.systemAdministrator.plane.domain.Plane;
 import org.vuelosGlobales.systemAdministrator.plane.domain.PlaneStMdDTO;
 import org.vuelosGlobales.systemAdministrator.plane.infrastructure.PlaneRepository;
@@ -24,13 +23,14 @@ public class PlaneMySQLRepository implements PlaneRepository {
     @Override
     public void save(Plane plane) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "INSERT INTO plane (plates, capacity, fabricationDate, idStatus, idModel) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO plane (plates, capacity, fabricationDate, idAirline, idStatus, idModel) VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, plane.getPlates());
                 stm.setInt(2, plane.getCapacity());
                 stm.setString(3, plane.getFabricationDate());
-                stm.setInt(4, plane.getIdStatus());
-                stm.setInt(5, plane.getIdModel());
+                stm.setInt(4, plane.getIdAirline());
+                stm.setInt(5, plane.getIdStatus());
+                stm.setInt(6, plane.getIdModel());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -41,14 +41,15 @@ public class PlaneMySQLRepository implements PlaneRepository {
     @Override
     public void update(Plane plane) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE plane SET plates = ?, capacity = ?, fabricationDate = ?, idStatus = ?, idModel = ? WHERE id = ?";
+            String query = "UPDATE plane SET plates = ?, capacity = ?, fabricationDate = ?, idAirline = ?, idStatus = ?, idModel = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, plane.getPlates());
                 stm.setInt(2, plane.getCapacity());
                 stm.setString(3, plane.getFabricationDate());
-                stm.setInt(4, plane.getIdStatus());
-                stm.setInt(5, plane.getIdModel());
-                stm.setInt(6, plane.getId());
+                stm.setInt(4, plane.getIdAirline());
+                stm.setInt(5, plane.getIdStatus());
+                stm.setInt(6, plane.getIdModel());
+                stm.setInt(7, plane.getId());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -59,14 +60,15 @@ public class PlaneMySQLRepository implements PlaneRepository {
     @Override
     public Optional<Plane> findById(int id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, plates, capacity, fabricationDate, idStatus, idModel FROM plane WHERE id = ?";
+            String query = "SELECT id, plates, capacity, fabricationDate, idAirline, idStatus, idModel FROM plane WHERE id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setInt(1, id);
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
                         Plane obj = new Plane(resultSet.getInt("id"), resultSet.getString("plates"),
                                 resultSet.getInt("capacity"), resultSet.getString("fabricationDate"),
-                                resultSet.getInt("idStatus"), resultSet.getInt("idModel"));
+                                resultSet.getInt("idAirline"), resultSet.getInt("idStatus"),
+                                resultSet.getInt("idModel"));
                         return Optional.of(obj);
                     }
                 }
@@ -81,13 +83,14 @@ public class PlaneMySQLRepository implements PlaneRepository {
     public List<Plane> findAll() {
         List<Plane> objects= new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, plates, capacity, fabricationDate, idStatus, idModel FROM plane";
+            String query = "SELECT id, plates, capacity, fabricationDate, idAirline, idStatus, idModel FROM plane";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
                     Plane plane = new Plane(resultSet.getInt("id"), resultSet.getString("plates"),
                             resultSet.getInt("capacity"), resultSet.getString("fabricationDate"),
-                            resultSet.getInt("idStatus"), resultSet.getInt("idModel"));
+                            resultSet.getInt("idAirline"), resultSet.getInt("idStatus"),
+                            resultSet.getInt("idModel"));
                     objects.add(plane);
                 }
             }
@@ -114,12 +117,12 @@ public class PlaneMySQLRepository implements PlaneRepository {
     public List<PlaneStMdDTO> findAllPlaneStMd() {
         List<PlaneStMdDTO> objects= new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT p.id, p.plates, p.capacity, p.fabricationDate, s.name AS 'status', m.name AS 'model' FROM plane p INNER JOIN statusA s ON  s.id = p.idStatus INNER JOIN model m ON m.id = p.idModel";
+            String query = "SELECT p.id, p.plates, p.capacity, p.fabricationDate, ai.name AS 'airline', s.name AS 'status', m.name AS 'model' FROM plane p INNER JOIN statusA s ON  s.id = p.idStatus INNER JOIN model m ON m.id = p.idModel INNER JOIN airline ai ON ai.id = p.idAirline";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
                     PlaneStMdDTO plane = new PlaneStMdDTO(resultSet.getInt("id"), resultSet.getString("plates"),
-                            resultSet.getInt("capacity"), resultSet.getString("fabricationDate"),
+                            resultSet.getInt("capacity"), resultSet.getString("fabricationDate"), resultSet.getString("airline"),
                             resultSet.getString("status"), resultSet.getString("model"));
                     objects.add(plane);
                 }
@@ -133,13 +136,13 @@ public class PlaneMySQLRepository implements PlaneRepository {
     @Override
     public Optional<PlaneStMdDTO> findPlaneStMdById(int id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT p.id, p.plates, p.capacity, p.fabricationDate, s.name AS 'status', m.name AS 'model' FROM plane p INNER JOIN statusA s ON  s.id = p.idStatus INNER JOIN model m ON m.id = p.idModel WHERE p.id = ?";
+            String query = "SELECT p.id, p.plates, p.capacity, p.fabricationDate, ai.name AS 'airline', s.name AS 'status', m.name AS 'model' FROM plane p INNER JOIN statusA s ON  s.id = p.idStatus INNER JOIN model m ON m.id = p.idModel INNER JOIN airline ai ON ai.id = p.idAirline WHERE p.id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setInt(1, id);
                 ResultSet resultSet = stm.executeQuery();
                 if (resultSet.next()){
                     PlaneStMdDTO plane = new PlaneStMdDTO(resultSet.getInt("id"), resultSet.getString("plates"),
-                            resultSet.getInt("capacity"), resultSet.getString("fabricationDate"),
+                            resultSet.getInt("capacity"), resultSet.getString("fabricationDate"), resultSet.getString("airline"),
                             resultSet.getString("status"), resultSet.getString("model"));
                    return Optional.of(plane);
                 }

@@ -4,6 +4,8 @@ import org.vuelosGlobales.generals.model.domain.Model;
 import org.vuelosGlobales.generals.model.infrastructure.ModelRepository;
 import org.vuelosGlobales.generals.status.domain.Status;
 import org.vuelosGlobales.generals.status.infrastructure.StatusRepository;
+import org.vuelosGlobales.systemAdministrator.airline.domain.Airline;
+import org.vuelosGlobales.systemAdministrator.airline.infrastructure.AirlineRepository;
 import org.vuelosGlobales.systemAdministrator.plane.domain.Plane;
 import org.vuelosGlobales.systemAdministrator.plane.domain.PlaneStMdDTO;
 import org.vuelosGlobales.systemAdministrator.plane.infrastructure.PlaneRepository;
@@ -15,11 +17,13 @@ public class PlaneService {
     private final PlaneRepository planeRepository;
     private final StatusRepository statusRepository;
     private final ModelRepository modelRepository;
+    private final AirlineRepository airlineRepository;
 
-    public PlaneService(PlaneRepository planeRepository, StatusRepository statusRepository, ModelRepository modelRepository) {
+    public PlaneService(PlaneRepository planeRepository, StatusRepository statusRepository, ModelRepository modelRepository, AirlineRepository airlineRepository) {
         this.planeRepository = planeRepository;
         this.statusRepository = statusRepository;
         this.modelRepository = modelRepository;
+        this.airlineRepository = airlineRepository;
     }
 
     public void createPlane(Plane plane){
@@ -64,4 +68,11 @@ public class PlaneService {
         return this.planeRepository.findPlaneStMdById(id);
     }
 
+    public List<Airline> getAllAirlines(){
+        return this.airlineRepository.findAll();
+    }
+
+    public Optional<Airline> getAirlineById(int id){
+        return this.airlineRepository.findById(id);
+    }
 }

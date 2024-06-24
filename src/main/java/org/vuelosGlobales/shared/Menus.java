@@ -24,11 +24,9 @@ import org.vuelosGlobales.maintenanceTechnician.revision.application.RevisionSer
 import org.vuelosGlobales.systemAdministrator.airline.adapter.in.AirlineConsoleAdap;
 import org.vuelosGlobales.systemAdministrator.airline.adapter.out.AirlineMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.airline.application.AirlineService;
-import org.vuelosGlobales.systemAdministrator.airline.domain.Airline;
 import org.vuelosGlobales.systemAdministrator.airport.adapter.in.AirportConsoleAdapter;
 import org.vuelosGlobales.systemAdministrator.airport.adapter.out.AirportMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.airport.application.AirportService;
-import org.vuelosGlobales.systemAdministrator.airport.domain.AirportCityDTO;
 import org.vuelosGlobales.systemAdministrator.plane.adapter.in.PlaneConsoleAdapter;
 import org.vuelosGlobales.systemAdministrator.plane.adapter.out.PlaneMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.plane.application.PlaneService;
@@ -68,16 +66,16 @@ public class Menus {
         AirportConsoleAdapter airportIn = new AirportConsoleAdapter(airportService);
 //        Plane
         PlaneMySQLRepository planeOut = new PlaneMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
-        PlaneService planeService = new PlaneService(planeOut, statusOut, modelOut);
+        PlaneService planeService = new PlaneService(planeOut, statusOut, modelOut, airlineOut);
         PlaneConsoleAdapter planeIn = new PlaneConsoleAdapter(planeService);
 //        Revision
         RevisionMySQLRepository revisionOut = new RevisionMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         RevisionService revisionService = new RevisionService(revisionOut,planeOut);
         RevisionConsoleAdapter revisionIn = new RevisionConsoleAdapter(revisionService);
 
-        revisionIn.crudRevision();
+//        revisionIn.crudRevision();
 
-//        planeIn.crudPlane();
+        planeIn.crudPlane();
 //        airportIn.crudAirport();
 //        roleIn.crudRole();
 //        airlineIn.crudAirline();
