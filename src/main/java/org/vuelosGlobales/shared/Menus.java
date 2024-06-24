@@ -6,6 +6,9 @@ import org.vuelosGlobales.generals.city.application.CityService;
 import org.vuelosGlobales.generals.country.adapter.in.CountryConsoleAdapter;
 import org.vuelosGlobales.generals.country.adapter.out.CountryMySQLRepository;
 import org.vuelosGlobales.generals.country.application.CountryService;
+import org.vuelosGlobales.generals.employee.adapter.in.EmployeeConsoleAdap;
+import org.vuelosGlobales.generals.employee.adapter.out.EmployeeMySQLRepository;
+import org.vuelosGlobales.generals.employee.application.EmployeeService;
 import org.vuelosGlobales.generals.manufacturer.adapter.in.ManufacturerConsoleAdap;
 import org.vuelosGlobales.generals.manufacturer.adapter.out.ManufacturerMySQLRepository;
 import org.vuelosGlobales.generals.manufacturer.application.ManufacturerService;
@@ -61,8 +64,8 @@ public class Menus {
         RoleService roleService = new RoleService(roleOut);
         RoleConsoleAdap roleIn = new RoleConsoleAdap(roleService);
 //        Airport
-        AirportMySQLRepository airportOtu = new AirportMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
-        AirportService airportService = new AirportService(airportOtu, cityOut);
+        AirportMySQLRepository airportOut = new AirportMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        AirportService airportService = new AirportService(airportOut, cityOut);
         AirportConsoleAdapter airportIn = new AirportConsoleAdapter(airportService);
 //        Plane
         PlaneMySQLRepository planeOut = new PlaneMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
@@ -72,10 +75,15 @@ public class Menus {
         RevisionMySQLRepository revisionOut = new RevisionMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         RevisionService revisionService = new RevisionService(revisionOut,planeOut);
         RevisionConsoleAdapter revisionIn = new RevisionConsoleAdapter(revisionService);
+//      Employee
+        EmployeeMySQLRepository employeeOut = new EmployeeMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        EmployeeService employeeService = new EmployeeService(employeeOut,roleOut,airlineOut, airportOut);
+        EmployeeConsoleAdap employeeIn = new EmployeeConsoleAdap(employeeService);
 
+
+        employeeIn.crudEmployee();
 //        revisionIn.crudRevision();
-
-        planeIn.crudPlane();
+//        planeIn.crudPlane();
 //        airportIn.crudAirport();
 //        roleIn.crudRole();
 //        airlineIn.crudAirline();

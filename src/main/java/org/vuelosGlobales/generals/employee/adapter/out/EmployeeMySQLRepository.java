@@ -1,6 +1,7 @@
 package org.vuelosGlobales.generals.employee.adapter.out;
 
 import org.vuelosGlobales.generals.employee.domain.Employee;
+import org.vuelosGlobales.generals.employee.domain.EmployeeRelationshipDTO;
 import org.vuelosGlobales.generals.employee.infrastructure.EmployeeRepository;
 
 import java.sql.*;
@@ -24,13 +25,14 @@ public class EmployeeMySQLRepository implements EmployeeRepository {
     @Override
     public void save(Employee employee) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "INSERT INTO employee (name, ingressDate, idRol, idAirline, idAirport) VALUES (?,?,?,?,?)";
+            String query = "INSERT INTO employee (id, name, ingressDate, idRol, idAirline, idAirport) VALUES (?,?,?,?,?,?)";
             try (PreparedStatement stm = conn.prepareStatement(query)){
-                stm.setString(1, employee.getNombre());
-                stm.setString(2, employee.getIngressDate());
-                stm.setInt(3, employee.getIdRol());
-                stm.setInt(4, employee.getIdAirline());
-                stm.setString(5, employee.getIdAirport());
+                stm.setString(1, employee.getId());
+                stm.setString(2, employee.getNombre());
+                stm.setString(3, employee.getIngressDate());
+                stm.setInt(4, employee.getIdRol());
+                stm.setInt(5, employee.getIdAirline());
+                stm.setString(6, employee.getIdAirport());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -45,8 +47,12 @@ public class EmployeeMySQLRepository implements EmployeeRepository {
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, employee.getNombre());
                 stm.setString(2, employee.getIngressDate());
-                stm.setString(3, employee.getId());
+                stm.setInt(3, employee.getIdRol());
+                stm.setInt(4, employee.getIdAirline());
+                stm.setString(5, employee.getIdAirport());
+                stm.setString(6, employee.getId());
                 stm.executeUpdate();
+                System.out.println("here");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -54,11 +60,11 @@ public class EmployeeMySQLRepository implements EmployeeRepository {
     }
 
     @Override
-    public Optional<Employee> findById(int id) {
+    public Optional<Employee> findById(String id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT name, ingressDate, idRol, idAirline, idAirport FROM employee WHERE id = ?";
+            String query = "SELECT id, name, ingressDate, idRol, idAirline, idAirport FROM employee WHERE id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
-                stm.setInt(1, id);
+                stm.setString(1, id);
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
                         Employee obj = new Employee(resultSet.getString("id"), resultSet.getString("name"),
@@ -78,7 +84,7 @@ public class EmployeeMySQLRepository implements EmployeeRepository {
     public List<Employee> findAll() {
         List<Employee> objects= new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT name, ingressDate, idRol, idAirline, idAirport FROM employee";
+            String query = "SELECT id, name, ingressDate, idRol, idAirline, idAirport FROM employee";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
@@ -95,15 +101,64 @@ public class EmployeeMySQLRepository implements EmployeeRepository {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
             String query = "DELETE FROM employee WHERE id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
-                stm.setInt(1, id);
+                stm.setString(1, id);
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<EmployeeRelationshipDTO> findAllEmployeesInfo() {
+        List<EmployeeRelationshipDTO> objects= new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT e.id, e.name, e.ingressDate, tr.name AS 'role', al.name AS 'airline', CONCAT_WS(' - ', c.name, a.name) AS 'airport' from employee e " +
+                    "INNER JOIN tripulationroles tr ON tr.id = e.idRol " +
+                    "INNER JOIN airline al ON al.id = e.idAirline " +
+                    "INNER JOIN airport a ON a.id = e.idAirport " +
+                    "INNER JOIN city c ON c.id = a.idCity";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    EmployeeRelationshipDTO employee = new EmployeeRelationshipDTO(resultSet.getString("id"), resultSet.getString("name"),
+                            resultSet.getString("ingressDAte"), resultSet.getString("role"),
+                            resultSet.getString("airline"), resultSet.getString("airport"));
+                    objects.add(employee);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return objects;
+    }
+
+    @Override
+    public Optional<EmployeeRelationshipDTO> findEmployeeInfoById(String id) {
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT e.id, e.name, e.ingressDate, tr.name AS 'role', al.name AS 'airline', CONCAT_WS(' - ', c.name, a.name) AS 'airport' from employee e " +
+                    "INNER JOIN tripulationroles tr ON tr.id = e.idRol " +
+                    "INNER JOIN airline al ON al.id = e.idAirline " +
+                    "INNER JOIN airport a ON a.id = e.idAirport " +
+                    "INNER JOIN city c ON c.id = a.idCity WHERE e.id = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setString(1, id);
+                try(ResultSet resultSet = stm.executeQuery()){
+                    if (resultSet.next()){
+                        EmployeeRelationshipDTO obj = new EmployeeRelationshipDTO(resultSet.getString("id"), resultSet.getString("name"),
+                                resultSet.getString("ingressDAte"), resultSet.getString("role"),
+                                resultSet.getString("airline"), resultSet.getString("airport"));
+                        return Optional.of(obj);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
     }
 }
