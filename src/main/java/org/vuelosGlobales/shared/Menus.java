@@ -18,6 +18,9 @@ import org.vuelosGlobales.generals.role.application.RoleService;
 import org.vuelosGlobales.generals.status.adapter.in.StatusConsoleAdapter;
 import org.vuelosGlobales.generals.status.adapter.out.StatusMySQLRepository;
 import org.vuelosGlobales.generals.status.application.StatusService;
+import org.vuelosGlobales.maintenanceTechnician.revision.adapter.in.RevisionConsoleAdapter;
+import org.vuelosGlobales.maintenanceTechnician.revision.adapter.out.RevisionMySQLRepository;
+import org.vuelosGlobales.maintenanceTechnician.revision.application.RevisionService;
 import org.vuelosGlobales.systemAdministrator.airline.adapter.in.AirlineConsoleAdap;
 import org.vuelosGlobales.systemAdministrator.airline.adapter.out.AirlineMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.airline.application.AirlineService;
@@ -67,9 +70,14 @@ public class Menus {
         PlaneMySQLRepository planeOut = new PlaneMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         PlaneService planeService = new PlaneService(planeOut, statusOut, modelOut);
         PlaneConsoleAdapter planeIn = new PlaneConsoleAdapter(planeService);
+//        Revision
+        RevisionMySQLRepository revisionOut = new RevisionMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        RevisionService revisionService = new RevisionService(revisionOut,planeOut);
+        RevisionConsoleAdapter revisionIn = new RevisionConsoleAdapter(revisionService);
 
-        planeIn.crudPlane();
+        revisionIn.crudRevision();
 
+//        planeIn.crudPlane();
 //        airportIn.crudAirport();
 //        roleIn.crudRole();
 //        airlineIn.crudAirline();

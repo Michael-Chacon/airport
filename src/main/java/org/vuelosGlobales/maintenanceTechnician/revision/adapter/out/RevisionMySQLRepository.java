@@ -53,7 +53,7 @@ public class RevisionMySQLRepository implements RevisionRepository {
     @Override
     public Optional<Revision> findById(int id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, revisionDate, idPlane FROM revision WHERE id = ?";
+            String query = "SELECT id, revisionDate, idPlane, description FROM revision WHERE id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setInt(1, id);
                 try(ResultSet resultSet = stm.executeQuery()){
@@ -74,7 +74,7 @@ public class RevisionMySQLRepository implements RevisionRepository {
     public List<Revision> findAll() {
         List<Revision> objects= new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, revisionDate, idPlane FROM revision";
+            String query = "SELECT id, revisionDate, idPlane, description FROM revision";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
@@ -100,5 +100,25 @@ public class RevisionMySQLRepository implements RevisionRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<Revision> findByIdPlane(int id) {
+        List<Revision> objects= new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT id, revisionDate, idPlane, description FROM revision WHERE idPlane = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, id);
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    Revision revision = new Revision(resultSet.getInt("id"), resultSet.getString("revisionDate"),
+                            resultSet.getInt("idPlane"), resultSet.getString("description"));
+                    objects.add(revision);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return objects;
     }
 }

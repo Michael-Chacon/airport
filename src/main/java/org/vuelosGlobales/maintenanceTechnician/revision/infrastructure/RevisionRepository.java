@@ -11,4 +11,5 @@ public interface RevisionRepository {
     Optional<Revision> findById(int id);
     List<Revision> findAll();
     void delete(int id);
+    List<Revision> findByIdPlane(int id);
 }
