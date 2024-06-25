@@ -21,19 +21,30 @@ public class TripMySQLRepository implements TripRepository {
     }
 
     @Override
-    public void save(Trip trip) {
+    public int save(Trip trip) {
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
         try (Connection conn = DriverManager.getConnection(url,user, password)){
             String query = "INSERT INTO trip (tripDate, priceTripe, idOrigin, idDestination) VALUES (?,?,?,?)";
-            try (PreparedStatement stm = conn.prepareStatement(query)){
-                stm.setString(1, trip.getTripDate());
-                stm.setDouble(2, trip.getPriceTrip());
-                stm.setString(3, trip.getIdOrigin());
-                stm.setString(4, trip.getIdDestination());
-                stm.executeUpdate();
+            preparedStatement = conn.prepareStatement(query, preparedStatement.RETURN_GENERATED_KEYS);
+                preparedStatement.setString(1, trip.getTripDate());
+                preparedStatement.setDouble(2, trip.getPriceTrip());
+                preparedStatement.setString(3, trip.getIdOrigin());
+                preparedStatement.setString(4, trip.getIdDestination());
+            int columnasAfectadas = preparedStatement.executeUpdate();
+            if (columnasAfectadas > 0){
+                resultSet = preparedStatement.getGeneratedKeys();
+                if (resultSet.next()){
+                    int idRevision = resultSet.getInt(1);
+                    return idRevision;
+                }else {
+                    System.out.println("Algo salió mal");
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return 0;
     }
 
     @Override
