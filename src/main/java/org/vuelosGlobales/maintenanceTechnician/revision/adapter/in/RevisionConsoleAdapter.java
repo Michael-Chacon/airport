@@ -1,10 +1,14 @@
 package org.vuelosGlobales.maintenanceTechnician.revision.adapter.in;
 
+import org.vuelosGlobales.generals.employee.domain.Employee;
+import org.vuelosGlobales.generals.employee.domain.EmployeeRelationshipDTO;
 import org.vuelosGlobales.maintenanceTechnician.revision.application.RevisionService;
 import org.vuelosGlobales.maintenanceTechnician.revision.domain.Revision;
+import org.vuelosGlobales.maintenanceTechnician.revision.domain.RevisionInfoDTO;
 import org.vuelosGlobales.shared.Console;
 import org.vuelosGlobales.shared.CuadroDeTexto;
 import org.vuelosGlobales.shared.Helpers;
+import org.vuelosGlobales.systemAdministrator.airline.domain.Airline;
 import org.vuelosGlobales.systemAdministrator.plane.domain.PlaneStMdDTO;
 
 import java.util.List;
@@ -22,26 +26,39 @@ public class RevisionConsoleAdapter {
             System.out.println("2. Actualizar Revisión");
             System.out.println("3. Buscar Revisión por ID");
             System.out.println("4. Eliminar Revisión");
-            System.out.println("5. Listar todos Revisiones");
-            System.out.println("6. Salir");
+            System.out.println("5. Salir");
             int choice = console.readInt("");
 
             switch (choice){
                 case 1:
                     CuadroDeTexto.dibujarCuadroDeTexto("Registrar revisión de avión", "*");
-                    showPlanes();
+                    showAirlines();
+                    Airline airline = Helpers.transformAndValidateObj(
+                            () -> revisionService.getAirlineById(console.readInt("Seleccione la aerolínea a la que pertenece el avión: "))
+                    );
+                    int idAirline = airline.getId();
 
+                    showPlanes(true, idAirline);
                     PlaneStMdDTO getPlane = Helpers.transformAndValidateObj(
                             () -> revisionService.getPlaneById(console.readInt("Seleccione el avión al que le va a hacer la revisión: "))
                     );
                     int idPlane = getPlane.getId();
+
+                    System.out.println("Listado de empleados de la aerolínea " + airline.getName());
+                    showEmployees(true, airline.getId());
+                    EmployeeRelationshipDTO employee = Helpers.transformAndValidateObj(
+                            () -> revisionService.getEmployeeById(console.stringNotNull("Seleccione al empleado por el id").toUpperCase())
+                    );
+                    String idEmployee = employee.getId();
+
                     String revisionDate = console.stringWithLeght("En que fecha se hizo la revisión, formato valido de fecha(YYYY-MM-DD): ", 10);
                     String description = console.stringNotNull("Escriba una descripción detallada de la revisión:\n ");
                     Revision revision = new Revision();
                     revision.setRevisionDate(revisionDate);
                     revision.setIdPlane(idPlane);
                     revision.setDescription(description);
-                    revisionService.createRevision(revision);
+                    int id = revisionService.createRevision(revision);
+                    revisionService.saveRevisionEmpl(id, idEmployee);
                     CuadroDeTexto.dibujarCuadroDeTexto(null, null);
                     break;
 
@@ -58,7 +75,7 @@ public class RevisionConsoleAdapter {
                     int idPlaneRevision;
                     String validate = console.stringNotNull("Quiere cambiar el avión al que le hizo la revisión? (y/n)");
                     if (validate.equals("y")){
-                        showPlanes();
+                        showPlanes(false, 0);
                         PlaneStMdDTO getPlaneSelect = Helpers.transformAndValidateObj(
                                 () -> revisionService.getPlaneById(console.readInt("A que país pertenece la ciudad, seleccione por el por el id: "))
                         );
@@ -75,8 +92,12 @@ public class RevisionConsoleAdapter {
 
                 case 3:
                     CuadroDeTexto.dibujarCuadroDeTexto("Consultar historial de revisiones de avión", "*");
+                    showAirlines();
+                    Airline airlineSelect = Helpers.transformAndValidateObj(
+                            () -> revisionService.getAirlineById(console.readInt("Seleccione la aerolínea a la que pertenece el avión: "))
+                    );
                     System.out.println();
-                    showPlanes();
+                    showPlanes(true, airlineSelect.getId());
                     PlaneStMdDTO showPlanes = Helpers.transformAndValidateObj(
                             () -> revisionService.getPlaneById(console.readInt("Seleccionar el avión por su id: "))
                     );
@@ -87,20 +108,25 @@ public class RevisionConsoleAdapter {
 
                 case 4:
                     CuadroDeTexto.dibujarCuadroDeTexto("Eliminar un revisión", "*");
-                    showRevisions();
-                    Revision showRevisionD = Helpers.transformAndValidateObj(
-                            () -> revisionService.getRevisionById(console.readInt("Seleccione la ciudad por el id: "))
+                    showAirlines();
+                    Airline airlineSel = Helpers.transformAndValidateObj(
+                            () -> revisionService.getAirlineById(console.readInt("Seleccione la aerolínea a la que pertenece el avión: "))
                     );
-                    int revisionDelete = showRevisionD.getId();
+                    System.out.println();
+                    showPlanes(true, airlineSel.getId());
+                    PlaneStMdDTO planesS = Helpers.transformAndValidateObj(
+                            () -> revisionService.getPlaneById(console.readInt("Seleccionar el avión por su id: "))
+                    );
+
+                    showRevisionByIdPlane(planesS.getId());
+                    Revision rev = Helpers.transformAndValidateObj(
+                            () -> revisionService.getRevisionById(console.readInt("Seleccione por el id la revisión a eliminar: "))
+                    );
+                    int revisionDelete = rev.getId();
                     revisionService.deleteRevision(revisionDelete);
                     CuadroDeTexto.dibujarCuadroDeTexto("Revisión eliminado con éxito", null);
                     break;
                 case 5:
-                    CuadroDeTexto.dibujarCuadroDeTexto("Revisiones registradas", "*");
-                    showRevisions();
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
-                    break;
-                case 6:
                     break menuRevision;
             }
         }
@@ -119,8 +145,20 @@ public class RevisionConsoleAdapter {
         System.out.println();
     }
 
-    public void showPlanes(){
-        List<PlaneStMdDTO> planeList = revisionService.getAllPlanes();
+    public void showAirlines(){
+        List<Airline> airlineList = revisionService.getAllAirlines();
+        System.out.println("Listado de aerolíneas:");
+        CuadroDeTexto.drawHorizontal(27, "-");
+        System.out.println(String.format("\n| %-4s | %-16s |", "ID", "NOMBRE"));
+        airlineList.forEach(airline -> {
+            CuadroDeTexto.drawHorizontal(27, "-");
+            System.out.println(String.format("\n| %-4s | %-16s |", airline.getId(), airline.getName()));
+        });
+        System.out.println();
+    }
+
+    public void showPlanes(boolean filter, int id){
+        List<PlaneStMdDTO> planeList = revisionService.getAllPlanes(filter, id);
         System.out.println("Listado de aviones:");
         CuadroDeTexto.drawHorizontal(100, "-");
         System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-20s | %-20s |", "ID", "PLACA", "CAPACIDAD", "FECHAFAB", "ESTADO", "MODELO"));
@@ -133,15 +171,27 @@ public class RevisionConsoleAdapter {
     }
 
     public void showRevisionByIdPlane(int id){
-        List<Revision> revisionList = revisionService.getRevisionsByIdPlane(id);
+        List<RevisionInfoDTO> revisionList = revisionService.getRevisionInfo(id);
         System.out.println("Historial de revisiones:");
-        CuadroDeTexto.drawHorizontal(50, "-");
-        System.out.println(String.format("\n| %-4s | %-16s | %-16s | %-16s ", "ID", "FECHA", "AVIÓN", "DESCRIPCIÓN"));
+        CuadroDeTexto.drawHorizontal(100, "-");
+        System.out.println(String.format("\n| %-4s | %-16s | %-25s | %-25s | %-30s | %-40s ", "ID", "FECHA", "EMPLEADO", "PLACA", "MODELO", "DESCRIPCIÓN"));
         revisionList.forEach(revision -> {
-            CuadroDeTexto.drawHorizontal(50, "-");
-            System.out.println(String.format("\n| %-4s | %-16s | %-16s | %-16s ", revision.getId(), revision.getRevisionDate(), revision.getIdPlane(), revision.getDescription()));
+            CuadroDeTexto.drawHorizontal(110, "-");
+            System.out.println(String.format("\n| %-4s | %-16s | %-25s | %-20s | %-30s | %-40s ", revision.getId(), revision.getRevisionDate(), revision.getNameEmployee(), revision.getPlatePlane(), revision.getModelPlane(), revision.getDescription()));
         });
-        CuadroDeTexto.drawHorizontal(50, "-");
+        CuadroDeTexto.drawHorizontal(105, "-");
+        System.out.println();
+    }
+
+    public void showEmployees(boolean filter, int id){
+        List<EmployeeRelationshipDTO> employeeList = revisionService.getAllEployeesInfo(filter, id);
+        CuadroDeTexto.drawHorizontal(151, "-");
+        System.out.println(String.format("\n| %-11s | %-17s | %-16s | %-45s |", "ID", "NOMBRE", "ROL", "AIRPORT"));
+        employeeList.forEach(employee -> {
+            CuadroDeTexto.drawHorizontal(151, "-");
+            System.out.println(String.format("\n| %-11s | %-17s | %-16s | %-45s |", employee.getId(), employee.getName(), employee.getRolName(), employee.getAirportName()));
+        });
+        CuadroDeTexto.drawHorizontal(151, "-");
         System.out.println();
     }
 }

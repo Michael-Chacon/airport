@@ -161,7 +161,7 @@ public class EmployeeConsoleAdap {
     }
 
     public void showEmployees(){
-        List<EmployeeRelationshipDTO> employeeList = employeeService.getAllEmployeesInfo();
+        List<EmployeeRelationshipDTO> employeeList = employeeService.getAllEmployeesInfo(false, 0);
         System.out.println("Listado de empleados:");
         CuadroDeTexto.drawHorizontal(151, "-");
         System.out.println(String.format("\n| %-11s | %-17s | %-15s | %-16s | %-28s | %-45s |", "ID", "NOMBRE", "FECHA", "ROL", "AEROLINEA", "AIRPORT"));

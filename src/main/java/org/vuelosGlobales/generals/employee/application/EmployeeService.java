@@ -71,8 +71,8 @@ public class EmployeeService {
         return this.airportRepository.findAirportCityById(id);
     }
 
-    public List<EmployeeRelationshipDTO> getAllEmployeesInfo(){
-        return this.employeeRepository.findAllEmployeesInfo();
+    public List<EmployeeRelationshipDTO> getAllEmployeesInfo(boolean filter, int id){
+        return this.employeeRepository.findAllEmployeesInfo(filter, id);
     }
 
     public Optional<EmployeeRelationshipDTO> getEmployeeInfoById(String id){

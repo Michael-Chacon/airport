@@ -72,17 +72,19 @@ public class Menus {
         PlaneService planeService = new PlaneService(planeOut, statusOut, modelOut, airlineOut);
         PlaneConsoleAdapter planeIn = new PlaneConsoleAdapter(planeService);
 //        Revision
-        RevisionMySQLRepository revisionOut = new RevisionMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
-        RevisionService revisionService = new RevisionService(revisionOut,planeOut);
-        RevisionConsoleAdapter revisionIn = new RevisionConsoleAdapter(revisionService);
-//      Employee
+        //      Employee
         EmployeeMySQLRepository employeeOut = new EmployeeMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         EmployeeService employeeService = new EmployeeService(employeeOut,roleOut,airlineOut, airportOut);
         EmployeeConsoleAdap employeeIn = new EmployeeConsoleAdap(employeeService);
 
+        RevisionMySQLRepository revisionOut = new RevisionMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        RevisionService revisionService = new RevisionService(revisionOut,planeOut, airlineOut, employeeOut);
+        RevisionConsoleAdapter revisionIn = new RevisionConsoleAdapter(revisionService);
 
-        employeeIn.crudEmployee();
-//        revisionIn.crudRevision();
+
+
+//        employeeIn.crudEmployee();
+        revisionIn.crudRevision();
 //        planeIn.crudPlane();
 //        airportIn.crudAirport();
 //        roleIn.crudRole();

@@ -114,11 +114,17 @@ public class PlaneMySQLRepository implements PlaneRepository {
     }
 
     @Override
-    public List<PlaneStMdDTO> findAllPlaneStMd() {
+    public List<PlaneStMdDTO> findAllPlaneStMd(boolean filter, int id) {
         List<PlaneStMdDTO> objects= new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, user, password)){
             String query = "SELECT p.id, p.plates, p.capacity, p.fabricationDate, ai.name AS 'airline', s.name AS 'status', m.name AS 'model' FROM plane p INNER JOIN statusA s ON  s.id = p.idStatus INNER JOIN model m ON m.id = p.idModel INNER JOIN airline ai ON ai.id = p.idAirline";
+            if (filter){
+                query += " WHERE p.idAirline = ?";
+            }
             try(PreparedStatement stm = conn.prepareStatement(query)){
+                if (filter){
+                    stm.setInt(1, id);
+                }
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
                     PlaneStMdDTO plane = new PlaneStMdDTO(resultSet.getInt("id"), resultSet.getString("plates"),

@@ -1,8 +1,12 @@
 package org.vuelosGlobales.maintenanceTechnician.revision.application;
 
+import org.vuelosGlobales.generals.employee.domain.EmployeeRelationshipDTO;
+import org.vuelosGlobales.generals.employee.infrastructure.EmployeeRepository;
 import org.vuelosGlobales.maintenanceTechnician.revision.domain.Revision;
+import org.vuelosGlobales.maintenanceTechnician.revision.domain.RevisionInfoDTO;
 import org.vuelosGlobales.maintenanceTechnician.revision.infrastructure.RevisionRepository;
-import org.vuelosGlobales.systemAdministrator.plane.domain.Plane;
+import org.vuelosGlobales.systemAdministrator.airline.domain.Airline;
+import org.vuelosGlobales.systemAdministrator.airline.infrastructure.AirlineRepository;
 import org.vuelosGlobales.systemAdministrator.plane.domain.PlaneStMdDTO;
 import org.vuelosGlobales.systemAdministrator.plane.infrastructure.PlaneRepository;
 
@@ -12,14 +16,18 @@ import java.util.Optional;
 public class RevisionService {
     private final RevisionRepository revisionRepository;
     private final PlaneRepository planeRepository;
+    private final AirlineRepository airlineRepository;
+    private final EmployeeRepository employeeRepository;
 
-    public RevisionService(RevisionRepository revisionRepository, PlaneRepository planeRepository) {
+    public RevisionService(RevisionRepository revisionRepository, PlaneRepository planeRepository, AirlineRepository airlineRepository, EmployeeRepository employeeRepository) {
         this.revisionRepository = revisionRepository;
         this.planeRepository = planeRepository;
+        this.airlineRepository = airlineRepository;
+        this.employeeRepository = employeeRepository;
     }
 
-    public void createRevision(Revision revision){
-        this.revisionRepository.save(revision);
+    public int createRevision(Revision revision){
+        return this.revisionRepository.save(revision);
     }
 
     public void updateRevision(Revision revision){
@@ -38,8 +46,8 @@ public class RevisionService {
         this.revisionRepository.delete(id);
     }
 
-    public List<PlaneStMdDTO> getAllPlanes(){
-        return this.planeRepository.findAllPlaneStMd();
+    public List<PlaneStMdDTO> getAllPlanes(boolean filter, int id){
+        return this.planeRepository.findAllPlaneStMd(filter, id);
     }
 
     public Optional<PlaneStMdDTO> getPlaneById(int id){
@@ -48,5 +56,29 @@ public class RevisionService {
 
     public List<Revision> getRevisionsByIdPlane(int id){
         return this.revisionRepository.findByIdPlane(id);
+    }
+
+    public List<Airline> getAllAirlines(){
+        return this.airlineRepository.findAll();
+    }
+
+    public Optional<Airline> getAirlineById(int id){
+        return this.airlineRepository.findById(id);
+    }
+
+    public List<EmployeeRelationshipDTO> getAllEployeesInfo(boolean filter, int id){
+        return this.employeeRepository.findAllEmployeesInfo(filter, id);
+    }
+
+    public Optional<EmployeeRelationshipDTO> getEmployeeById(String id){
+        return this.employeeRepository.findEmployeeInfoById(id);
+    }
+
+    public void saveRevisionEmpl(int idRevision, String idEmpl){
+        this.revisionRepository.saveReviEmployee(idRevision, idEmpl);
+    }
+
+    public List<RevisionInfoDTO> getRevisionInfo(int id){
+        return this.revisionRepository.findRevisionByPlane(id);
     }
 }

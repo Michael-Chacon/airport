@@ -1,6 +1,7 @@
 package org.vuelosGlobales.maintenanceTechnician.revision.adapter.out;
 
 import org.vuelosGlobales.maintenanceTechnician.revision.domain.Revision;
+import org.vuelosGlobales.maintenanceTechnician.revision.domain.RevisionInfoDTO;
 import org.vuelosGlobales.maintenanceTechnician.revision.infrastructure.RevisionRepository;
 
 import java.sql.*;
@@ -20,13 +21,38 @@ public class RevisionMySQLRepository implements RevisionRepository {
     }
 
     @Override
-    public void save(Revision revision) {
+    public int save(Revision revision) {
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
         try (Connection conn = DriverManager.getConnection(url,user, password)){
             String query = "INSERT INTO revision (revisionDate, idPlane, description) VALUES (?,?,?)";
+            preparedStatement = conn.prepareStatement(query, preparedStatement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, revision.getRevisionDate());
+            preparedStatement.setInt(2, revision.getIdPlane());
+            preparedStatement.setString(3, revision.getDescription());
+            int columnasAfectadas = preparedStatement.executeUpdate();
+            if (columnasAfectadas > 0){
+                resultSet = preparedStatement.getGeneratedKeys();
+                if (resultSet.next()){
+                    int idRevision = resultSet.getInt(1);
+                    return idRevision;
+                }else {
+                    System.out.println("Algo salió mal");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
+
+    @Override
+    public void saveReviEmployee(int idRevision, String idEmployee){
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "INSERT INTO revemployee (idRevision, idEmployee) VALUES(?,?)";
             try (PreparedStatement stm = conn.prepareStatement(query)){
-                stm.setString(1, revision.getRevisionDate());
-                stm.setInt(2, revision.getIdPlane());
-                stm.setString(3, revision.getDescription());
+                stm.setInt(1, idRevision);
+                stm.setString(2, idEmployee);
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -114,6 +140,32 @@ public class RevisionMySQLRepository implements RevisionRepository {
                     Revision revision = new Revision(resultSet.getInt("id"), resultSet.getString("revisionDate"),
                             resultSet.getInt("idPlane"), resultSet.getString("description"));
                     objects.add(revision);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return objects;
+    }
+
+    @Override
+    public List<RevisionInfoDTO> findRevisionByPlane(int id){
+        List<RevisionInfoDTO> objects = new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT r.id, r.revisionDate, e.name AS 'empleado', p.plates, m.name AS 'model', r.description FROM revision r " +
+                    "INNER JOIN revemployee re ON re.idRevision = r.id " +
+                    "INNER JOIN employee e ON  e.id = re.idEmployee " +
+                    "INNER JOIN plane p ON p.id = r.idPlane " +
+                    "INNER JOIN model m ON m.id = p.idModel " +
+                    "WHERE p.id = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, id);
+                ResultSet resultSet = stm.executeQuery();
+                while(resultSet.next()){
+                    RevisionInfoDTO object = new RevisionInfoDTO(resultSet.getInt("id"), resultSet.getString("revisionDate"),
+                            resultSet.getString("empleado"), resultSet.getString("plates"), resultSet.getString("model"),
+                            resultSet.getString("description"));
+                    objects.add(object);
                 }
             }
         } catch (SQLException e) {

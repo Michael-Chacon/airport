@@ -12,6 +12,6 @@ public interface PlaneRepository {
     Optional<Plane> findById(int id);
     List<Plane> findAll();
     void delete(int id);
-    List<PlaneStMdDTO> findAllPlaneStMd();
+    List<PlaneStMdDTO> findAllPlaneStMd(boolean filter, int id);
     Optional<PlaneStMdDTO> findPlaneStMdById(int id);
 }

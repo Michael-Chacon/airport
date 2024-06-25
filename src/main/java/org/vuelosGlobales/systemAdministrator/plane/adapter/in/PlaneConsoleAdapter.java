@@ -154,7 +154,7 @@ public class PlaneConsoleAdapter {
     }
 
     public void showPlanes(){
-        List<PlaneStMdDTO> planeList = planeService.getAllPlaneStMd();
+        List<PlaneStMdDTO> planeList = planeService.getAllPlaneStMd(false, 0);
         System.out.println("Listado de aviones:");
         CuadroDeTexto.drawHorizontal(110, "-");
         System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-25s | %-20s | %-20s |", "ID", "PLACA", "CAPACIDAD", "FECHAFAB", "AEROLÍNEA", "ESTADO", "MODELO"));

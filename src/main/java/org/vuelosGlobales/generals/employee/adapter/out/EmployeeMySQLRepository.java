@@ -114,7 +114,7 @@ public class EmployeeMySQLRepository implements EmployeeRepository {
     }
 
     @Override
-    public List<EmployeeRelationshipDTO> findAllEmployeesInfo() {
+    public List<EmployeeRelationshipDTO> findAllEmployeesInfo(boolean filter, int id) {
         List<EmployeeRelationshipDTO> objects= new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, user, password)){
             String query = "SELECT e.id, e.name, e.ingressDate, tr.name AS 'role', al.name AS 'airline', CONCAT_WS(' - ', c.name, a.name) AS 'airport' from employee e " +
@@ -122,7 +122,13 @@ public class EmployeeMySQLRepository implements EmployeeRepository {
                     "INNER JOIN airline al ON al.id = e.idAirline " +
                     "INNER JOIN airport a ON a.id = e.idAirport " +
                     "INNER JOIN city c ON c.id = a.idCity";
+            if (filter){
+                query += " WHERE e.idAirline = ?";
+            }
             try(PreparedStatement stm = conn.prepareStatement(query)){
+                if (filter){
+                    stm.setInt(1, id);
+                }
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
                     EmployeeRelationshipDTO employee = new EmployeeRelationshipDTO(resultSet.getString("id"), resultSet.getString("name"),

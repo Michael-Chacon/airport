@@ -61,8 +61,8 @@ public class PlaneService {
         return this.modelRepository.findById(id);
     }
 
-    public List<PlaneStMdDTO> getAllPlaneStMd(){
-        return this.planeRepository.findAllPlaneStMd();
+    public List<PlaneStMdDTO> getAllPlaneStMd(boolean filter, int id){
+        return this.planeRepository.findAllPlaneStMd(filter, id);
     }
     public Optional<PlaneStMdDTO> getPlaneStMdById(int id){
         return this.planeRepository.findPlaneStMdById(id);

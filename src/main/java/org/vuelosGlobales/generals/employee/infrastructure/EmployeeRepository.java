@@ -13,7 +13,7 @@ public interface EmployeeRepository {
     List<Employee> findAll();
     void delete(String id);
 
-    List<EmployeeRelationshipDTO> findAllEmployeesInfo();
+    List<EmployeeRelationshipDTO> findAllEmployeesInfo(boolean filter, int id);
     Optional<EmployeeRelationshipDTO> findEmployeeInfoById(String id);
 
 }
