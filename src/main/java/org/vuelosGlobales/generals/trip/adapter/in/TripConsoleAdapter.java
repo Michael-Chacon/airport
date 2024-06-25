@@ -1,6 +1,6 @@
 package org.vuelosGlobales.generals.trip.adapter.in;
 
-import org.vuelosGlobales.generals.city.domain.City;
+import org.vuelosGlobales.generals.connection.domain.ConnInfoDTO;
 import org.vuelosGlobales.generals.connection.domain.Connections;
 import org.vuelosGlobales.generals.trip.application.TripService;
 import org.vuelosGlobales.shared.Console;
@@ -25,14 +25,15 @@ public class TripConsoleAdapter {
         menuTrip: while (true){
             System.out.println("1. Crear Viaje");
             System.out.println("2. Actualizar Viaje");
-            System.out.println("3. Buscar Viaje por ID");
-            System.out.println("4. Eliminar Viaje");
-            System.out.println("5. Listar todos los Viajes");
-            System.out.println("6. Salir");
+            System.out.println("3. Actualizar una conexión");
+            System.out.println("4. Buscar Viaje por ID");
+            System.out.println("5. Eliminar Viaje");
+            System.out.println("6. Listar todos los Viajes");
+            System.out.println("7. Salir");
             int choice = console.readInt("");
 
-            switch (choice){
-                case 1:
+            switch (choice) {
+                case 1 -> {
                     CuadroDeTexto.dibujarCuadroDeTexto("Registrar viaje", "*");
                     String tripDate = console.stringNotNull("Fecha del viaje, formado (yyyy-mm-dd): ");
                     int priceTrip = console.readInt("Ingrese el precio del viaje: ");
@@ -46,109 +47,176 @@ public class TripConsoleAdapter {
                     String idOrigen = objAirportOrigin.getId();
                     String idDestination = objAirportDestination.getId();
                     Trip st = new Trip();
-//                    st.setId(getTrip);
-//                    st.setName(name);
-//                    st.setIdCity(objCity.getId());
+                    st.setPriceTrip(priceTrip);
+                    st.setTripDate(tripDate);
+                    st.setIdOrigin(idOrigen);
+                    st.setIdDestination(idDestination);
                     int tripId = tripService.createTrip(st);
                     String tipoVuelo = console.stringNotNull("¿El vuelo tiene escalas?(y/n): ");
-                    if (tipoVuelo.equals("n")){
+                    if (tipoVuelo.equals("n")) {
                         String nroConexion = console.stringNotNull("Ingrese el número de la conexión");
                         showPlanes();
                         PlaneStMdDTO planeSelect = Helpers.transformAndValidateObj(
                                 () -> tripService.getPlaneById(console.readInt("Selección el avión: "))
                         );
-                        String idPlane = String.valueOf(planeSelect.getId());
+                        int idPlane = planeSelect.getId();
                         showAirports();
-                        String idAirport = idDestination;
                         Connections connections = new Connections();
-                        connections.getConnectionNumber(nroConexion);
-
-                    }else {
-
+                        connections.setConnectionNumber(nroConexion);
+                        connections.setIdTrip(tripId);
+                        connections.setIdPlane(idPlane);
+                        connections.setIdAriport(idDestination);
+                        tripService.createConnecion(connections);
+                        CuadroDeTexto.dibujarCuadroDeTexto(null, null);
+                    } else {
+                        CuadroDeTexto.dibujarCuadroDeTexto("Registrar conexiones", "*");
+                        masconexiones:
+                        while (true) {
+                            String nroConexion = console.stringNotNull("Ingrese el número de la conexión");
+                            showPlanes();
+                            PlaneStMdDTO planeSelect = Helpers.transformAndValidateObj(
+                                    () -> tripService.getPlaneById(console.readInt("Selección el avión: "))
+                            );
+                            int idPlane = planeSelect.getId();
+                            showAirports();
+                            AirportCityDTO getAirport = Helpers.transformAndValidateObj(
+                                    () -> tripService.getAirportCityById(console.stringNotNull("Seleccione el aeropuerto donde se hace la conexión: "))
+                            );
+                            String idAirport = getAirport.getId();
+                            Connections connections = new Connections();
+                            connections.setConnectionNumber(nroConexion);
+                            connections.setIdTrip(tripId);
+                            connections.setIdPlane(idPlane);
+                            connections.setIdAriport(idAirport);
+                            tripService.createConnecion(connections);
+                            String validar = console.stringNotNull("Quiere registrar otra conexión? (y/n): ");
+                            if (validar.equals("n")) {
+                                break masconexiones;
+                            }
+                        }
                     }
                     CuadroDeTexto.dibujarCuadroDeTexto(null, null);
-                    break;
+                }
+                case 2 -> {
+                    CuadroDeTexto.dibujarCuadroDeTexto("Actualizar información del viaje", "*");
+                    showTripes();
+                    Trip airportSelect = Helpers.transformAndValidateObj(
+                            () -> tripService.getTripById(console.readInt("Seleccione el viaje por su ID: "))
+                    );
+                    CuadroDeTexto.dibujarCuadroDeTexto("Actualizar los datos de un trayecto ", "*");
+                    String newDate = console.stringNotNull("Nueva fecha: ");
+                    String newPreice = console.stringNotNull("Nuevo precio: ");
+                    airportSelect.setTripDate(newDate);
+                    airportSelect.setPriceTrip(Double.parseDouble(newPreice));
+                    tripService.updateTrip(airportSelect);
+                    CuadroDeTexto.dibujarCuadroDeTexto(null, null);
+                }
+                case 3 -> {
+                    CuadroDeTexto.dibujarCuadroDeTexto("Actualizar la información de una conexión", "*");
+                    showTripes();
+                    TripAirportDTO getTrip = Helpers.transformAndValidateObj(
+                            () -> tripService.getTripAripById(console.readInt("Elija el viaje cuya conexión desea actualizar: "))
+                    );
+                    CuadroDeTexto.drawHorizontal(130, "-");
+                    System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", "ID", "FECHA", "PRECIO", "ORIGEN", "DESTINATION");
+                    CuadroDeTexto.drawHorizontal(130, "-");
+                    System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", getTrip.getId(), getTrip.getTripDate(), getTrip.getPriceTrip(), getTrip.getOrigin(), getTrip.getDestination());
+                    CuadroDeTexto.drawHorizontal(130, "-");
+                    showConnections(getTrip.getId());
+                    Connections getConn = Helpers.transformAndValidateObj(
+                            () -> tripService.getConnById(console.readInt("Seleccione la conexión a editar por su Id Conn: "))
+                    );
+                    String nroConxion = console.stringNotNull("Ingrese el nuevo número de la conexión:");
+                    int idPlane;
+                    String upPlane = console.stringNotNull("¿Desea cambiar el avión de esta conexión? (s/n): ");
+                    if (upPlane.equals("s")) {
+                        showPlanes();
+                        PlaneStMdDTO getPlane = Helpers.transformAndValidateObj(
+                                () -> tripService.getPlaneById(console.readInt("Seleccione el id del nuevo avión para esta conexión: "))
+                        );
+                        idPlane = getPlane.getId();
+                    } else {
+                        idPlane = getConn.getId();
+                    }
+                    String idAirport;
+                    String upAirport = console.stringNotNull("¿Desea cambiar el aeropuerto de esta conexión? (s/n): ");
+                    if (upAirport.equals("s")) {
+                        showAirports();
+                        AirportCityDTO getAirport = Helpers.transformAndValidateObj(
+                                () -> tripService.getAirportCityById(console.stringNotNull("Seleccione el nuevo aeropuerto por su ID"))
+                        );
+                        idAirport = getAirport.getId();
+                    } else {
+                        idAirport = getConn.getIdAriport();
+                    }
+                    getConn.setConnectionNumber(nroConxion);
+                    getConn.setIdPlane(idPlane);
+                    getConn.setIdAriport(idAirport);
+                    tripService.updateConnection(getConn);
+                    CuadroDeTexto.dibujarCuadroDeTexto(null, null);
+                }
+                case 4 -> {
+                    CuadroDeTexto.dibujarCuadroDeTexto("Buscar viaje por ID", "*");
+                    showTripes();
+                    TripAirportDTO getTripObj = Helpers.transformAndValidateObj(
+                            () -> tripService.getTripAripById(console.readInt("Selecciona el id del viaje: "))
+                    );
+                    CuadroDeTexto.drawHorizontal(130, "-");
+                    System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", "ID", "FECHA", "PRECIO", "ORIGEN", "DESTINATION");
+                    CuadroDeTexto.drawHorizontal(130, "-");
+                    System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", getTripObj.getId(), getTripObj.getTripDate(), getTripObj.getPriceTrip(), getTripObj.getOrigin(), getTripObj.getDestination());
+                    CuadroDeTexto.drawHorizontal(130, "-");
+                    showConnections(getTripObj.getId());
+                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    break ;
+                }
 
-//                case 2:
-//                    CuadroDeTexto.dibujarCuadroDeTexto("Actualizar información del viaje", "*");
-//                    showTripes();
-//                    Trip airportSelect = Helpers.transformAndValidateObj(
-//                            () -> tripService.getTripById(console.stringNotNull("Seleccione el viaje por el id: ").toUpperCase())
-//                    );
-//                    CuadroDeTexto.dibujarCuadroDeTexto("Actualizar datos de " + airportSelect.getName(), "*");
-//                    String newName = console.stringNotNull("Nuevo nombre del viaje: ");
-//                    String idCity;
-//                    String updateCity = console.stringNotNull("Quiere cambiar la ubicación de este viaje? (y/n): ");
-//                    if (updateCity.equals("y")){
-//                        showAirports();
-//                        City selectCity = Helpers.transformAndValidateObj(
-//                                () -> tripService.getCityById(console.stringNotNull("Selección el id del nuevo fabricante: ").toUpperCase())
-//                        );
-//                        idCity = selectCity.getId();
-//                    }else {
-//                        idCity = airportSelect.getIdCity();
-//                    }
-//                    airportSelect.setName(newName);
-//                    airportSelect.setIdCity(idCity);
-//                    tripService.updateTrip(airportSelect);
-//                    CuadroDeTexto.dibujarCuadroDeTexto(null, null);
-//                    break;
-//
-//                case 3:
-//                    CuadroDeTexto.dibujarCuadroDeTexto("Mostrar info de un viaje", "*");
-//                    System.out.println();
-//                    showTripes();
-//                    TripCityDTO showTrip = Helpers.transformAndValidateObj(
-//                            () -> tripService.getTripCityById(console.stringNotNull("Seleccione el viaje por el id: ").toUpperCase())
-//                    );
-//                    System.out.println(showTrip);
-//                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
-//                    break;
-//
-//                case 4:
-//                    CuadroDeTexto.dibujarCuadroDeTexto("Eliminar un viaje", "*");
-//                    showTripes();
-//                    Trip showTripF = Helpers.transformAndValidateObj(
-//                            () -> tripService.getTripById(console.stringNotNull("Seleccione el viaje por el id: ").toUpperCase())
-//                    );
-//                    String airportDelete = showTripF.getId();
-//                    tripService.deleteTrip(airportDelete);
-//                    CuadroDeTexto.dibujarCuadroDeTexto("Viaje eliminado con éxito", null);
-//                    break;
-//
-//                case 5:
-//                    CuadroDeTexto.dibujarCuadroDeTexto("Viajes registrados", "*");
-//                    showTripes();
-//                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
-//                    break;
-//
-//                case 6:
-//                    break menuTrip;
+                case 5 -> {
+                    CuadroDeTexto.dibujarCuadroDeTexto("Eliminar un viaje", "*");
+                    showTripes();
+                    Trip showTripF = Helpers.transformAndValidateObj(
+                            () -> tripService.getTripById(console.readInt("Seleccione el viaje por el id: "))
+                    );
+                    int tripDelete = showTripF.getId();
+                    tripService.deleteTrip(tripDelete);
+                    CuadroDeTexto.dibujarCuadroDeTexto("Viaje eliminado con éxito", null);
+                    break;
+                }
+                case 6 -> {
+                    CuadroDeTexto.dibujarCuadroDeTexto("Viajes registrados", "*");
+                    showTripes();
+                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    break;
+                }
+                case 7 -> {
+                    break menuTrip;
+                }
+
             }
         }
     }
 
-//    public void showTripes(){
-//        List<TripCityDTO> airports = tripService.getAllTripCity();
-//        System.out.println("Listado de estados:");
-//        CuadroDeTexto.drawHorizontal(57, "-");
-//        System.out.println(String.format("\n| %-5s | %-22s | %-20s |", "ID", "NOMBRE", "CIUDAD"));
-//        airports.forEach(airport -> {
-//            CuadroDeTexto.drawHorizontal(57, "-");
-//            System.out.println(String.format("\n| %-5s | %-22s | %-20s |", airport.getId(), airport.getNameTrip(), airport.getNameCity()));
-//        });
-//        CuadroDeTexto.drawHorizontal(57, "-");
-//        System.out.println();
-//    }
-//
+    public void showTripes(){
+        List<TripAirportDTO> airports = tripService.getAllTripAirp();
+        System.out.println("Listado de viajes:");
+        CuadroDeTexto.drawHorizontal(130, "-");
+        System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", "ID", "FECHA", "PRECIO", "ORIGEN", "DESTINATION");
+        airports.forEach(airport -> {
+            CuadroDeTexto.drawHorizontal(130, "-");
+            System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", airport.getId(), airport.getTripDate(), airport.getPriceTrip(), airport.getOrigin(), airport.getDestination());
+        });
+        CuadroDeTexto.drawHorizontal(130, "-");
+        System.out.println();
+    }
+
     public void showAirports(){
         List<AirportCityDTO> listadoAeropuertos = tripService.getAllAirportCity();
         System.out.println("Listado Aeropuertos:");
         CuadroDeTexto.drawHorizontal(27, "-");
-        System.out.println(String.format("\n| %-4s | %-30s | %-30s |", "ID", "Aeropuerto", "Ciudad"));
+        System.out.printf("\n| %-4s | %-30s | %-30s |%n", "ID", "Aeropuerto", "Ciudad");
         listadoAeropuertos.forEach(aeropuerto -> {
             CuadroDeTexto.drawHorizontal(27, "-");
-            System.out.println(String.format("\n| %-4s | %-30s | %-30s |", aeropuerto.getId(), aeropuerto.getNameAirport(), aeropuerto.getNameCity()));
+            System.out.printf("\n| %-4s | %-30s | %-30s |%n", aeropuerto.getId(), aeropuerto.getNameAirport(), aeropuerto.getNameCity());
         });
         System.out.println();
     }
@@ -157,12 +225,25 @@ public class TripConsoleAdapter {
         List<PlaneStMdDTO> planeList = tripService.getAllPlanesInfo();
         System.out.println("Listado de aviones:");
         CuadroDeTexto.drawHorizontal(110, "-");
-        System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-25s | %-20s | %-20s |", "ID", "PLACA", "CAPACIDAD", "FECHAFAB", "AEROLÍNEA", "ESTADO", "MODELO"));
+        System.out.printf("\n| %-4s | %-10s | %-10s | %-17s | %-25s | %-20s | %-20s |%n", "ID", "PLACA", "CAPACIDAD", "FECHAFAB", "AEROLÍNEA", "ESTADO", "MODELO");
         planeList.forEach(plane -> {
             CuadroDeTexto.drawHorizontal(105, "-");
-            System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-25s | %-20s | %-20s |", plane.getId(), plane.getPlates(), plane.getCapacity(), plane.getFabricationDate(), plane.getNameAirline(), plane.getNameStatus(), plane.getNameModel()));
+            System.out.printf("\n| %-4s | %-10s | %-10s | %-17s | %-25s | %-20s | %-20s |%n", plane.getId(), plane.getPlates(), plane.getCapacity(), plane.getFabricationDate(), plane.getNameAirline(), plane.getNameStatus(), plane.getNameModel());
         });
         CuadroDeTexto.drawHorizontal(107, "-");
+        System.out.println();
+    }
+
+    public void showConnections(int idTrip){
+        List<ConnInfoDTO> connetions = tripService.getAllConnByTrip(idTrip);
+        CuadroDeTexto.dibujarCuadroDeTexto("Listado de conexiones", null);
+        CuadroDeTexto.drawHorizontal(100, "-");
+        System.out.printf("\n| %-10s | %-10s | %-12s | %-13s | %-40s |%n", "Id Trip", "Id Conn", "Conn Number", "plates plane", "Aeropuerto");
+        connetions.forEach(conn -> {
+            CuadroDeTexto.drawHorizontal(100, "-");
+            System.out.printf("\n| %-10s | %-10s | %-10s | %-10s | %-40s |%n", conn.getIdTrip(), conn.getIdConn(), conn.getConnNumber(), conn.getPlates(), conn.getNameCityAirport());
+        });
+        CuadroDeTexto.drawHorizontal(100, "-");
         System.out.println();
     }
 }

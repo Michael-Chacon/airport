@@ -1,5 +1,6 @@
 package org.vuelosGlobales.generals.trip.application;
 
+import org.vuelosGlobales.generals.connection.domain.ConnInfoDTO;
 import org.vuelosGlobales.generals.connection.domain.Connections;
 import org.vuelosGlobales.generals.connection.infrastructure.ConnectionRepository;
 import org.vuelosGlobales.generals.trip.domain.Trip;
@@ -72,6 +73,18 @@ public class TripService {
 
     public void createConnecion(Connections connections){
         this.connectionRepository.save(connections);
+    }
+
+    public List<ConnInfoDTO> getAllConnByTrip(int idTrip){
+        return this.connectionRepository.findAllConnByTrip(idTrip);
+    }
+
+    public Optional<Connections> getConnById(int idConn){
+        return this.connectionRepository.findById(idConn);
+    }
+
+    public void updateConnection(Connections conn){
+        this.connectionRepository.update(conn);
     }
 
 }

@@ -1,5 +1,6 @@
 package org.vuelosGlobales.generals.connection.adapter.out;
 
+import org.vuelosGlobales.generals.connection.domain.ConnInfoDTO;
 import org.vuelosGlobales.generals.connection.domain.Connections;
 import org.vuelosGlobales.generals.connection.infrastructure.ConnectionRepository;
 
@@ -44,7 +45,7 @@ public class ConnectionMySQLRepository implements ConnectionRepository {
                 stm.setInt(2, connections.getIdTrip());
                 stm.setInt(3, connections.getIdPlane());
                 stm.setString(4, connections.getIdAriport()); // posible error de tipo, debe ser String no int
-                stm.setInt(2, connections.getId());
+                stm.setInt(5, connections.getId());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -55,13 +56,13 @@ public class ConnectionMySQLRepository implements ConnectionRepository {
     @Override
     public Optional<Connections> findById(int id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, connectionNumber, idTrip, idPlane, idAirplane FROM flightconnection WHERE id = ?";
+            String query = "SELECT id, connectionNumber, idTrip, idPlane, idAirport FROM flightconnection WHERE id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setInt(1, id);
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
                         Connections obj = new Connections(resultSet.getInt("id"), resultSet.getString("connectionNumber"),
-                                resultSet.getInt("idTrip"), resultSet.getInt("idPlane"), resultSet.getString("idAirplane"));
+                                resultSet.getInt("idTrip"), resultSet.getInt("idPlane"), resultSet.getString("idAirport"));
                         return Optional.of(obj);
                     }
                 }
@@ -91,6 +92,7 @@ public class ConnectionMySQLRepository implements ConnectionRepository {
         return objects;
     }
 
+
     @Override
     public void delete(int id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
@@ -102,5 +104,59 @@ public class ConnectionMySQLRepository implements ConnectionRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<ConnInfoDTO> findAllConnByTrip(int id) {
+        List<ConnInfoDTO> objects= new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT t.id AS 'idTrip', c.id AS 'idConn', c.connectionNumber, p.plates, CONCAT_WS(' - ', ci.name, a.name) AS 'cityA' FROM flightconnection c " +
+                    "INNER JOIN trip t ON t.id = c.idTrip " +
+                    "INNER JOIN plane p ON p.id = c.idPlane " +
+                    "INNER JOIN airport a ON a.id = c.idAirport " +
+                    "INNER JOIN city ci ON ci.id = a.idCity " +
+                    "WHERE t.id = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, id);
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    ConnInfoDTO connections = new ConnInfoDTO(resultSet.getInt("idTrip"), resultSet.getInt("idConn"),
+                            resultSet.getString("connectionNumber"), resultSet.getString("plates"),
+                            resultSet.getString("cityA"));
+                    objects.add(connections);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return objects;
+    }
+
+    @Override
+    public Optional<ConnInfoDTO> findConnByTripByIdConn(int idConn) {
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT t.id AS 'idTrip', c.id AS 'idConn', c.connectionNumber, p.plates, CONCAT_WS(' - ', ci.name, a.name) AS 'cityA' FROM flightconnection c" +
+                    "INNER JOIN plane p ON p.id = c.idPlane " +
+                    "INNER JOIN airport a ON a.id = c.idAirport " +
+                    "INNER JOIN city ci ON ci.id = a.idCity " +
+                    "WHERE t.id = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, idConn);
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    ConnInfoDTO connections = new ConnInfoDTO(resultSet.getInt("idTrip"), resultSet.getInt("idConn"),
+                            resultSet.getString("connectionNumber"), resultSet.getString("plates"),
+                            resultSet.getString("cityA"));
+                    return Optional.of(connections);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
+    }
+    @Override
+    public Optional<ConnInfoDTO> findConnById(int id) {
+        return Optional.empty();
     }
 }

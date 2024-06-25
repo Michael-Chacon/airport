@@ -3,6 +3,8 @@ package org.vuelosGlobales.shared;
 import org.vuelosGlobales.generals.city.adapter.in.CityConsoleAdapter;
 import org.vuelosGlobales.generals.city.adapter.out.CityMySQLRepository;
 import org.vuelosGlobales.generals.city.application.CityService;
+import org.vuelosGlobales.generals.connection.adapter.out.ConnectionMySQLRepository;
+import org.vuelosGlobales.generals.connection.application.ConnectionService;
 import org.vuelosGlobales.generals.country.adapter.in.CountryConsoleAdapter;
 import org.vuelosGlobales.generals.country.adapter.out.CountryMySQLRepository;
 import org.vuelosGlobales.generals.country.application.CountryService;
@@ -21,6 +23,9 @@ import org.vuelosGlobales.generals.role.application.RoleService;
 import org.vuelosGlobales.generals.status.adapter.in.StatusConsoleAdapter;
 import org.vuelosGlobales.generals.status.adapter.out.StatusMySQLRepository;
 import org.vuelosGlobales.generals.status.application.StatusService;
+import org.vuelosGlobales.generals.trip.adapter.in.TripConsoleAdapter;
+import org.vuelosGlobales.generals.trip.adapter.out.TripMySQLRepository;
+import org.vuelosGlobales.generals.trip.application.TripService;
 import org.vuelosGlobales.maintenanceTechnician.revision.adapter.in.RevisionConsoleAdapter;
 import org.vuelosGlobales.maintenanceTechnician.revision.adapter.out.RevisionMySQLRepository;
 import org.vuelosGlobales.maintenanceTechnician.revision.application.RevisionService;
@@ -71,18 +76,23 @@ public class Menus {
         PlaneMySQLRepository planeOut = new PlaneMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         PlaneService planeService = new PlaneService(planeOut, statusOut, modelOut, airlineOut);
         PlaneConsoleAdapter planeIn = new PlaneConsoleAdapter(planeService);
-//        Revision
         //      Employee
         EmployeeMySQLRepository employeeOut = new EmployeeMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         EmployeeService employeeService = new EmployeeService(employeeOut,roleOut,airlineOut, airportOut);
         EmployeeConsoleAdap employeeIn = new EmployeeConsoleAdap(employeeService);
-
+//        Revision
         RevisionMySQLRepository revisionOut = new RevisionMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         RevisionService revisionService = new RevisionService(revisionOut,planeOut, airlineOut, employeeOut);
         RevisionConsoleAdapter revisionIn = new RevisionConsoleAdapter(revisionService);
+//      Connection
+        ConnectionMySQLRepository connOut = new ConnectionMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        ConnectionService connectionService = new ConnectionService(connOut);
+//      Trip connection
+        TripMySQLRepository tripOut = new TripMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        TripService tripService = new TripService(tripOut, airportOut,planeOut, connOut);
+        TripConsoleAdapter tripConsoleAdapter = new TripConsoleAdapter(tripService);
 
-
-
+        tripConsoleAdapter.crudTrip();
 //        employeeIn.crudEmployee();
 //        revisionIn.crudRevision();
 //        planeIn.crudPlane();

@@ -25,7 +25,7 @@ public class TripMySQLRepository implements TripRepository {
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "INSERT INTO trip (tripDate, priceTripe, idOrigin, idDestination) VALUES (?,?,?,?)";
+            String query = "INSERT INTO trip (tripDate, priceTrip, idOrigin, idDestination) VALUES (?,?,?,?)";
             preparedStatement = conn.prepareStatement(query, preparedStatement.RETURN_GENERATED_KEYS);
                 preparedStatement.setString(1, trip.getTripDate());
                 preparedStatement.setDouble(2, trip.getPriceTrip());
@@ -67,13 +67,13 @@ public class TripMySQLRepository implements TripRepository {
     @Override
     public Optional<Trip> findById(int id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, tripDate, priceTripe, idOrigin, idDestination FROM trip WHERE id = ?";
+            String query = "SELECT id, tripDate, priceTrip, idOrigin, idDestination FROM trip WHERE id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setInt(1, id);
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
                         Trip obj = new Trip(resultSet.getInt("id"), resultSet.getString("tripDate"),
-                                resultSet.getDouble("priceTripe"), resultSet.getString("idOrigin"),
+                                resultSet.getDouble("priceTrip"), resultSet.getString("idOrigin"),
                                 resultSet.getString("idDestination"));
                         return Optional.of(obj);
                     }
@@ -89,12 +89,12 @@ public class TripMySQLRepository implements TripRepository {
     public List<Trip> findAll() {
         List<Trip> objects= new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, tripDate, priceTripe, idOrigin, idDestination FROM trip";
+            String query = "SELECT id, tripDate, priceTrip, idOrigin, idDestination FROM trip";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
                     Trip trip = new Trip(resultSet.getInt("id"), resultSet.getString("tripDate"),
-                            resultSet.getDouble("priceTripe"), resultSet.getString("idOrigin"),
+                            resultSet.getDouble("priceTrip"), resultSet.getString("idOrigin"),
                             resultSet.getString("idDestination"));
                     objects.add(trip);
                 }
@@ -122,16 +122,16 @@ public class TripMySQLRepository implements TripRepository {
     public List<TripAirportDTO> findAllTripAirport() {
         List<TripAirportDTO> objects= new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT t.id, t.tripDate, t.priceTrip, CONCAT_WS(' - ', co.name, ao.name) as 'origin', CONCAT_WS(' - ', cd.name, ad.name) as 'destination' FROM trip t" +
-                    "INNER JOIN airport ao on ao.id = t.idOrigin" +
-                    "INNER JOIN city co on co.id = ao.idCity" +
-                    "INNER JOIN airport ad on ad.id = t.idDestination" +
-                    "INNER JOIN city cd on cd.id = ad.idCity";
+            String query = "SELECT t.id, t.tripDate, t.priceTrip, CONCAT_WS(' - ', co.name, ao.name) as 'origin', CONCAT_WS(' - ', cd.name, ad.name) as 'destination' FROM trip t " +
+                    "INNER JOIN airport ao on ao.id = t.idOrigin " +
+                    "INNER JOIN city co on co.id = ao.idCity " +
+                    "INNER JOIN airport ad on ad.id = t.idDestination " +
+                    "INNER JOIN city cd on cd.id = ad.idCity ";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
                     TripAirportDTO trip = new TripAirportDTO(resultSet.getInt("id"), resultSet.getString("tripDate"),
-                            resultSet.getDouble("priceTripe"), resultSet.getString("origin"),
+                            resultSet.getDouble("priceTrip"), resultSet.getString("origin"),
                             resultSet.getString("destination"));
                     objects.add(trip);
                 }
@@ -145,17 +145,17 @@ public class TripMySQLRepository implements TripRepository {
     @Override
     public Optional<TripAirportDTO> findTripAirportById(int id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT t.id, t.tripDate, t.priceTrip, CONCAT_WS(' - ', co.name, ao.name) as 'origin', CONCAT_WS(' - ', cd.name, ad.name) as 'destination' FROM trip t" +
-                    "INNER JOIN airport ao on ao.id = t.idOrigin" +
-                    "INNER JOIN city co on co.id = ao.idCity" +
-                    "INNER JOIN airport ad on ad.id = t.idDestination" +
+            String query = "SELECT t.id, t.tripDate, t.priceTrip, CONCAT_WS(' - ', co.name, ao.name) as 'origin', CONCAT_WS(' - ', cd.name, ad.name) as 'destination' FROM trip t " +
+                    "INNER JOIN airport ao on ao.id = t.idOrigin " +
+                    "INNER JOIN city co on co.id = ao.idCity " +
+                    "INNER JOIN airport ad on ad.id = t.idDestination " +
                     "INNER JOIN city cd on cd.id = ad.idCity WHERE t.id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setInt(1, id);
                 ResultSet resultSet = stm.executeQuery();
                 if (resultSet.next()){
                     TripAirportDTO trip = new TripAirportDTO(resultSet.getInt("id"), resultSet.getString("tripDate"),
-                            resultSet.getDouble("priceTripe"), resultSet.getString("origin"),
+                            resultSet.getDouble("priceTrip"), resultSet.getString("origin"),
                             resultSet.getString("destination"));
                     return Optional.of(trip);
                 }
