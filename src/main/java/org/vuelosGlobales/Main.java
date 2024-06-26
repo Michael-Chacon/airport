@@ -1,5 +1,10 @@
-package org.vuelosGlobales;public class Main {
+package org.vuelosGlobales;
+
+import org.vuelosGlobales.shared.Menus;
+
+public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        Menus menus = new Menus();
+        menus.MenuPrincipal();
     }
 }

@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class PlaneService {
-    private final PlaneRepository planeRepository;
-    private final StatusRepository statusRepository;
-    private final ModelRepository modelRepository;
-    private final AirlineRepository airlineRepository;
+    private  PlaneRepository planeRepository;
+    private  StatusRepository statusRepository;
+    private  ModelRepository modelRepository;
+    private  AirlineRepository airlineRepository;
 
     public PlaneService(PlaneRepository planeRepository, StatusRepository statusRepository, ModelRepository modelRepository, AirlineRepository airlineRepository) {
         this.planeRepository = planeRepository;

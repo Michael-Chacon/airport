@@ -43,7 +43,9 @@ import org.vuelosGlobales.systemAdministrator.plane.adapter.out.PlaneMySQLReposi
 import org.vuelosGlobales.systemAdministrator.plane.application.PlaneService;
 
 public class Menus {
-    public static void main(String[] args) {
+    Console console = new Console();
+//    public static void main(String[] args) {
+
         CountryMySQLRepository countryOut = new CountryMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         CountryService countryService = new CountryService(countryOut);
         CountryConsoleAdapter countryIn = new CountryConsoleAdapter(countryService);
@@ -99,7 +101,7 @@ public class Menus {
         TripCrewService tripCrewService = new TripCrewService(tripCrewOut, airlineOut, employeeOut, connOut, tripOut);
         TripCrewConsoleAdap tripCrewIn = new TripCrewConsoleAdap(tripCrewService);
 
-        tripCrewIn.crew();
+//        tripCrewIn.crew();
 //        tripConsoleAdapter.crudTrip();
 //        employeeIn.crudEmployee();
 //        revisionIn.crudRevision();
@@ -112,6 +114,75 @@ public class Menus {
 //        statusIn.crudStatus();
 //        cityIn.crudCity();
 //        countryIn.crudCountry();
+
+
+
+    public void MenuPrincipal(){
+        CuadroDeTexto.dibujarCuadroDeTexto("Actores del sistema", "*");
+        menuAdmin: while(true){
+            System.out.println("\t1. Administrador del sistema");
+            System.out.println("\t2. Agente de ventas");
+            System.out.println("\t3. Técnico en mantenimiento");
+            System.out.println("\t4. Cliente");
+            System.out.println("\t5. Salir");
+            int choise = console.readInt("Seleccione un apción: ");
+
+            if (choise == 1){
+                menuSystemAdmin();
+            }else if (choise == 2){
+                System.out.println("nada");
+            } else if (choise == 3) {
+                revisionIn.crudRevision();
+            } else if (choise == 5) {
+                break menuAdmin;
+            }
+        }
+    }
+
+    public void menuSystemAdmin(){
+        CuadroDeTexto.dibujarCuadroDeTexto("Opciones de administrador del sistema", "*");
+        menuAdmin: while(true){
+            System.out.println("\t1. Administrar los aviones");
+            System.out.println("\t2. Administrar los aeropuertos");
+            System.out.println("\t3. Gestionar los trayectos y sus escalas");
+            System.out.println("\t4. Gestionar las tarifas");
+            System.out.println("\t13 Gestionar de empleados");
+            System.out.println("\t5. Tipo de documento");
+            System.out.println("\t6. Gestionar info de paises");
+            System.out.println("\t7. Gestionar info de las ciudades");
+            System.out.println("\t8. Gestionar info de los fabricantes de aviones");
+            System.out.println("\t9. Gestionar info de los modelos de avión");
+            System.out.println("\t10. Gestionar info de los estados de un avión");
+            System.out.println("\t11. Gestionar info de los roles de la tripulación");
+            System.out.println("\t12. Regresar la menu principal");
+            int choise = console.readInt("Seleccione un apción: ");
+
+            if (choise == 1){
+                planeIn.crudPlane();
+            }else if (choise == 2){
+                airportIn.crudAirport();
+            } else if (choise == 3) {
+                tripConsoleAdapter.crudTrip();
+            } else if (choise == 6) {
+                countryIn.crudCountry();
+            } else if (choise == 7) {
+                cityIn.crudCity();
+            } else if (choise == 8) {
+                manufacturerIn.crudManufacturer();
+            } else if (choise == 9) {
+                modelIn.crudModel();
+            } else if (choise == 10) {
+                statusIn.crudStatus();
+            } else if (choise == 11) {
+                roleIn.crudRole();
+            } else if (choise == 12) {
+                break menuAdmin;
+            } else if (choise == 13) {
+                employeeIn.crudEmployee();
+            } else {
+                System.out.println("Opción incorrecta");
+            }
+        }
     }
 
 }
