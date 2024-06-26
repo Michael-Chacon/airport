@@ -34,7 +34,6 @@ public class Helpers {
         if (validationResult.isPresent()){
             System.out.println("El id ingresado ya existe");
         }else{
-            System.out.println("Id valido");
             return input;
         }
     }

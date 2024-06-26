@@ -57,7 +57,7 @@ public class AirlineConsoleAdap {
                             () -> airlineService.getAirlineById(console.readInt("Seleccione el aerolínea por el id: "))
                     );
                     System.out.println(showAirline);
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
 
                 case 4:
@@ -73,7 +73,7 @@ public class AirlineConsoleAdap {
                 case 5:
                     CuadroDeTexto.dibujarCuadroDeTexto("Aerolíneas registradas", "*");
                     showAirlines();
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
                 case 6:
                     break menuAirline;
@@ -90,6 +90,7 @@ public class AirlineConsoleAdap {
             CuadroDeTexto.drawHorizontal(27, "-");
             System.out.println(String.format("\n| %-4s | %-16s |", airline.getId(), airline.getName()));
         });
+        CuadroDeTexto.drawHorizontal(27, "-");
         System.out.println();
     }
 }

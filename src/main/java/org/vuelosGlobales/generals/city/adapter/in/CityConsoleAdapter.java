@@ -21,12 +21,16 @@ public class CityConsoleAdapter {
 
     public  void crudCity(){
         menuCity: while (true){
-            System.out.println("1. Crear Ciudad");
-            System.out.println("2. Actualizar Ciudad");
-            System.out.println("3. Buscar Ciudad por ID");
-            System.out.println("4. Eliminar Ciudad");
-            System.out.println("5. Listar todos Ciudades");
-            System.out.println("6. Salir");
+            System.out.println("======================================");
+            System.out.println("            MENÚ DE CIUDADES          ");
+            System.out.println("======================================");
+            System.out.println("\t1. Crear Ciudad");
+            System.out.println("\t2. Actualizar Ciudad");
+            System.out.println("\t3. Buscar Ciudad por ID");
+            System.out.println("\t4. Eliminar Ciudad");
+            System.out.println("\t5. Listar todas las Ciudades");
+            System.out.println("\t6. Salir");
+            System.out.println("======================================");
             int choice = console.readInt("");
 
             switch (choice){
@@ -35,17 +39,17 @@ public class CityConsoleAdapter {
                     showCountries();
 
                     Country getObj = Helpers.transformAndValidateObj(
-                            () -> cityService.getCountryById(console.stringNotNull("A que país pertenece la ciudad, seleccione por el por el id xxx: ").toUpperCase())
+                            () -> cityService.getCountryById(console.stringNotNull("¿A qué país pertenece la ciudad? Seleccione por el ID: ").toUpperCase())
                     );
 
                     String idCountry = getObj.getId();
                     String name = console.stringNotNull("Nombre del ciudad: ");
                     String idCity = Helpers.validateExist(
-                            "Ingrese el id del ciudad, debe ser alfanumérico de máximo 5 caracteres: ",
+                            "Ingrese el ID de la ciudad (alfanumérico, máximo 5 caracteres): ",
                             id -> cityService.getCityById(id)
                     );
                     cityService.createCity(new City(idCity.toUpperCase(), name, idCountry));
-                    CuadroDeTexto.dibujarCuadroDeTexto(null, null);
+                    CuadroDeTexto.dibujarCuadroDeTexto(null, "-");
                     break;
 
                 case 2:
@@ -82,8 +86,10 @@ public class CityConsoleAdapter {
                     City showCity = Helpers.transformAndValidateObj(
                         () -> cityService.getCityById(console.stringNotNull("Seleccione la ciudad por el id: ").toUpperCase())
                     );
+                    CuadroDeTexto.drawHorizontal(20, "-");
                     System.out.println(showCity);
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    CuadroDeTexto.drawHorizontal(20, "-");
+
                     break;
 
                 case 4:
@@ -99,7 +105,7 @@ public class CityConsoleAdapter {
                 case 5:
                     CuadroDeTexto.dibujarCuadroDeTexto("Ciudades registradas", "*");
                     showCities();
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
                 case 6:
                     break menuCity;
@@ -109,7 +115,6 @@ public class CityConsoleAdapter {
 
     public void showCities(){
         List<CityCountryDTO> cityList = cityService.getCityWithCountry();
-        System.out.println("Listado de ciudades:");
         CuadroDeTexto.drawHorizontal(50, "-");
         System.out.println(String.format("\n| %-6s | %-17s | %-17s |", "ID", "CIUDAD", "PAIS"));
         cityList.forEach(city -> {
@@ -120,8 +125,7 @@ public class CityConsoleAdapter {
         System.out.println();
     }
 
-    public void showCountries(){
-        List<Country> countryList = cityService.getAllCoutries();
+    public void showCountries(){      List<Country> countryList = cityService.getAllCoutries();
         System.out.println("Listado de paises:");
         CuadroDeTexto.drawHorizontal(27, "-");
         System.out.println(String.format("\n| %-4s | %-16s |", "ID", "PAIS"));

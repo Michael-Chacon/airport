@@ -164,15 +164,6 @@ CREATE TABLE employee (
     CONSTRAINT fk_employees_airports FOREIGN KEY (idAirport) REFERENCES airport(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
---/* COLOQUÉ LA DESCRIPCIÓN DE LA REVISION EN LA TABLA revemployee, no creé la table revision_details
---CREATE TABLE airport.revision_details (
---    id INT NOT NULL,
---    description TEXT NOT NULL,
---    id_employee VARCHAR(20) NOT NULL,
---    CONSTRAINT pk_revision_details PRIMARY KEY(id),
---    CONSTRAINT fk_revision_details_employees FOREIGN KEY (id_employee) REFERENCES airport.employee(id)
---) ENGINE=InnoDB;
---*/
 CREATE TABLE revemployee (
     idRevision INT NOT NULL,
     idEmployee VARCHAR(20) NOT NULL,
@@ -184,7 +175,6 @@ CREATE TABLE revemployee (
 CREATE TABLE tripcrew (
     idEmployees VARCHAR(20) NOT NULL,
     idConection INT NOT NULL,
-    CONSTRAINT pk_tripcrews PRIMARY KEY (idEmployees, idConection),
     CONSTRAINT fk_tripcrews_employees FOREIGN KEY (idEmployees) REFERENCES employee(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_tripcrews_connections FOREIGN KEY (idConection) REFERENCES flightconnection(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;

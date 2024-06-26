@@ -118,13 +118,16 @@ public class Menus {
 
 
     public void MenuPrincipal(){
-        CuadroDeTexto.dibujarCuadroDeTexto("Actores del sistema", "*");
         menuAdmin: while(true){
+            System.out.println("======================================");
+            System.out.println("           MENÚ DE ROLES               ");
+            System.out.println("======================================");
             System.out.println("\t1. Administrador del sistema");
             System.out.println("\t2. Agente de ventas");
             System.out.println("\t3. Técnico en mantenimiento");
             System.out.println("\t4. Cliente");
             System.out.println("\t5. Salir");
+            System.out.println("======================================");
             int choise = console.readInt("Seleccione un apción: ");
 
             if (choise == 1){
@@ -142,26 +145,37 @@ public class Menus {
     public void menuSystemAdmin(){
         CuadroDeTexto.dibujarCuadroDeTexto("Opciones de administrador del sistema", "*");
         menuAdmin: while(true){
-            System.out.println("\t1. Administrar los aviones");
-            System.out.println("\t2. Administrar los aeropuertos");
-            System.out.println("\t3. Gestionar los trayectos y sus escalas");
-            System.out.println("\t4. Gestionar las tarifas");
-            System.out.println("\t13 Gestionar de empleados");
-            System.out.println("\t5. Tipo de documento");
-            System.out.println("\t6. Gestionar info de paises");
-            System.out.println("\t7. Gestionar info de las ciudades");
-            System.out.println("\t8. Gestionar info de los fabricantes de aviones");
-            System.out.println("\t9. Gestionar info de los modelos de avión");
-            System.out.println("\t10. Gestionar info de los estados de un avión");
-            System.out.println("\t11. Gestionar info de los roles de la tripulación");
-            System.out.println("\t12. Regresar la menu principal");
+            System.out.println("======================================");
+            System.out.println("            MENÚ PRINCIPAL           ");
+            System.out.println("======================================");
+            System.out.println("\t1.  Gestionar los aviones");
+            System.out.println("\t2.  Gestionar los aeropuertos");
+            System.out.println("\t3.  Gestionar aerolíneas");
+            System.out.println("\t4.  Gestionar los trayectos y sus escalas");
+            System.out.println("\t5.  Gestionar las tarifas");
+            System.out.println("\t6.  Tipo de documento");
+            System.out.println("\t7.  Gestionar información de países");
+            System.out.println("\t8.  Gestionar información de ciudades");
+            System.out.println("\t9.  Gestionar información de fabricantes de aviones");
+            System.out.println("\t10. Gestionar información de modelos de avión");
+            System.out.println("\t11. Gestionar información de estados de un avión");
+            System.out.println("\t12. Gestionar información de roles de la tripulación");
+            System.out.println("\t13. Gestionar empleados");
+            System.out.println("\t14. Gestionar tripulación");
+            System.out.println("\t15. Regresar al menú principal");
+            System.out.println("======================================");
+            System.out.print("Seleccione una opción: ");
+
             int choise = console.readInt("Seleccione un apción: ");
 
             if (choise == 1){
                 planeIn.crudPlane();
             }else if (choise == 2){
                 airportIn.crudAirport();
-            } else if (choise == 3) {
+            }else if (choise == 3){
+                airlineIn.crudAirline();
+            }
+            else if (choise == 4) {
                 tripConsoleAdapter.crudTrip();
             } else if (choise == 6) {
                 countryIn.crudCountry();
@@ -173,12 +187,14 @@ public class Menus {
                 modelIn.crudModel();
             } else if (choise == 10) {
                 statusIn.crudStatus();
-            } else if (choise == 11) {
-                roleIn.crudRole();
             } else if (choise == 12) {
+                roleIn.crudRole();
+            } else if (choise == 15) {
                 break menuAdmin;
             } else if (choise == 13) {
                 employeeIn.crudEmployee();
+            } else if (choise == 14) {
+                tripCrewIn.crew();
             } else {
                 System.out.println("Opción incorrecta");
             }

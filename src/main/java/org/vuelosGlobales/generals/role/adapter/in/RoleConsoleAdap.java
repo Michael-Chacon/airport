@@ -56,7 +56,7 @@ public class RoleConsoleAdap {
                             () -> roleService.getRoleById(console.readInt("Seleccione el rol por el id: "))
                     );
                     System.out.println(showRole);
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
 
                 case 4:
@@ -72,7 +72,7 @@ public class RoleConsoleAdap {
                 case 5:
                     CuadroDeTexto.dibujarCuadroDeTexto("Roles registrados", "*");
                     showRoles();
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
                 case 6:
                     break menuRole;
@@ -89,6 +89,7 @@ public class RoleConsoleAdap {
             CuadroDeTexto.drawHorizontal(27, "-");
             System.out.println(String.format("\n| %-4s | %-16s |", role.getId(), role.getName()));
         });
+        CuadroDeTexto.drawHorizontal(27, "-");
         System.out.println();
     }
 }

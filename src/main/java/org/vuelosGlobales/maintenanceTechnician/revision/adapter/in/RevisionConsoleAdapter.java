@@ -22,11 +22,13 @@ public class RevisionConsoleAdapter {
     }
     public  void crudRevision(){
         menuRevision: while (true){
+            System.out.println("------- Menú de Gestión de Revisiones -------");
             System.out.println("1. Crear Revisión");
             System.out.println("2. Actualizar Revisión");
-            System.out.println("3. Buscar Revisión por ID");
+            System.out.println("3. Buscar Revisión por avión");
             System.out.println("4. Eliminar Revisión");
             System.out.println("5. Salir");
+            System.out.println("--------------------------------------------");
             int choice = console.readInt("");
 
             switch (choice){
@@ -47,7 +49,7 @@ public class RevisionConsoleAdapter {
                     System.out.println("Listado de empleados de la aerolínea " + airline.getName());
                     showEmployees(true, airline.getId());
                     EmployeeRelationshipDTO employee = Helpers.transformAndValidateObj(
-                            () -> revisionService.getEmployeeById(console.stringNotNull("Seleccione al empleado por el id").toUpperCase())
+                            () -> revisionService.getEmployeeById(console.stringNotNull("Seleccione al empleado por el id: ").toUpperCase())
                     );
                     String idEmployee = employee.getId();
 
@@ -103,7 +105,7 @@ public class RevisionConsoleAdapter {
                     );
 
                     showRevisionByIdPlane(showPlanes.getId());
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
 
                 case 4:
@@ -135,13 +137,13 @@ public class RevisionConsoleAdapter {
     public void showRevisions(){
         List<Revision> revisionList = revisionService.getAllRevisions();
         System.out.println("Listado de revisiones:");
-        CuadroDeTexto.drawHorizontal(50, "-");
+        CuadroDeTexto.drawHorizontal(80, "-");
         System.out.println(String.format("\n| %-4s | %-16s | %-16s | %-16s ", "ID", "FECHA", "AVIÓN", "DESCRIPCIÓN"));
         revisionList.forEach(revision -> {
-            CuadroDeTexto.drawHorizontal(50, "-");
+            CuadroDeTexto.drawHorizontal(80, "-");
             System.out.println(String.format("\n| %-4s | %-16s | %-16s | %-16s ", revision.getId(), revision.getRevisionDate(), revision.getIdPlane(), revision.getDescription()));
         });
-        CuadroDeTexto.drawHorizontal(50, "-");
+        CuadroDeTexto.drawHorizontal(80, "-");
         System.out.println();
     }
 
@@ -154,6 +156,8 @@ public class RevisionConsoleAdapter {
             CuadroDeTexto.drawHorizontal(27, "-");
             System.out.println(String.format("\n| %-4s | %-16s |", airline.getId(), airline.getName()));
         });
+        CuadroDeTexto.drawHorizontal(27, "-");
+
         System.out.println();
     }
 
@@ -173,13 +177,13 @@ public class RevisionConsoleAdapter {
     public void showRevisionByIdPlane(int id){
         List<RevisionInfoDTO> revisionList = revisionService.getRevisionInfo(id);
         System.out.println("Historial de revisiones:");
-        CuadroDeTexto.drawHorizontal(100, "-");
-        System.out.println(String.format("\n| %-4s | %-16s | %-25s | %-25s | %-30s | %-40s ", "ID", "FECHA", "EMPLEADO", "PLACA", "MODELO", "DESCRIPCIÓN"));
+        CuadroDeTexto.drawHorizontal(110, "-");
+        System.out.println(String.format("\n| %-4s | %-16s | %-25s | %-15s | %-15s | %-40s ", "ID", "FECHA", "EMPLEADO", "PLACA", "MODELO", "DESCRIPCIÓN"));
         revisionList.forEach(revision -> {
             CuadroDeTexto.drawHorizontal(110, "-");
-            System.out.println(String.format("\n| %-4s | %-16s | %-25s | %-20s | %-30s | %-40s ", revision.getId(), revision.getRevisionDate(), revision.getNameEmployee(), revision.getPlatePlane(), revision.getModelPlane(), revision.getDescription()));
+            System.out.println(String.format("\n| %-4s | %-16s | %-25s | %-15s | %-15s | %-40s ", revision.getId(), revision.getRevisionDate(), revision.getNameEmployee(), revision.getPlatePlane(), revision.getModelPlane(), revision.getDescription()));
         });
-        CuadroDeTexto.drawHorizontal(105, "-");
+        CuadroDeTexto.drawHorizontal(110, "-");
         System.out.println();
     }
 

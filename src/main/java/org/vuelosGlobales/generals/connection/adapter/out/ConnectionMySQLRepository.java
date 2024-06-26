@@ -44,7 +44,7 @@ public class ConnectionMySQLRepository implements ConnectionRepository {
                 stm.setString(1, connections.getConnectionNumber());
                 stm.setInt(2, connections.getIdTrip());
                 stm.setInt(3, connections.getIdPlane());
-                stm.setString(4, connections.getIdAriport()); // posible error de tipo, debe ser String no int
+                stm.setString(4, connections.getIdAriport());
                 stm.setInt(5, connections.getId());
                 stm.executeUpdate();
             }

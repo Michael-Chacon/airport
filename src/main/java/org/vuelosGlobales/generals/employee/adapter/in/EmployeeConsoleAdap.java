@@ -22,26 +22,29 @@ public class EmployeeConsoleAdap {
 
     public  void crudEmployee(){
         menuEmployee: while (true){
-            System.out.println("1. Crear empleado");
-            System.out.println("2. Actualizar empleado");
-            System.out.println("3. Buscar empleado por ID");
-            System.out.println("4. Eliminar empleado");
-            System.out.println("5. Listar todos los empleado");
-            System.out.println("6. Salir");
+            System.out.println("======================================");
+            System.out.println("          MENÚ DE GESTIÓN DE EMPLEADOS ");
+            System.out.println("======================================");
+            System.out.println("\t1. Crear empleado");
+            System.out.println("\t2. Actualizar empleado");
+            System.out.println("\t3. Buscar empleado por ID");
+            System.out.println("\t4. Eliminar empleado");
+            System.out.println("\t5. Listar todos los empleados");
+            System.out.println("\t6. Salir");
             int choice = console.readInt("");
 
             switch (choice){
                 case 1:
                     CuadroDeTexto.dibujarCuadroDeTexto("Registrar un employee", "*");
                     String idEmployee = Helpers.validateExist(
-                            "Ingrese el id del empleado, debe tener máximo 5 caracteres",
+                            "Ingrese el id del empleado, debe tener máximo 5 caracteres: ",
                             id -> employeeService.getEmployeeById(id)
                     );
                     String employeeName = console.stringNotNull("Nombre del empleado: ");
                     String ingressDate = console.stringNotNull("En que fecha ingresó el empleado a la empresa: ");
                     showRoles();
                     Role roleSelect = Helpers.transformAndValidateObj(
-                            () -> employeeService.getRoleById(console.readInt("Seleccione el rol del employee"))
+                            () -> employeeService.getRoleById(console.readInt("Seleccione el rol del employee: "))
                     );
                     int idRol = roleSelect.getId();
 
@@ -52,7 +55,7 @@ public class EmployeeConsoleAdap {
                     int idAirline = airlineSelect.getId();
                     showAirportes();
                     AirportCityDTO airportSelect = Helpers.transformAndValidateObj(
-                            () -> employeeService.getAirportById(console.stringNotNull("Ingrese el id del aeropuerto al que pertenece el empleado").toUpperCase())
+                            () -> employeeService.getAirportById(console.stringNotNull("Ingrese el id del aeropuerto al que pertenece el empleado: ").toUpperCase())
                     );
                     String idAirport = airportSelect.getId();
 
@@ -131,12 +134,12 @@ public class EmployeeConsoleAdap {
                             () -> employeeService.getEmployeeInfoById(console.stringNotNull("Seleccione el employee por el id: ").toUpperCase())
                     );
                     CuadroDeTexto.drawHorizontal(100, "-");
-                    System.out.printf("\n| %-4s | %-10s | %-10s | %-17s | %-25s | %-25s |%n", "ID", "NOMBRE", "FECHA", "ROL", "AEROLÍNEA", "AIRPORT");
+                    System.out.printf("\n| %-4s | %-18s | %-18s | %-18s | %-25s | %-30s |%n", "ID", "NOMBRE", "FECHA", "ROL", "AEROLÍNEA", "AIRPORT");
                     CuadroDeTexto.drawHorizontal(100, "-");
-                    System.out.printf("\n| %-4s | %-10s | %-10s | %-17s | %-25s | %-25s |%n", getEmployee.getId(), getEmployee.getName(), getEmployee.getIngressDate(), getEmployee.getRolName(), getEmployee.getAirlineName(), getEmployee.getAirportName());
+                    System.out.printf("\n| %-4s | %-18s | %-18s | %-18s | %-25s | %-30s |%n", getEmployee.getId(), getEmployee.getName(), getEmployee.getIngressDate(), getEmployee.getRolName(), getEmployee.getAirlineName(), getEmployee.getAirportName());
                     CuadroDeTexto.drawHorizontal(100, "-");
                     System.out.println();
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
 
                 case 4:
@@ -152,7 +155,7 @@ public class EmployeeConsoleAdap {
                 case 5:
                     CuadroDeTexto.dibujarCuadroDeTexto("Empleados registradas", "*");
                     showEmployees();
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
                 case 6:
                     break menuEmployee;
@@ -202,12 +205,13 @@ public class EmployeeConsoleAdap {
     public void showRoles(){
         List<Role> roleList = employeeService.getAllRoles();
         System.out.println("Listado de roles:");
-        CuadroDeTexto.drawHorizontal(27, "-");
+        CuadroDeTexto.drawHorizontal(33, "-");
         System.out.printf("\n| %-4s | %-16s |%n", "ID", "NOMBRE");
         roleList.forEach(role -> {
-            CuadroDeTexto.drawHorizontal(27, "-");
+            CuadroDeTexto.drawHorizontal(33, "-");
             System.out.printf("\n| %-4s | %-16s |%n", role.getId(), role.getName());
         });
+        CuadroDeTexto.drawHorizontal(33, "-");
         System.out.println();
     }
 }
