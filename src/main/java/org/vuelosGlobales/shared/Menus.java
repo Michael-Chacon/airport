@@ -26,6 +26,9 @@ import org.vuelosGlobales.generals.status.application.StatusService;
 import org.vuelosGlobales.generals.trip.adapter.in.TripConsoleAdapter;
 import org.vuelosGlobales.generals.trip.adapter.out.TripMySQLRepository;
 import org.vuelosGlobales.generals.trip.application.TripService;
+import org.vuelosGlobales.generals.tripcrew.adapter.in.TripCrewConsoleAdap;
+import org.vuelosGlobales.generals.tripcrew.adapter.out.TripCrewMySQLRepository;
+import org.vuelosGlobales.generals.tripcrew.application.TripCrewService;
 import org.vuelosGlobales.maintenanceTechnician.revision.adapter.in.RevisionConsoleAdapter;
 import org.vuelosGlobales.maintenanceTechnician.revision.adapter.out.RevisionMySQLRepository;
 import org.vuelosGlobales.maintenanceTechnician.revision.application.RevisionService;
@@ -91,8 +94,13 @@ public class Menus {
         TripMySQLRepository tripOut = new TripMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         TripService tripService = new TripService(tripOut, airportOut,planeOut, connOut);
         TripConsoleAdapter tripConsoleAdapter = new TripConsoleAdapter(tripService);
+//        tripCrew
+        TripCrewMySQLRepository tripCrewOut = new TripCrewMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        TripCrewService tripCrewService = new TripCrewService(tripCrewOut, airlineOut, employeeOut, connOut, tripOut);
+        TripCrewConsoleAdap tripCrewIn = new TripCrewConsoleAdap(tripCrewService);
 
-        tripConsoleAdapter.crudTrip();
+        tripCrewIn.crew();
+//        tripConsoleAdapter.crudTrip();
 //        employeeIn.crudEmployee();
 //        revisionIn.crudRevision();
 //        planeIn.crudPlane();

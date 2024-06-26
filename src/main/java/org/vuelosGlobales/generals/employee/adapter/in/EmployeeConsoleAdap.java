@@ -131,9 +131,9 @@ public class EmployeeConsoleAdap {
                             () -> employeeService.getEmployeeInfoById(console.stringNotNull("Seleccione el employee por el id: ").toUpperCase())
                     );
                     CuadroDeTexto.drawHorizontal(100, "-");
-                    System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-25s | %-25s |", "ID", "NOMBRE", "FECHA", "ROL", "AEROLÍNEA", "AIRPORT"));
+                    System.out.printf("\n| %-4s | %-10s | %-10s | %-17s | %-25s | %-25s |%n", "ID", "NOMBRE", "FECHA", "ROL", "AEROLÍNEA", "AIRPORT");
                     CuadroDeTexto.drawHorizontal(100, "-");
-                    System.out.println(String.format("\n| %-4s | %-10s | %-10s | %-17s | %-25s | %-25s |", getEmployee.getId(), getEmployee.getName(), getEmployee.getIngressDate(), getEmployee.getRolName(), getEmployee.getAirlineName(), getEmployee.getAirportName()));
+                    System.out.printf("\n| %-4s | %-10s | %-10s | %-17s | %-25s | %-25s |%n", getEmployee.getId(), getEmployee.getName(), getEmployee.getIngressDate(), getEmployee.getRolName(), getEmployee.getAirlineName(), getEmployee.getAirportName());
                     CuadroDeTexto.drawHorizontal(100, "-");
                     System.out.println();
                     CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
@@ -164,10 +164,10 @@ public class EmployeeConsoleAdap {
         List<EmployeeRelationshipDTO> employeeList = employeeService.getAllEmployeesInfo(false, 0);
         System.out.println("Listado de empleados:");
         CuadroDeTexto.drawHorizontal(151, "-");
-        System.out.println(String.format("\n| %-11s | %-17s | %-15s | %-16s | %-28s | %-45s |", "ID", "NOMBRE", "FECHA", "ROL", "AEROLINEA", "AIRPORT"));
+        System.out.printf("\n| %-11s | %-17s | %-15s | %-16s | %-28s | %-45s |%n", "ID", "NOMBRE", "FECHA", "ROL", "AEROLINEA", "AIRPORT");
         employeeList.forEach(employee -> {
             CuadroDeTexto.drawHorizontal(151, "-");
-            System.out.println(String.format("\n| %-11s | %-17s | %-15s | %-16s | %-28s | %-45s |", employee.getId(), employee.getName(), employee.getIngressDate(), employee.getRolName(), employee.getAirlineName(), employee.getAirportName()));
+            System.out.printf("\n| %-11s | %-17s | %-15s | %-16s | %-28s | %-45s |%n", employee.getId(), employee.getName(), employee.getIngressDate(), employee.getRolName(), employee.getAirlineName(), employee.getAirportName());
         });
         CuadroDeTexto.drawHorizontal(151, "-");
         System.out.println();
@@ -177,22 +177,23 @@ public class EmployeeConsoleAdap {
         List<Airline> airlineList = employeeService.getAllAirlines();
         System.out.println("Listado de aerolíneas:");
         CuadroDeTexto.drawHorizontal(27, "-");
-        System.out.println(String.format("\n| %-4s | %-16s |", "ID", "NOMBRE"));
+        System.out.printf("\n| %-4s | %-16s |%n", "ID", "NOMBRE");
         airlineList.forEach(airline -> {
             CuadroDeTexto.drawHorizontal(27, "-");
-            System.out.println(String.format("\n| %-4s | %-16s |", airline.getId(), airline.getName()));
+            System.out.printf("\n| %-4s | %-16s |%n", airline.getId(), airline.getName());
         });
         CuadroDeTexto.drawHorizontal(27, "-");
         System.out.println();
     }
+
     public void showAirportes(){
         List<AirportCityDTO> airports = employeeService.getAllAirport();
         System.out.println("Listado de estados:");
         CuadroDeTexto.drawHorizontal(57, "-");
-        System.out.println(String.format("\n| %-5s | %-22s | %-20s |", "ID", "NOMBRE", "CIUDAD"));
+        System.out.printf("\n| %-5s | %-22s | %-20s |%n", "ID", "NOMBRE", "CIUDAD");
         airports.forEach(airport -> {
             CuadroDeTexto.drawHorizontal(57, "-");
-            System.out.println(String.format("\n| %-5s | %-22s | %-20s |", airport.getId(), airport.getNameAirport(), airport.getNameCity()));
+            System.out.printf("\n| %-5s | %-22s | %-20s |%n", airport.getId(), airport.getNameAirport(), airport.getNameCity());
         });
         CuadroDeTexto.drawHorizontal(57, "-");
         System.out.println();
@@ -202,10 +203,10 @@ public class EmployeeConsoleAdap {
         List<Role> roleList = employeeService.getAllRoles();
         System.out.println("Listado de roles:");
         CuadroDeTexto.drawHorizontal(27, "-");
-        System.out.println(String.format("\n| %-4s | %-16s |", "ID", "NOMBRE"));
+        System.out.printf("\n| %-4s | %-16s |%n", "ID", "NOMBRE");
         roleList.forEach(role -> {
             CuadroDeTexto.drawHorizontal(27, "-");
-            System.out.println(String.format("\n| %-4s | %-16s |", role.getId(), role.getName()));
+            System.out.printf("\n| %-4s | %-16s |%n", role.getId(), role.getName());
         });
         System.out.println();
     }
