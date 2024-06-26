@@ -1,6 +1,5 @@
 package org.vuelosGlobales.systemAdministrator.document.adapter.in;
 
-import org.vuelosGlobales.generals.country.domain.Country;
 import org.vuelosGlobales.shared.Console;
 import org.vuelosGlobales.shared.CuadroDeTexto;
 import org.vuelosGlobales.shared.Helpers;
@@ -18,7 +17,7 @@ public class DocumentConsoleAdapter {
     }
 
     public  void crudCountry(){
-        menuCountry: while (true){
+        menuDocument: while (true){
             System.out.println("1. Registrar documento");
             System.out.println("2. Actualizar info de un documento");
             System.out.println("3. Buscar tipo de documento por ID");
@@ -30,7 +29,7 @@ public class DocumentConsoleAdapter {
             switch (choice){
                 case 1:
                     CuadroDeTexto.dibujarCuadroDeTexto("Registrar un tipo de documento", "*");
-                    String name = console.stringNotNull("Nombre del del tipo de documento: ");
+                    String name = console.stringNotNull("Nombre del tipo de documento: ");
                     documentService.createDocument(new Document(name));
                     CuadroDeTexto.dibujarCuadroDeTexto(null, null);
                     break;
@@ -39,7 +38,7 @@ public class DocumentConsoleAdapter {
                     CuadroDeTexto.dibujarCuadroDeTexto("Actualizar información de un tipo de documento", "*");
                     showDocuments();
                     Document documentSelect = Helpers.transformAndValidateObj(
-                            () -> documentService.getCountryById(console.readInt("Seleccione el tipo de documento por el id: "))
+                            () -> documentService.getDocumentById(console.readInt("Seleccione el tipo de documento por el id: "))
                     );
                     CuadroDeTexto.dibujarCuadroDeTexto("Actualizar datos del tipo de documento " + documentSelect.getName(), "*");
                     String newName = console.stringNotNull("Nuevo nombre del tipo de documento: ");
@@ -49,33 +48,33 @@ public class DocumentConsoleAdapter {
                     break;
 
                 case 3:
-                    CuadroDeTexto.dibujarCuadroDeTexto("Mostrar info de un país", "*");
+                    CuadroDeTexto.dibujarCuadroDeTexto("Mostrar info de un documento", "*");
                     System.out.println();
                     showDocuments();
-                    Country showCountry = Helpers.transformAndValidateObj(
-                            () -> documentService.getCountryById(console.stringNotNull("Seleccione el pais por el id: ").toUpperCase())
+                    Document showDocument = Helpers.transformAndValidateObj(
+                            () -> documentService.getDocumentById(console.readInt("Seleccione el documento por el id: "))
                     );
-                    System.out.println(showCountry);
+                    System.out.println(showDocument);
                     CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
                     break;
 
                 case 4:
                     CuadroDeTexto.dibujarCuadroDeTexto("Eliminar un tipo de documento", "*");
                     showDocuments();
-                    Document showCountryF = Helpers.transformAndValidateObj(
-                            () -> documentService.getCountryById(console.readInt("Seleccione el tipo de documento por el id: "))
+                    Document showDocumentF = Helpers.transformAndValidateObj(
+                            () -> documentService.getDocumentById(console.readInt("Seleccione el tipo de documento por el id: "))
                     );
-                    int countryDelete = showCountryF.getId();
-                    documentService.deleteCountry(countryDelete);
-                    CuadroDeTexto.dibujarCuadroDeTexto("Pais eliminado con éxito", null);
+                    int documentDelete = showDocumentF.getId();
+                    documentService.deleteDocument(documentDelete);
+                    CuadroDeTexto.dibujarCuadroDeTexto("Documento eliminado con éxito", null);
                     break;
                 case 5:
-                    CuadroDeTexto.dibujarCuadroDeTexto("Paises registrados", "*");
+                    CuadroDeTexto.dibujarCuadroDeTexto("Documentos Registrados", "*");
                     showDocuments();
                     CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
                     break;
                 case 6:
-                    break menuCountry;
+                    break menuDocument;
             }
             String option = console.stringNull("Algo: ");
         }
