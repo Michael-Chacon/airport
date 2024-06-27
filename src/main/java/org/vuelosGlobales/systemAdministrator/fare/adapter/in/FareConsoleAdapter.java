@@ -19,7 +19,11 @@ public class FareConsoleAdapter {
     public  void crudFares(){
         menuCountry: while (true){
             System.out.println("======================================");
+<<<<<<< HEAD
             System.out.println("             MENÚ DE TARIFAS           ");
+=======
+            System.out.println("             MENÚ DE PAÍSES           ");
+>>>>>>> desarrollo
             System.out.println("======================================");
             System.out.println("\t1. Crear taifa de vuelo");
             System.out.println("\t2. Actualizar tarifa de vuelo");
