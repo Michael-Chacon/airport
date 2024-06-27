@@ -32,12 +32,18 @@ import org.vuelosGlobales.generals.tripcrew.application.TripCrewService;
 import org.vuelosGlobales.maintenanceTechnician.revision.adapter.in.RevisionConsoleAdapter;
 import org.vuelosGlobales.maintenanceTechnician.revision.adapter.out.RevisionMySQLRepository;
 import org.vuelosGlobales.maintenanceTechnician.revision.application.RevisionService;
+import org.vuelosGlobales.salesAgent.customer.adapter.in.CustomerConsoleAdapter;
+import org.vuelosGlobales.salesAgent.customer.adapter.out.CustomerMySQLRepository;
+import org.vuelosGlobales.salesAgent.customer.application.CustomerService;
+import org.vuelosGlobales.salesAgent.customer.domain.Customer;
 import org.vuelosGlobales.systemAdministrator.airline.adapter.in.AirlineConsoleAdap;
 import org.vuelosGlobales.systemAdministrator.airline.adapter.out.AirlineMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.airline.application.AirlineService;
 import org.vuelosGlobales.systemAdministrator.airport.adapter.in.AirportConsoleAdapter;
 import org.vuelosGlobales.systemAdministrator.airport.adapter.out.AirportMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.airport.application.AirportService;
+import org.vuelosGlobales.systemAdministrator.document.adapter.out.DocumentMySQLRepository;
+import org.vuelosGlobales.systemAdministrator.document.application.DocumentService;
 import org.vuelosGlobales.systemAdministrator.fare.adapter.in.FareConsoleAdapter;
 import org.vuelosGlobales.systemAdministrator.fare.adapter.out.FareMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.fare.application.FareService;
@@ -108,6 +114,13 @@ public class Menus {
         FareService fareService = new FareService(fareOut);
         FareConsoleAdapter fareIn = new FareConsoleAdapter(fareService);
 
+        DocumentMySQLRepository documentOut = new DocumentMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        DocumentService documentService = new DocumentService(documentOut);
+        // Customer
+        CustomerMySQLRepository customerOut = new CustomerMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        CustomerService customerService = new CustomerService(customerOut, documentOut);
+        CustomerConsoleAdapter customerIn = new CustomerConsoleAdapter(customerService);
+
 //        tripCrewIn.crew();
 //        tripConsoleAdapter.crudTrip();
 //        employeeIn.crudEmployee();
@@ -140,7 +153,7 @@ public class Menus {
             if (choise == 1){
                 menuSystemAdmin();
             }else if (choise == 2){
-                System.out.println("nada");
+                optionsSalesAgent();
             } else if (choise == 3) {
                 revisionIn.crudRevision();
             } else if (choise == 5) {
@@ -207,6 +220,18 @@ public class Menus {
                 fareIn.crudFares();
             } else {
                 System.out.println("Opción incorrecta");
+            }
+        }
+    }
+
+    public void optionsSalesAgent(){
+        salesAgent: while (true){
+            System.out.println("\t1.  Gestionar los clientes");
+            System.out.println("\t2.  No recuerdo");
+            System.out.println("\t3.  Regresar");
+            int choise = console.readInt("Seleccione una opcion: ");
+            if (choise == 1){
+                customerIn.crudCustomer();
             }
         }
     }

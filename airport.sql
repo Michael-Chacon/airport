@@ -1,7 +1,7 @@
 
 
-CREATE DATABASE airport;
-USE airport;
+CREATE DATABASE airportxxx;
+USE airportxxx;
 
 CREATE TABLE documenttype(
     id INT AUTO_INCREMENT NOT NULL,
@@ -18,6 +18,8 @@ CREATE TABLE customer (
     CONSTRAINT pk_customers PRIMARY KEY(id),
     CONSTRAINT fk_customers_documenttypes FOREIGN KEY (idDocumentc) REFERENCES documenttype(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+ALTER TABLE customer ADD COLUMN nroIdc INT(11) NOT NULL AFTER lastName;
+
 
 CREATE TABLE flightfare (
     id INT AUTO_INCREMENT NOT NULL,
