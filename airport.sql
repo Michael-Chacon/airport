@@ -1,3 +1,5 @@
+
+
 CREATE DATABASE airport;
 USE airport;
 
@@ -10,10 +12,11 @@ CREATE TABLE documenttype(
 CREATE TABLE customer (
     id INT AUTO_INCREMENT NOT NULL,
     name VARCHAR(30) NOT NULL,
+    lastName VARCHAR(20) NOT NULL,
     age INT NOT NULL,
-    idDocument INT NOT NULL,
+    idDocumentc INT(11) NOT NULL,
     CONSTRAINT pk_customers PRIMARY KEY(id),
-    CONSTRAINT fk_customers_documenttypes FOREIGN KEY (idDocument) REFERENCES documenttype(id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_customers_documenttypes FOREIGN KEY (idDocumentc) REFERENCES documenttype(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE flightfare (
@@ -108,13 +111,29 @@ CREATE TABLE tripbooking (
 CREATE TABLE tripbookingdetail (
     id INT AUTO_INCREMENT NOT NULL,
     idTripBooking INT NOT NULL,
-    idCustomers VARCHAR(20) NOT NULL,
+    idCustomers INT(11) NOT NULL,
     idFares INT NOT NULL,
     CONSTRAINT pk_tripbookingdetails PRIMARY KEY(id),
     CONSTRAINT fk_tripbookingdetails_tripbooking FOREIGN KEY (idTripBooking) REFERENCES tripbooking(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_tripbookingdetails_customers FOREIGN KEY (idCustomers) REFERENCES customer(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_tripbookingdetails_fares FOREIGN KEY (idFares) REFERENCES flightfare(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+ALTER TABLE tripbookingdetail
+ADD COLUMN status ENUM('active', 'cancelled') NOT NULL DEFAULT 'active';
+
+CREATE TABLE passenger(
+    id INT AUTO_INCREMENT NOT NULL,
+    name VARCHAR(30) NOT NULL, 
+    lastName VARCHAR(20) NOT NULL,
+    nroId INT(11) NOT NULL,
+    age INT(11) NOT NULL,
+    seat INT(3) NOT NULL,
+    idDocument INT(11) NOT NULL,
+    idTripBookingDetails INT(11) NOT NULL,
+    CONSTRAINT pk_passenger  PRIMARY KEY(id),
+    CONSTRAINT fk_passenger_docu FOREIGN KEY (idDocument) REFERENCES documenttype(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_passenger_tripbookingdetail FOREIGN KEY(idTripBookingDetails) REFERENCES tripbookingdetail(id) ON DELETE CASCADE ON UPDATE CASCADE
+)ENGINE=InnoDB;
 
 CREATE TABLE plane (
     id INT AUTO_INCREMENT NOT NULL,
