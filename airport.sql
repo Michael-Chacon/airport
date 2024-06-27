@@ -1,28 +1,33 @@
-CREATE DATABASE airport;
-USE airport;
 
---CREATE TABLE documenttype(
---    id INT AUTO_INCREMENT NOT NULL,
---    name VARCHAR(40) NOT NULL,
---    CONSTRAINT pk_documenttypes PRIMARY KEY(id)
---) ENGINE=InnoDB;
---
---CREATE TABLE customer (
---    id INT AUTO_INCREMENT NOT NULL,
---    name VARCHAR(30) NOT NULL,
---    age INT NOT NULL,
---    idDocument INT NOT NULL,
---    CONSTRAINT pk_customers PRIMARY KEY(id),
---    CONSTRAINT fk_customers_documenttypes FOREIGN KEY (idDocument) REFERENCES documenttype(id) ON DELETE CASCADE ON UPDATE CASCADE
---) ENGINE=InnoDB;
 
---CREATE TABLE flightfare (
---    id INT AUTO_INCREMENT NOT NULL,
---    description VARCHAR(20) NOT NULL,
---    details TEXT NULL,
---    value DOUBLE(7,3) NOT NULL,
---    CONSTRAINT pk_flightfares PRIMARY KEY(id)
---) ENGINE=InnoDB;
+CREATE DATABASE airportxxx;
+USE airportxxx;
+
+CREATE TABLE documenttype(
+    id INT AUTO_INCREMENT NOT NULL,
+    name VARCHAR(40) NOT NULL,
+    CONSTRAINT pk_documenttypes PRIMARY KEY(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE customer (
+    id INT AUTO_INCREMENT NOT NULL,
+    name VARCHAR(30) NOT NULL,
+    lastName VARCHAR(20) NOT NULL,
+    age INT NOT NULL,
+    idDocumentc INT(11) NOT NULL,
+    CONSTRAINT pk_customers PRIMARY KEY(id),
+    CONSTRAINT fk_customers_documenttypes FOREIGN KEY (idDocumentc) REFERENCES documenttype(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+ALTER TABLE customer ADD COLUMN nroIdc INT(11) NOT NULL AFTER lastName;
+
+
+CREATE TABLE flightfare (
+    id INT AUTO_INCREMENT NOT NULL,
+    description VARCHAR(20) NOT NULL,
+    details TEXT NULL,
+    value DOUBLE(7,3) NOT NULL,
+    CONSTRAINT pk_flightfares PRIMARY KEY(id)
+) ENGINE=InnoDB;
 
 CREATE TABLE airline (
     id INT AUTO_INCREMENT NOT NULL,
@@ -97,24 +102,40 @@ CREATE TABLE trip (
     CONSTRAINT pk_destination_airport FOREIGN KEY (idDestination) REFERENCES airport(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
---CREATE TABLE tripbooking (
---    id INT AUTO_INCREMENT NOT NULL,
---    date DATE NOT NULL,
---    idTrip INT NOT NULL,
---    CONSTRAINT pk_tripbooking PRIMARY KEY(id),
---    CONSTRAINT fk_tripbooking_trips FOREIGN KEY (idTrip) REFERENCES trip(id) ON DELETE CASCADE ON UPDATE CASCADE
---) ENGINE=InnoDB;
+CREATE TABLE tripbooking (
+    id INT AUTO_INCREMENT NOT NULL,
+    date DATE NOT NULL,
+    idTrip INT NOT NULL,
+    CONSTRAINT pk_tripbooking PRIMARY KEY(id),
+    CONSTRAINT fk_tripbooking_trips FOREIGN KEY (idTrip) REFERENCES trip(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
---CREATE TABLE tripbookingdetail (
---    id INT AUTO_INCREMENT NOT NULL,
---    idTripBooking INT NOT NULL,
---    idCustomers VARCHAR(20) NOT NULL,
---    idFares INT NOT NULL,
---    CONSTRAINT pk_tripbookingdetails PRIMARY KEY(id),
---    CONSTRAINT fk_tripbookingdetails_tripbooking FOREIGN KEY (idTripBooking) REFERENCES tripbooking(id) ON DELETE CASCADE ON UPDATE CASCADE,
---    CONSTRAINT fk_tripbookingdetails_customers FOREIGN KEY (idCustomers) REFERENCES customer(id) ON DELETE CASCADE ON UPDATE CASCADE,
---    CONSTRAINT fk_tripbookingdetails_fares FOREIGN KEY (idFares) REFERENCES flightfare(id) ON DELETE CASCADE ON UPDATE CASCADE
---) ENGINE=InnoDB;
+CREATE TABLE tripbookingdetail (
+    id INT AUTO_INCREMENT NOT NULL,
+    idTripBooking INT NOT NULL,
+    idCustomers INT(11) NOT NULL,
+    idFares INT NOT NULL,
+    CONSTRAINT pk_tripbookingdetails PRIMARY KEY(id),
+    CONSTRAINT fk_tripbookingdetails_tripbooking FOREIGN KEY (idTripBooking) REFERENCES tripbooking(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_tripbookingdetails_customers FOREIGN KEY (idCustomers) REFERENCES customer(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_tripbookingdetails_fares FOREIGN KEY (idFares) REFERENCES flightfare(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+ALTER TABLE tripbookingdetail
+ADD COLUMN status ENUM('active', 'cancelled') NOT NULL DEFAULT 'active';
+
+CREATE TABLE passenger(
+    id INT AUTO_INCREMENT NOT NULL,
+    name VARCHAR(30) NOT NULL, 
+    lastName VARCHAR(20) NOT NULL,
+    nroId INT(11) NOT NULL,
+    age INT(11) NOT NULL,
+    seat INT(3) NOT NULL,
+    idDocument INT(11) NOT NULL,
+    idTripBookingDetails INT(11) NOT NULL,
+    CONSTRAINT pk_passenger  PRIMARY KEY(id),
+    CONSTRAINT fk_passenger_docu FOREIGN KEY (idDocument) REFERENCES documenttype(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_passenger_tripbookingdetail FOREIGN KEY(idTripBookingDetails) REFERENCES tripbookingdetail(id) ON DELETE CASCADE ON UPDATE CASCADE
+)ENGINE=InnoDB;
 
 CREATE TABLE plane (
     id INT AUTO_INCREMENT NOT NULL,
@@ -164,15 +185,6 @@ CREATE TABLE employee (
     CONSTRAINT fk_employees_airports FOREIGN KEY (idAirport) REFERENCES airport(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
---/* COLOQUÉ LA DESCRIPCIÓN DE LA REVISION EN LA TABLA revemployee, no creé la table revision_details
---CREATE TABLE airport.revision_details (
---    id INT NOT NULL,
---    description TEXT NOT NULL,
---    id_employee VARCHAR(20) NOT NULL,
---    CONSTRAINT pk_revision_details PRIMARY KEY(id),
---    CONSTRAINT fk_revision_details_employees FOREIGN KEY (id_employee) REFERENCES airport.employee(id)
---) ENGINE=InnoDB;
---*/
 CREATE TABLE revemployee (
     idRevision INT NOT NULL,
     idEmployee VARCHAR(20) NOT NULL,
@@ -184,7 +196,6 @@ CREATE TABLE revemployee (
 CREATE TABLE tripcrew (
     idEmployees VARCHAR(20) NOT NULL,
     idConection INT NOT NULL,
-    CONSTRAINT pk_tripcrews PRIMARY KEY (idEmployees, idConection),
     CONSTRAINT fk_tripcrews_employees FOREIGN KEY (idEmployees) REFERENCES employee(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_tripcrews_connections FOREIGN KEY (idConection) REFERENCES flightconnection(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;

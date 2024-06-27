@@ -1,6 +1,7 @@
 package org.vuelosGlobales.salesAgent.customer.adapter.out;
 
 import org.vuelosGlobales.salesAgent.customer.domain.Customer;
+import org.vuelosGlobales.salesAgent.customer.domain.CustomerDocuDTO;
 import org.vuelosGlobales.salesAgent.customer.infrastructure.CustomerRepository;
 
 import java.sql.*;
@@ -22,11 +23,13 @@ public class CustomerMySQLRepository implements CustomerRepository {
     @Override
     public void save(Customer customer) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "INSERT INTO customer (name, age, idDocument) VALUES (?, ?, ?)";
+            String query = "INSERT INTO customer (name, lastName, nroIdc, age, idDocumentc) VALUES (?,?,?,?,?)";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, customer.getName());
-                stm.setInt(2, customer.getAge());
-                stm.setInt(3, customer.getIdDocument());
+                stm.setString(2, customer.getLastName());
+                stm.setInt(3, customer.getNroId());
+                stm.setInt(4, customer.getAge());
+                stm.setInt(5, customer.getIdDocument());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -37,12 +40,14 @@ public class CustomerMySQLRepository implements CustomerRepository {
     @Override
     public void update(Customer customer) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE customer SET name = ?, age = ?, idDocument = ? WHERE id = ?";
+            String query = "UPDATE customer SET name = ?, lastName = ?, nroIdc = ?, age = ?, idDocumentc = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, customer.getName());
-                stm.setInt(2, customer.getAge());
-                stm.setInt(3, customer.getIdDocument());
-                stm.setInt(4, customer.getId());
+                stm.setString(2, customer.getLastName());
+                stm.setInt(3, customer.getNroId());
+                stm.setInt(4, customer.getAge());
+                stm.setInt(5, customer.getIdDocument());
+                stm.setInt(6, customer.getId());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -53,13 +58,14 @@ public class CustomerMySQLRepository implements CustomerRepository {
     @Override
     public Optional<Customer> findById(int id) {
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, name, age, idDocument FROM customer WHERE id = ?";
+            String query = "SELECT * FROM customer WHERE id = ?";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setInt(1, id);
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
                         Customer obj = new Customer(resultSet.getInt("id"), resultSet.getString("name"),
-                                resultSet.getInt("age"), resultSet.getInt("idDocument"));
+                                resultSet.getString("lastName"), resultSet.getInt("nroIdc"),
+                                resultSet.getInt("age"), resultSet.getInt("idDocumentc"));
                         return Optional.of(obj);
                     }
                 }
@@ -74,12 +80,13 @@ public class CustomerMySQLRepository implements CustomerRepository {
     public List<Customer> findAll() {
         List<Customer> objects = new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, user, password)){
-            String query = "SELECT id, name, age, idDocument FROM customer";
+            String query = "SELECT * FROM customer";
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
                     Customer customer = new Customer(resultSet.getInt("id"), resultSet.getString("name"),
-                            resultSet.getInt("age"), resultSet.getInt("idDocument"));
+                            resultSet.getString("lastName"), resultSet.getInt("nroIdc"),
+                            resultSet.getInt("age"), resultSet.getInt("idDocumentc"));
                     objects.add(customer);
                 }
             }
@@ -100,5 +107,47 @@ public class CustomerMySQLRepository implements CustomerRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<CustomerDocuDTO> getAllCustDoc() {
+        List<CustomerDocuDTO> objects = new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT c.id, c.name AS 'customer', c.lastName, c.nroIdc, c.age, d.name AS 'document' FROM customer c " +
+                    "INNER JOIN documenttype d ON d.id = c.idDocumentc";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    CustomerDocuDTO customer = new CustomerDocuDTO(resultSet.getInt("id"), resultSet.getString("customer"),
+                            resultSet.getString("lastName"), resultSet.getInt("nroIdc"),
+                            resultSet.getInt("age"), resultSet.getString("document"));
+                    objects.add(customer);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return objects;
+    }
+
+    @Override
+    public Optional<CustomerDocuDTO> getCustDocById(int id) {
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT c.id, c.name AS 'customer', c.lastName, c.nroIdc, c.age, d.name AS 'document' FROM customer c " +
+                    "INNER JOIN documenttype d ON d.id = c.idDocumentc WHERE c.id = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, id);
+                ResultSet resultSet = stm.executeQuery();
+                if (resultSet.next()){
+                    CustomerDocuDTO customer = new CustomerDocuDTO(resultSet.getInt("id"), resultSet.getString("customer"),
+                            resultSet.getString("lastName"), resultSet.getInt("nroIdc"),
+                            resultSet.getInt("age"), resultSet.getString("document"));
+                   return Optional.of(customer);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
     }
 }

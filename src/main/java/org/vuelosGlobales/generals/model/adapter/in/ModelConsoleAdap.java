@@ -20,18 +20,22 @@ public class ModelConsoleAdap {
 
     public void crudModel() {
         menuModel: while (true){
-            System.out.println("1. Crear Modelo");
-            System.out.println("2. Actualizar Modelo");
-            System.out.println("3. Buscar Modelo por ID");
-            System.out.println("4. Eliminar Modelo");
-            System.out.println("5. Listar todos Modelos");
-            System.out.println("6. Salir");
+            System.out.println("======================================");
+            System.out.println("         MENÚ DE GESTIÓN DE MODELOS     ");
+            System.out.println("======================================");
+            System.out.println("\t1. Crear Modelo");
+            System.out.println("\t2. Actualizar Modelo");
+            System.out.println("\t3. Buscar Modelo por ID");
+            System.out.println("\t4. Eliminar Modelo");
+            System.out.println("\t5. Listar todos los Modelos");
+            System.out.println("\t6. Salir");
+            System.out.println("======================================");
             int choice = console.readInt("");
 
             switch (choice){
                 case 1:
                     CuadroDeTexto.dibujarCuadroDeTexto("Registrar Modelo del avión", "*");
-                    String name = console.stringNotNull("Nombre del estado: ");
+                    String name = console.stringNotNull("Nombre del modelo: ");
                     showManufactureres();
                     Manufacturer objManufacturer = Helpers.transformAndValidateObj(
                             () -> modelService.getManufacturerById(console.readInt("Selección el id del fabricante: "))
@@ -93,7 +97,7 @@ public class ModelConsoleAdap {
                 case 5:
                     CuadroDeTexto.dibujarCuadroDeTexto("Modelos registrados", "*");
                     showModeles();
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
 
                 case 6:
@@ -104,25 +108,27 @@ public class ModelConsoleAdap {
 
     public void showModeles(){
         List<ModelManufacDTO> models = modelService.getAllModelManuf();
-        System.out.println("Listado de estados:");
         CuadroDeTexto.drawHorizontal(45, "-");
         System.out.println(String.format("\n| %-4s | %-16s | %-16s |", "ID", "MODELO", "FABRICANTE"));
         models.forEach(model -> {
             CuadroDeTexto.drawHorizontal(45, "-");
             System.out.println(String.format("\n| %-4s | %-16s | %-16s |", model.getId(), model.getNameModel(), model.getNameManufac()));
         });
+        CuadroDeTexto.drawHorizontal(45, "-");
         System.out.println();
     }
 
     public void showManufactureres(){
         List<Manufacturer> manufacturers = modelService.getAllManufacturers();
-        System.out.println("Listado de fabricantes:");
+        System.out.println("\nListado de fabricantes:");
         CuadroDeTexto.drawHorizontal(27, "-");
         System.out.println(String.format("\n| %-4s | %-16s |", "ID", "FABRICANTE"));
         manufacturers.forEach(country -> {
             CuadroDeTexto.drawHorizontal(27, "-");
             System.out.println(String.format("\n| %-4s | %-16s |", country.getId(), country.getName()));
         });
+        CuadroDeTexto.drawHorizontal(45, "-");
+
         System.out.println();
     }
 }

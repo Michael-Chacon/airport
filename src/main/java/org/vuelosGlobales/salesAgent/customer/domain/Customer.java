@@ -3,15 +3,19 @@ package org.vuelosGlobales.salesAgent.customer.domain;
 public class Customer {
     private int id;
     private String name;
+    private String lastName;
+    private int nroId;
     private int age;
     private int idDocument;
 
     public Customer() {
     }
 
-    public Customer(int id, String name, int age, int idDocument) {
+    public Customer(int id, String name, String lastName, int nroId, int age, int idDocument) {
         this.id = id;
         this.name = name;
+        this.lastName = lastName;
+        this.nroId = nroId;
         this.age = age;
         this.idDocument = idDocument;
     }
@@ -30,6 +34,22 @@ public class Customer {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public int getNroId() {
+        return nroId;
+    }
+
+    public void setNroId(int nroId) {
+        this.nroId = nroId;
     }
 
     public int getAge() {

@@ -39,10 +39,10 @@ public class TripConsoleAdapter {
                     int priceTrip = console.readInt("Ingrese el precio del viaje: ");
                     showAirports();
                     AirportCityDTO objAirportOrigin = Helpers.transformAndValidateObj(
-                            () -> tripService.getAirportCityById(console.stringNotNull("Selección el aeropuerto de origen: ").toUpperCase())
+                            () -> tripService.getAirportCityById(console.stringNotNull("Selección el aeropuerto de origen por su ID: ").toUpperCase())
                     );
                     AirportCityDTO objAirportDestination = Helpers.transformAndValidateObj(
-                            () -> tripService.getAirportCityById(console.stringNotNull("Selección el aeropuerto de destino: ").toUpperCase())
+                            () -> tripService.getAirportCityById(console.stringNotNull("Selección el aeropuerto de destino por us ID: ").toUpperCase())
                     );
                     String idOrigen = objAirportOrigin.getId();
                     String idDestination = objAirportDestination.getId();
@@ -52,26 +52,24 @@ public class TripConsoleAdapter {
                     st.setIdOrigin(idOrigen);
                     st.setIdDestination(idDestination);
                     int tripId = tripService.createTrip(st);
+
                     String tipoVuelo = console.stringNotNull("¿El vuelo tiene escalas?(y/n): ");
                     if (tipoVuelo.equals("n")) {
-                        String nroConexion = console.stringNotNull("Ingrese el número de la conexión");
+                        String nroConexion = console.stringNotNull("Ingrese el número de la conexión: ");
                         showPlanes();
                         PlaneStMdDTO planeSelect = Helpers.transformAndValidateObj(
                                 () -> tripService.getPlaneById(console.readInt("Selección el avión: "))
                         );
                         int idPlane = planeSelect.getId();
-                        showAirports();
                         Connections connections = new Connections();
                         connections.setConnectionNumber(nroConexion);
                         connections.setIdTrip(tripId);
                         connections.setIdPlane(idPlane);
                         connections.setIdAriport(idDestination);
                         tripService.createConnecion(connections);
-                        CuadroDeTexto.dibujarCuadroDeTexto(null, null);
                     } else {
                         CuadroDeTexto.dibujarCuadroDeTexto("Registrar conexiones", "*");
-                        masconexiones:
-                        while (true) {
+                        masconexiones: while (true) {
                             String nroConexion = console.stringNotNull("Ingrese el número de la conexión");
                             showPlanes();
                             PlaneStMdDTO planeSelect = Helpers.transformAndValidateObj(
@@ -136,19 +134,21 @@ public class TripConsoleAdapter {
                         );
                         idPlane = getPlane.getId();
                     } else {
-                        idPlane = getConn.getId();
+                        idPlane = getConn.getIdPlane();
                     }
                     String idAirport;
                     String upAirport = console.stringNotNull("¿Desea cambiar el aeropuerto de esta conexión? (s/n): ");
                     if (upAirport.equals("s")) {
                         showAirports();
                         AirportCityDTO getAirport = Helpers.transformAndValidateObj(
-                                () -> tripService.getAirportCityById(console.stringNotNull("Seleccione el nuevo aeropuerto por su ID"))
+                                () -> tripService.getAirportCityById(console.stringNotNull("Seleccione el nuevo aeropuerto por su ID: "))
                         );
                         idAirport = getAirport.getId();
                     } else {
                         idAirport = getConn.getIdAriport();
                     }
+                    System.out.println(idAirport);
+                    System.out.println(idPlane);
                     getConn.setConnectionNumber(nroConxion);
                     getConn.setIdPlane(idPlane);
                     getConn.setIdAriport(idAirport);
@@ -161,13 +161,15 @@ public class TripConsoleAdapter {
                     TripAirportDTO getTripObj = Helpers.transformAndValidateObj(
                             () -> tripService.getTripAripById(console.readInt("Selecciona el id del viaje: "))
                     );
+
                     CuadroDeTexto.drawHorizontal(130, "-");
                     System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", "ID", "FECHA", "PRECIO", "ORIGEN", "DESTINATION");
                     CuadroDeTexto.drawHorizontal(130, "-");
                     System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", getTripObj.getId(), getTripObj.getTripDate(), getTripObj.getPriceTrip(), getTripObj.getOrigin(), getTripObj.getDestination());
                     CuadroDeTexto.drawHorizontal(130, "-");
+
                     showConnections(getTripObj.getId());
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break ;
                 }
 
@@ -212,12 +214,13 @@ public class TripConsoleAdapter {
     public void showAirports(){
         List<AirportCityDTO> listadoAeropuertos = tripService.getAllAirportCity();
         System.out.println("Listado Aeropuertos:");
-        CuadroDeTexto.drawHorizontal(27, "-");
+        CuadroDeTexto.drawHorizontal(80, "-");
         System.out.printf("\n| %-4s | %-30s | %-30s |%n", "ID", "Aeropuerto", "Ciudad");
         listadoAeropuertos.forEach(aeropuerto -> {
-            CuadroDeTexto.drawHorizontal(27, "-");
+            CuadroDeTexto.drawHorizontal(80, "-");
             System.out.printf("\n| %-4s | %-30s | %-30s |%n", aeropuerto.getId(), aeropuerto.getNameAirport(), aeropuerto.getNameCity());
         });
+        CuadroDeTexto.drawHorizontal(80, "-");
         System.out.println();
     }
 
@@ -236,7 +239,8 @@ public class TripConsoleAdapter {
 
     public void showConnections(int idTrip){
         List<ConnInfoDTO> connetions = tripService.getAllConnByTrip(idTrip);
-        CuadroDeTexto.dibujarCuadroDeTexto("Listado de conexiones", null);
+        System.out.println();
+        CuadroDeTexto.dibujarCuadroDeTexto("Listado de conexiones", "*");
         CuadroDeTexto.drawHorizontal(100, "-");
         System.out.printf("\n| %-10s | %-10s | %-12s | %-13s | %-40s |%n", "Id Trip", "Id Conn", "Conn Number", "plates plane", "Aeropuerto");
         connetions.forEach(conn -> {

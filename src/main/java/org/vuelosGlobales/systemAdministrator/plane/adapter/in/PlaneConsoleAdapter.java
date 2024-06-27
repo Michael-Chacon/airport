@@ -21,12 +21,15 @@ public class PlaneConsoleAdapter {
 
     public  void crudPlane(){
         menuPlane: while (true){
-            System.out.println("1. Crear Avión");
-            System.out.println("2. Actualizar Avión");
-            System.out.println("3. Buscar Avión por ID");
-            System.out.println("4. Eliminar Avión");
-            System.out.println("5. Listar todos Aviones");
-            System.out.println("6. Salir");
+            System.out.println("======================================");
+            System.out.println("          MENÚ DE GESTIÓN DE AVIONES   ");
+            System.out.println("======================================");
+            System.out.println("\t1. Crear Avión");
+            System.out.println("\t2. Actualizar Avión");
+            System.out.println("\t3. Buscar Avión por ID");
+            System.out.println("\t4. Eliminar Avión");
+            System.out.println("\t5. Listar todos los Aviones");
+            System.out.println("\t6. Salir");
             int choice = console.readInt("");
 
             switch (choice){
@@ -82,7 +85,7 @@ public class PlaneConsoleAdapter {
                         );
                         idAirlineUp = getAirlineUp.getId();
                     }else {
-                        idAirlineUp = planeSelect.getIdStatus();
+                        idAirlineUp = planeSelect.getIdAirline();
                     }
 
                     int idStatusUp;

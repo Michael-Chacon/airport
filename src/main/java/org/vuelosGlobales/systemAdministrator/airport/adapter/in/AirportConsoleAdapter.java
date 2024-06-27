@@ -19,12 +19,16 @@ public class AirportConsoleAdapter {
 
     public void crudAirport() {
         menuAirport: while (true){
-            System.out.println("1. Crear Aeropuerto");
-            System.out.println("2. Actualizar Aeropuerto");
-            System.out.println("3. Buscar Aeropuerto por ID");
-            System.out.println("4. Eliminar Aeropuerto");
-            System.out.println("5. Listar todos Aeropuertos");
-            System.out.println("6. Salir");
+            System.out.println("======================================");
+            System.out.println("          MENÚ DE AEROPUERTOS         ");
+            System.out.println("======================================");
+            System.out.println("\t1. Crear Aeropuerto");
+            System.out.println("\t2. Actualizar Aeropuerto");
+            System.out.println("\t3. Buscar Aeropuerto por ID");
+            System.out.println("\t4. Eliminar Aeropuerto");
+            System.out.println("\t5. Listar todos los Aeropuertos");
+            System.out.println("\t6. Salir");
+            System.out.println("======================================");
             int choice = console.readInt("");
 
             switch (choice){

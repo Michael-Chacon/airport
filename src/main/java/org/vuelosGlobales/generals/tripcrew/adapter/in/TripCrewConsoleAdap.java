@@ -29,31 +29,34 @@ public class TripCrewConsoleAdap {
             int choice = console.readInt("");
             switch (choice){
                 case 1:
-                asignarTripulacion();
-                break;
+                    asignarTripulacion();
+                    break;
                 case 2:
                     verTripulacion();
                     break;
+                case 3:
+                    break tripulation;
             }
         }
     }
 
     public void asignarTripulacion(){
-        CuadroDeTexto.dibujarCuadroDeTexto("Asignar tripulación", "*");
-        showAirlines();
-        Airline getAirline = Helpers.transformAndValidateObj(
-                () -> tripCrewService.getAirlineById(console.readInt("Seleccione la aerolínea a la que pertenece el vuelo: "))
-        );
-        int idAirline = getAirline.getId();
-       showTripes();
-       TripAirportDTO getTrip = Helpers.transformAndValidateObj(
-               () -> tripCrewService.getTripAirpById(console.readInt("Seleccione el viaje al que pertenece la conexión: "))
-       );
-       int idTrip = getTrip.getId();
+
        getConn: while (true){
+           CuadroDeTexto.dibujarCuadroDeTexto("Asignar tripulación", "*");
+           showAirlines();
+           Airline getAirline = Helpers.transformAndValidateObj(
+                   () -> tripCrewService.getAirlineById(console.readInt("Seleccione la aerolínea a la que pertenece el vuelo: "))
+           );
+           int idAirline = getAirline.getId();
+           showTripes();
+           TripAirportDTO getTrip = Helpers.transformAndValidateObj(
+                   () -> tripCrewService.getTripAirpById(console.readInt("Seleccione el viaje al que pertenece la conexión: "))
+           );
+           int idTrip = getTrip.getId();
            showConnections(idTrip);
            Connections getConn = Helpers.transformAndValidateObj(
-                   () -> tripCrewService.getConnectionById(console.readInt("Seleccione la conexión: "))
+                   () -> tripCrewService.getConnectionById(console.readInt("Seleccione la conexión por el Id Conn: "))
            );
            showEmployees(idAirline);
            EmployeeRelationshipDTO piloto = Helpers.transformAndValidateObj(
@@ -89,19 +92,19 @@ public class TripCrewConsoleAdap {
         );
         showConnections(getTrip.getId());
         Connections getConn = Helpers.transformAndValidateObj(
-                () -> tripCrewService.getConnectionById(console.readInt("Seleccione la conexión: "))
+                () -> tripCrewService.getConnectionById(console.readInt("Seleccione la conexión por el  Id Conn: "))
         );
         showTripCrew(getConn.getId());
-        CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+        System.out.println();
     }
 
     public void showTripCrew(int idConn){
         List<TripCrewInfoDTO> crew = tripCrewService.getDataTripCrewByConn(idConn);
         CuadroDeTexto.drawHorizontal(130, "-");
-        System.out.printf("\n| %-35s | %-20s | %-20s | %-40s |", "Nombre", "Rol", "Conexión", "Aeropuerto");
+        System.out.printf("\n| %-35s | %-20s | %-20s | %-40s |%n", "Nombre", "Rol", "Conexión", "Aeropuerto");
         crew.forEach(data -> {
             CuadroDeTexto.drawHorizontal(130, "-");
-            System.out.printf("\n| %-35s | %-20s | %-20s | %-40s |", data.getNameEmployee(), data.getRolEmployee(), data.getConnectionNumber(), data.getAirport());
+            System.out.printf("\n| %-35s | %-20s | %-20s | %-40s |%n", data.getNameEmployee(), data.getRolEmployee(), data.getConnectionNumber(), data.getAirport());
         });
         CuadroDeTexto.drawHorizontal(130, "-");
     }
@@ -110,10 +113,10 @@ public class TripCrewConsoleAdap {
         List<Airline> airlineList = tripCrewService.getAllAirlines();
         System.out.println("Listado de aerolíneas:");
         CuadroDeTexto.drawHorizontal(27, "-");
-        System.out.println(String.format("\n| %-4s | %-16s |", "ID", "NOMBRE"));
+        System.out.printf("\n| %-4s | %-16s |%n", "ID", "NOMBRE");
         airlineList.forEach(airline -> {
             CuadroDeTexto.drawHorizontal(27, "-");
-            System.out.println(String.format("\n| %-4s | %-16s |", airline.getId(), airline.getName()));
+            System.out.printf("\n| %-4s | %-16s |%n", airline.getId(), airline.getName());
         });
         System.out.println();
     }

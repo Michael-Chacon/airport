@@ -17,12 +17,15 @@ public class ManufacturerConsoleAdap {
     
     public void crudManufacturer(){
         menuManufacturer: while (true){
-            System.out.println("1. Crear Fabricante");
-            System.out.println("2. Actualizar Fabricante");
-            System.out.println("3. Buscar Fabricante por ID");
-            System.out.println("4. Eliminar Fabricante");
-            System.out.println("5. Listar todos Fabricantes");
-            System.out.println("6. Salir");
+            System.out.println("======================================");
+            System.out.println("       MENÚ DE GESTIÓN DE FABRICANTES  ");
+            System.out.println("======================================");
+            System.out.println("\t1. Crear Fabricante");
+            System.out.println("\t2. Actualizar Fabricante");
+            System.out.println("\t3. Buscar Fabricante por ID");
+            System.out.println("\t4. Eliminar Fabricante");
+            System.out.println("\t5. Listar todos los Fabricantes");
+            System.out.println("\t6. Salir");
             int choice = console.readInt("");
 
             switch (choice){
@@ -39,7 +42,7 @@ public class ManufacturerConsoleAdap {
                     CuadroDeTexto.dibujarCuadroDeTexto("Actualizar información de un fabricante", "*");
                     showManufactureres();
                     Manufacturer manufacturerSelect = Helpers.transformAndValidateObj(
-                            () -> manufacturerService.getManufacturerById(console.readInt("Seleccione el fabricante por el id: "))
+                            () -> manufacturerService.getManufacturerById(console.readInt("Seleccione el fabricante por su ID: "))
                     );
                     CuadroDeTexto.dibujarCuadroDeTexto("Actualizar datos de " + manufacturerSelect.getName(), "*");
                     String newName = console.stringNotNull("Nuevo nombre del fabricante: ");
@@ -56,7 +59,7 @@ public class ManufacturerConsoleAdap {
                             () -> manufacturerService.getManufacturerById(console.readInt("Seleccione el estado por el id: "))
                     );
                     System.out.println(showManufacturer);
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
 
                 case 4:
@@ -73,7 +76,7 @@ public class ManufacturerConsoleAdap {
                 case 5:
                     CuadroDeTexto.dibujarCuadroDeTexto("Fabricantes registrados", "*");
                     showManufactureres();
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
 
                 case 6:
@@ -84,13 +87,13 @@ public class ManufacturerConsoleAdap {
 
     public void showManufactureres(){
         List<Manufacturer> manufacturers = manufacturerService.getAllManufacturers();
-        System.out.println("Listado de fabricantes:");
         CuadroDeTexto.drawHorizontal(27, "-");
         System.out.println(String.format("\n| %-4s | %-16s |", "ID", "FABRICANTE"));
         manufacturers.forEach(country -> {
             CuadroDeTexto.drawHorizontal(27, "-");
             System.out.println(String.format("\n| %-4s | %-16s |", country.getId(), country.getName()));
         });
+        CuadroDeTexto.drawHorizontal(27, "-");
         System.out.println();
     }  
 

@@ -18,12 +18,16 @@ public class CountryConsoleAdapter {
 
     public  void crudCountry(){
         menuCountry: while (true){
-            System.out.println("1. Crear Pais");
-            System.out.println("2. Actualizar Pais");
-            System.out.println("3. Buscar Pais por ID");
-            System.out.println("4. Eliminar Pais");
-            System.out.println("5. Listar todos Paises");
-            System.out.println("6. Salir");
+            System.out.println("======================================");
+            System.out.println("             MENÚ DE PAÍSES           ");
+            System.out.println("======================================");
+            System.out.println("\t1. Crear País");
+            System.out.println("\t2. Actualizar País");
+            System.out.println("\t3. Buscar País por ID");
+            System.out.println("\t4. Eliminar País");
+            System.out.println("\t5. Listar todos los Países");
+            System.out.println("\t6. Salir");
+            System.out.println("======================================");
             int choice = console.readInt("");
 
             switch (choice){
@@ -31,10 +35,9 @@ public class CountryConsoleAdapter {
                     CuadroDeTexto.dibujarCuadroDeTexto("Registrar pais", "*");
                     String name = console.stringNotNull("Nombre del pais: ");
                     String idCountry = Helpers.validateExist(
-                        "Ingrese el id del pais, debe ser alfanumerico de máximo 5 caracteres",
+                        "Ingrese el ID del país (alfanumérico, máximo 5 caracteres): ",
                         id -> countryService.getCountryById(id)
                     );
-                    System.out.println(idCountry);
                     countryService.createCountry(new Country(idCountry.toUpperCase(),name));
                     CuadroDeTexto.dibujarCuadroDeTexto(null, null);
                     break;
@@ -49,7 +52,7 @@ public class CountryConsoleAdapter {
                     String newName = console.stringNotNull("Nuevo nombre del pais: ");
                     countrySelect.setName(newName);
                     countryService.updateCountry(countrySelect);
-                    CuadroDeTexto.dibujarCuadroDeTexto(null, null);
+                    CuadroDeTexto.dibujarCuadroDeTexto(null, "-");
                     break;
 
                 case 3:
@@ -60,7 +63,7 @@ public class CountryConsoleAdapter {
                             () -> countryService.getCountryById(console.stringNotNull("Seleccione el pais por el id: ").toUpperCase())
                     );
                     System.out.println(showCountry);
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
 
                 case 4:
@@ -76,12 +79,11 @@ public class CountryConsoleAdapter {
                 case 5:
                     CuadroDeTexto.dibujarCuadroDeTexto("Paises registrados", "*");
                     showCountries();
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
                 case 6:
                     break menuCountry;
             }
-            String option = console.stringNull("Algo: ");
         }
     }
 
@@ -94,6 +96,7 @@ public class CountryConsoleAdapter {
             CuadroDeTexto.drawHorizontal(27, "-");
             System.out.println(String.format("\n| %-4s | %-16s |", country.getId(), country.getName()));
         });
+        CuadroDeTexto.drawHorizontal(27, "-");
         System.out.println();
     }
 

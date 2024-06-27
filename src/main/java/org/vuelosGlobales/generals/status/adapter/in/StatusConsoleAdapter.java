@@ -18,17 +18,20 @@ public class StatusConsoleAdapter {
 
     public void crudStatus(){
         menuStatus: while (true){
-            System.out.println("1. Crear Estado");
-            System.out.println("2. Actualizar Estado");
-            System.out.println("3. Buscar Estado por ID");
-            System.out.println("4. Eliminar Estado");
-            System.out.println("5. Listar todos Estados");
-            System.out.println("6. Salir");
+            System.out.println("======================================");
+            System.out.println("         MENÚ DE GESTIÓN DE ESTADOS     ");
+            System.out.println("======================================");
+            System.out.println("\t1. Crear Estado");
+            System.out.println("\t2. Actualizar Estado");
+            System.out.println("\t3. Buscar Estado por ID");
+            System.out.println("\t4. Eliminar Estado");
+            System.out.println("\t5. Listar todos los Estados");
+            System.out.println("\t6. Salir");
             int choice = console.readInt("");
 
             switch (choice){
                 case 1:
-                    CuadroDeTexto.dibujarCuadroDeTexto("Registrar Estado del avión", "*");
+                    CuadroDeTexto.dibujarCuadroDeTexto("Registrar el estado de los  avión", "*");
                     String name = console.stringNotNull("Nombre del estado: ");
                     Status st = new Status();
                     st.setName(name);
@@ -57,7 +60,7 @@ public class StatusConsoleAdapter {
                             () -> statusService.getStatusById(console.readInt("Seleccione el estado por el id: "))
                     );
                     System.out.println(showStatus);
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
 
                 case 4:
@@ -74,25 +77,24 @@ public class StatusConsoleAdapter {
                 case 5:
                     CuadroDeTexto.dibujarCuadroDeTexto("Estados registrados", "*");
                     showStatuses();
-                    CuadroDeTexto.dibujarCuadroDeTexto("Fin", null);
+                    System.out.println();
                     break;
 
                 case 6:
                     break menuStatus;
             }
-            String option = console.stringNull("Algo: ");
         }
     }
 
     public void showStatuses(){
         List<Status> statuses = statusService.getAllStatuss();
-        System.out.println("Listado de estados:");
         CuadroDeTexto.drawHorizontal(27, "-");
         System.out.println(String.format("\n| %-4s | %-16s |", "ID", "ESTADOS"));
         statuses.forEach(country -> {
             CuadroDeTexto.drawHorizontal(27, "-");
             System.out.println(String.format("\n| %-4s | %-16s |", country.getId(), country.getName()));
         });
+        CuadroDeTexto.drawHorizontal(27, "-");
         System.out.println();
     }
 

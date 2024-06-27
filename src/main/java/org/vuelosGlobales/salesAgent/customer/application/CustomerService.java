@@ -1,16 +1,21 @@
 package org.vuelosGlobales.salesAgent.customer.application;
 
+import org.vuelosGlobales.salesAgent.customer.domain.CustomerDocuDTO;
 import org.vuelosGlobales.salesAgent.customer.infrastructure.CustomerRepository;
 import org.vuelosGlobales.salesAgent.customer.domain.Customer;
+import org.vuelosGlobales.systemAdministrator.document.domain.Document;
+import org.vuelosGlobales.systemAdministrator.document.infrastructure.DocumentRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 public class CustomerService {
     private final CustomerRepository customerRepository;
+    private final DocumentRepository documentRepository;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, DocumentRepository documentRepository) {
         this.customerRepository = customerRepository;
+        this.documentRepository = documentRepository;
     }
 
     public void createCustomer(Customer customer){
@@ -31,5 +36,20 @@ public class CustomerService {
 
     public void deleteCustomer(int id){
         this.customerRepository.delete(id);
+    }
+    public List<Document> getAllDocuments(){
+        return documentRepository.findAll();
+    }
+
+    public Optional<Document> getDocumentById(int id){
+        return documentRepository.findById(id);
+    }
+
+    public List<CustomerDocuDTO> getAllCustDoc(){
+        return this.customerRepository.getAllCustDoc();
+    }
+
+    public Optional<CustomerDocuDTO> getCusDocById(int id){
+        return this.customerRepository.getCustDocById(id);
     }
 }

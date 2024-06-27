@@ -14,7 +14,7 @@ public class CuadroDeTexto {
         int widthHorizontal = widthMessage + 4;
 
         drawHorizontal(widthHorizontal, tipe);
-        System.out.println("\n║ " + message + " ║");
+        System.out.println("\n| " + message + " |");
         drawHorizontal(widthHorizontal, tipe);
         System.out.println();
     }
