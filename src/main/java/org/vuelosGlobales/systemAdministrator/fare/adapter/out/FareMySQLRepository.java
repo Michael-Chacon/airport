@@ -23,7 +23,7 @@ public class FareMySQLRepository implements FareRepository {
     @Override
     public void save(Fare fare) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "INSERT INTO flightfare (description, deatils, value) VALUES (?, ?, ?)";
+            String query = "INSERT INTO flightfare (description, details, value) VALUES (?, ?, ?)";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, fare.getDescription());
                 stm.setString(2, fare.getDetails());

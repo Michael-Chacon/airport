@@ -38,6 +38,9 @@ import org.vuelosGlobales.systemAdministrator.airline.application.AirlineService
 import org.vuelosGlobales.systemAdministrator.airport.adapter.in.AirportConsoleAdapter;
 import org.vuelosGlobales.systemAdministrator.airport.adapter.out.AirportMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.airport.application.AirportService;
+import org.vuelosGlobales.systemAdministrator.fare.adapter.in.FareConsoleAdapter;
+import org.vuelosGlobales.systemAdministrator.fare.adapter.out.FareMySQLRepository;
+import org.vuelosGlobales.systemAdministrator.fare.application.FareService;
 import org.vuelosGlobales.systemAdministrator.plane.adapter.in.PlaneConsoleAdapter;
 import org.vuelosGlobales.systemAdministrator.plane.adapter.out.PlaneMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.plane.application.PlaneService;
@@ -100,6 +103,10 @@ public class Menus {
         TripCrewMySQLRepository tripCrewOut = new TripCrewMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         TripCrewService tripCrewService = new TripCrewService(tripCrewOut, airlineOut, employeeOut, connOut, tripOut);
         TripCrewConsoleAdap tripCrewIn = new TripCrewConsoleAdap(tripCrewService);
+//      Fare
+        FareMySQLRepository fareOut = new FareMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        FareService fareService = new FareService(fareOut);
+        FareConsoleAdapter fareIn = new FareConsoleAdapter(fareService);
 
 //        tripCrewIn.crew();
 //        tripConsoleAdapter.crudTrip();
@@ -162,7 +169,8 @@ public class Menus {
             System.out.println("\t12. Gestionar información de roles de la tripulación");
             System.out.println("\t13. Gestionar empleados");
             System.out.println("\t14. Gestionar tripulación");
-            System.out.println("\t15. Regresar al menú principal");
+            System.out.println("\t15. Gestionar tarifas de vuelo");
+            System.out.println("\t16. Regresar al menú principal");
             System.out.println("======================================");
             System.out.print("Seleccione una opción: ");
 
@@ -189,12 +197,14 @@ public class Menus {
                 statusIn.crudStatus();
             } else if (choise == 12) {
                 roleIn.crudRole();
-            } else if (choise == 15) {
+            } else if (choise == 16) {
                 break menuAdmin;
             } else if (choise == 13) {
                 employeeIn.crudEmployee();
             } else if (choise == 14) {
                 tripCrewIn.crew();
+            } else if (choise == 15) {
+                fareIn.crudFares();
             } else {
                 System.out.println("Opción incorrecta");
             }
