@@ -42,6 +42,7 @@ import org.vuelosGlobales.systemAdministrator.airline.application.AirlineService
 import org.vuelosGlobales.systemAdministrator.airport.adapter.in.AirportConsoleAdapter;
 import org.vuelosGlobales.systemAdministrator.airport.adapter.out.AirportMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.airport.application.AirportService;
+import org.vuelosGlobales.systemAdministrator.document.adapter.in.DocumentConsoleAdapter;
 import org.vuelosGlobales.systemAdministrator.document.adapter.out.DocumentMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.document.application.DocumentService;
 import org.vuelosGlobales.systemAdministrator.fare.adapter.in.FareConsoleAdapter;
@@ -116,6 +117,7 @@ public class Menus {
 
         DocumentMySQLRepository documentOut = new DocumentMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         DocumentService documentService = new DocumentService(documentOut);
+        DocumentConsoleAdapter documentIn = new DocumentConsoleAdapter(documentService);
         // Customer
         CustomerMySQLRepository customerOut = new CustomerMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
         CustomerService customerService = new CustomerService(customerOut, documentOut);
@@ -184,6 +186,7 @@ public class Menus {
             System.out.println("\t14. Gestionar tripulación");
             System.out.println("\t15. Gestionar tarifas de vuelo");
             System.out.println("\t16. Regresar al menú principal");
+            System.out.println("\t16. documento");
             System.out.println("======================================");
             System.out.print("Seleccione una opción: ");
 
@@ -218,6 +221,8 @@ public class Menus {
                 tripCrewIn.crew();
             } else if (choise == 15) {
                 fareIn.crudFares();
+            } else if (choise == 17) {
+                documentIn.crudDocument();
             } else {
                 System.out.println("Opción incorrecta");
             }

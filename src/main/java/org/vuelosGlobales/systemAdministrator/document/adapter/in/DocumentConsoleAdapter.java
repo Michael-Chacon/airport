@@ -16,7 +16,7 @@ public class DocumentConsoleAdapter {
         this.documentService = documentService;
     }
 
-    public  void crudCountry(){
+    public  void crudDocument(){
         menuDocument: while (true){
             System.out.println("1. Registrar documento");
             System.out.println("2. Actualizar info de un documento");
@@ -76,19 +76,19 @@ public class DocumentConsoleAdapter {
                 case 6:
                     break menuDocument;
             }
-            String option = console.stringNull("Algo: ");
         }
     }
 
     public void showDocuments(){
         List<Document> documents = documentService.getAllDocuments();
         System.out.println("Documentos registrados:");
-        CuadroDeTexto.drawHorizontal(27, "-");
-        System.out.printf("\n| %-4s | %-16s |%n", "ID", "NOMBRE");
+        CuadroDeTexto.drawHorizontal(33, "-");
+        System.out.printf("\n| %-4s | %-20s |%n", "ID", "NOMBRE");
         documents.forEach(document -> {
-            CuadroDeTexto.drawHorizontal(27, "-");
-            System.out.printf("\n| %-4s | %-16s |%n", document.getId(), document.getName());
+            CuadroDeTexto.drawHorizontal(33, "-");
+            System.out.printf("\n| %-4s | %-20s |%n", document.getId(), document.getName());
         });
+        CuadroDeTexto.drawHorizontal(33, "-");
         System.out.println();
     }
 }
