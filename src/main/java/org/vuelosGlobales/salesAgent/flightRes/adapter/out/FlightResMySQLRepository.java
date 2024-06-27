@@ -22,7 +22,7 @@ public class FlightResMySQLRepository implements FlightResRepository {
     @Override
     public void save(FlightRes flightRes) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "INSERT INTO tripbooking (date) VALUES (?)";
+            String query = "INSERT INTO tripbooking (date, idTrip) VALUES (?)";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, flightRes.getDate());
                 stm.executeUpdate();
