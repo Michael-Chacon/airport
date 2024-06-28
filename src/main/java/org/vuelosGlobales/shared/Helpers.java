@@ -32,10 +32,23 @@ public class Helpers {
         String input = console.stringWithLeght(message, 5);
         Optional<T> validationResult = validator.validate(input.toUpperCase());
         if (validationResult.isPresent()){
-            System.out.println("El id ingresado ya existe");
+            System.out.println("El valor ingresado ya existe");
         }else{
             return input;
         }
     }
    }
+
+    public static <T> String validatePlate(String message, Validator<T> validator){
+        Console console = new Console();
+        while (true){
+            String input = console.stringWithLeght(message, 30);
+            Optional<T> validationResult = validator.validate(input.toUpperCase());
+            if (validationResult.isPresent()){
+                System.out.println("La placa ingresada ya existe");
+            }else{
+                return input;
+            }
+        }
+    }
 }

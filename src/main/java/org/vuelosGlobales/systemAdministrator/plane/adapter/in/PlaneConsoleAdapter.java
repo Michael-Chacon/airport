@@ -39,8 +39,14 @@ public class PlaneConsoleAdapter {
                     Airline airlineSelect = Helpers.transformAndValidateObj(
                             () -> planeService.getAirlineById(console.readInt("Seleccione la aerolínea a la que pertenece el avión"))
                     );
+
+                    String plate = Helpers.validatePlate(
+                            "Ingrese la placa del avión: ",
+                            id -> planeService.validatePlate(id)
+                    );
+
                     int airlineId = airlineSelect.getId();
-                    String plate = console.stringNotNull("Ingrese la placa del avión: ");
+//                    String plate = console.stringNotNull("Ingrese la placa del avión: ");
                     int capacity = console.readInt("Cual es la capacidad del avión: ");
                     String fabreicationDate = console.stringWithLeght("En que fecha se fabricó el avión, formato valido de fecha(YYYY-MM-DD): ", 10);
 

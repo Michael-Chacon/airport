@@ -75,4 +75,7 @@ public class PlaneService {
     public Optional<Airline> getAirlineById(int id){
         return this.airlineRepository.findById(id);
     }
+    public Optional<Plane> validatePlate(String plate){
+        return this.planeRepository.validatePlate(plate);
+    }
 }

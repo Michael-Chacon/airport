@@ -80,6 +80,25 @@ public class PlaneMySQLRepository implements PlaneRepository {
     }
 
     @Override
+    public Optional<Plane> validatePlate(String plate){
+        try (Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT plates FROM plane WHERE plates = ? ";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setString(1, plate);
+                ResultSet resultSet = stm.executeQuery();
+                if (resultSet.next()){
+                    Plane plane = new Plane();
+                    plane.setPlates(resultSet.getString("plates"));
+                    return Optional.of(plane);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public List<Plane> findAll() {
         List<Plane> objects= new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, user, password)){

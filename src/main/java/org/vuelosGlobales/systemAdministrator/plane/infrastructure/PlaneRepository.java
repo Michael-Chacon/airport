@@ -14,4 +14,5 @@ public interface PlaneRepository {
     void delete(int id);
     List<PlaneStMdDTO> findAllPlaneStMd(boolean filter, int id);
     Optional<PlaneStMdDTO> findPlaneStMdById(int id);
+    Optional<Plane> validatePlate(String plate);
 }
