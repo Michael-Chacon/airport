@@ -150,7 +150,7 @@ public class Menus {
             System.out.println("\t4. Cliente");
             System.out.println("\t5. Salir");
             System.out.println("======================================");
-            int choise = console.readInt("Seleccione un apción: ");
+            int choise = console.readInt("Seleccione un opción: ");
 
             if (choise == 1){
                 menuSystemAdmin();
