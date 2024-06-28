@@ -15,4 +15,5 @@ public interface ConnectionRepository {
     List<ConnInfoDTO> findAllConnByTrip(int id);
     Optional<ConnInfoDTO> findConnById(int id);
     Optional<ConnInfoDTO> findConnByTripByIdConn(int idConn);
+    Optional<Connections> validateNroConn(int nroConn);
 }

@@ -155,6 +155,27 @@ public class ConnectionMySQLRepository implements ConnectionRepository {
         }
         return Optional.empty();
     }
+
+    @Override
+    public Optional<Connections> validateNroConn(int nroConn) {
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT connectionNumber FROM flightconnection WHERE connectionNumber = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, nroConn);
+                try(ResultSet resultSet = stm.executeQuery()){
+                    if (resultSet.next()){
+                        Connections obj = new Connections();
+                        obj.setConnectionNumber(resultSet.getString("flightconnection"));
+                        return Optional.of(obj);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
+    }
+
     @Override
     public Optional<ConnInfoDTO> findConnById(int id) {
         return Optional.empty();
