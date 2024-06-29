@@ -27,7 +27,7 @@ public class TripMySQLRepository implements TripRepository {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
             String query = "INSERT INTO trip (tripDate, priceTrip, idOrigin, idDestination) VALUES (?,?,?,?)";
             preparedStatement = conn.prepareStatement(query, preparedStatement.RETURN_GENERATED_KEYS);
-                preparedStatement.setString(1, trip.getTripDate());
+                preparedStatement.setDate(1, trip.getTripDate());
                 preparedStatement.setDouble(2, trip.getPriceTrip());
                 preparedStatement.setString(3, trip.getIdOrigin());
                 preparedStatement.setString(4, trip.getIdDestination());
@@ -35,8 +35,7 @@ public class TripMySQLRepository implements TripRepository {
             if (columnasAfectadas > 0){
                 resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()){
-                    int idRevision = resultSet.getInt(1);
-                    return idRevision;
+                    return resultSet.getInt(1);
                 }else {
                     System.out.println("Algo salió mal");
                 }
@@ -52,7 +51,7 @@ public class TripMySQLRepository implements TripRepository {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
             String query = "UPDATE trip SET tripDate = ?, priceTrip = ?, idOrigin = ?, idDestination = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
-                stm.setString(1, trip.getTripDate());
+                stm.setDate(1, trip.getTripDate());
                 stm.setDouble(2, trip.getPriceTrip());
                 stm.setString(3, trip.getIdOrigin());
                 stm.setString(4, trip.getIdDestination());
@@ -72,7 +71,7 @@ public class TripMySQLRepository implements TripRepository {
                 stm.setInt(1, id);
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
-                        Trip obj = new Trip(resultSet.getInt("id"), resultSet.getString("tripDate"),
+                        Trip obj = new Trip(resultSet.getInt("id"), resultSet.getDate("tripDate"),
                                 resultSet.getDouble("priceTrip"), resultSet.getString("idOrigin"),
                                 resultSet.getString("idDestination"));
                         return Optional.of(obj);
@@ -93,7 +92,7 @@ public class TripMySQLRepository implements TripRepository {
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
-                    Trip trip = new Trip(resultSet.getInt("id"), resultSet.getString("tripDate"),
+                    Trip trip = new Trip(resultSet.getInt("id"), resultSet.getDate("tripDate"),
                             resultSet.getDouble("priceTrip"), resultSet.getString("idOrigin"),
                             resultSet.getString("idDestination"));
                     objects.add(trip);
@@ -130,7 +129,7 @@ public class TripMySQLRepository implements TripRepository {
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
-                    TripAirportDTO trip = new TripAirportDTO(resultSet.getInt("id"), resultSet.getString("tripDate"),
+                    TripAirportDTO trip = new TripAirportDTO(resultSet.getInt("id"), resultSet.getDate("tripDate"),
                             resultSet.getDouble("priceTrip"), resultSet.getString("origin"),
                             resultSet.getString("destination"));
                     objects.add(trip);
@@ -154,7 +153,7 @@ public class TripMySQLRepository implements TripRepository {
                 stm.setInt(1, id);
                 ResultSet resultSet = stm.executeQuery();
                 if (resultSet.next()){
-                    TripAirportDTO trip = new TripAirportDTO(resultSet.getInt("id"), resultSet.getString("tripDate"),
+                    TripAirportDTO trip = new TripAirportDTO(resultSet.getInt("id"), resultSet.getDate("tripDate"),
                             resultSet.getDouble("priceTrip"), resultSet.getString("origin"),
                             resultSet.getString("destination"));
                     return Optional.of(trip);

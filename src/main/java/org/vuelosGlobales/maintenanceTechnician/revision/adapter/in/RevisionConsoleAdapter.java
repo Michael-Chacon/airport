@@ -11,6 +11,7 @@ import org.vuelosGlobales.shared.Helpers;
 import org.vuelosGlobales.systemAdministrator.airline.domain.Airline;
 import org.vuelosGlobales.systemAdministrator.plane.domain.PlaneStMdDTO;
 
+import java.sql.Date;
 import java.util.List;
 
 public class RevisionConsoleAdapter {
@@ -53,7 +54,8 @@ public class RevisionConsoleAdapter {
                     );
                     String idEmployee = employee.getId();
 
-                    String revisionDate = console.stringWithLeght("En que fecha se hizo la revisión, formato valido de fecha(YYYY-MM-DD): ", 10);
+
+                    Date revisionDate = console.validarFecha("En que fecha se hizo la revisión, formato valido de fecha(YYYY-MM-DD): ");
                     String description = console.stringNotNull("Escriba una descripción detallada de la revisión:\n ");
                     Revision revision = new Revision();
                     revision.setRevisionDate(revisionDate);
@@ -72,7 +74,7 @@ public class RevisionConsoleAdapter {
                     );
                     System.out.println(revisionSelect);
                     CuadroDeTexto.dibujarCuadroDeTexto("Actualizar datos de la revisión" + revisionSelect.getId(), "*");
-                    String revisionDateUp = console.stringNotNull("Ingrese al fecha actualizada de la revisión: ");
+                    Date revisionDateUp = console.validarFecha("Ingrese al fecha actualizada de la revisión: ");
                     String descriptionUp = console.stringNotNull("Escriba la nueva descripción: \n");
                     int idPlaneRevision;
                     String validate = console.stringNotNull("Quiere cambiar el avión al que le hizo la revisión? (y/n)");

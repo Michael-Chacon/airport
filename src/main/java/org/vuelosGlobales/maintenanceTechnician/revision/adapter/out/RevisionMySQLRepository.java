@@ -27,7 +27,7 @@ public class RevisionMySQLRepository implements RevisionRepository {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
             String query = "INSERT INTO revision (revisionDate, idPlane, description) VALUES (?,?,?)";
             preparedStatement = conn.prepareStatement(query, preparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, revision.getRevisionDate());
+            preparedStatement.setDate(1, revision.getRevisionDate());
             preparedStatement.setInt(2, revision.getIdPlane());
             preparedStatement.setString(3, revision.getDescription());
             int columnasAfectadas = preparedStatement.executeUpdate();
@@ -65,7 +65,7 @@ public class RevisionMySQLRepository implements RevisionRepository {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
             String query = "UPDATE revision SET revisionDate = ?, idPlane = ?, description = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
-                stm.setString(1, revision.getRevisionDate());
+                stm.setDate(1, revision.getRevisionDate());
                 stm.setInt(2, revision.getIdPlane());
                 stm.setString(3, revision.getDescription());
                 stm.setInt(4, revision.getId());
@@ -84,7 +84,7 @@ public class RevisionMySQLRepository implements RevisionRepository {
                 stm.setInt(1, id);
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
-                        Revision obj = new Revision(resultSet.getInt("id"), resultSet.getString("revisionDate"),
+                        Revision obj = new Revision(resultSet.getInt("id"), resultSet.getDate("revisionDate"),
                                 resultSet.getInt("idPlane"), resultSet.getString("description"));
                         return Optional.of(obj);
                     }
@@ -104,7 +104,7 @@ public class RevisionMySQLRepository implements RevisionRepository {
             try(PreparedStatement stm = conn.prepareStatement(query)){
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
-                    Revision revision = new Revision(resultSet.getInt("id"), resultSet.getString("revisionDate"),
+                    Revision revision = new Revision(resultSet.getInt("id"), resultSet.getDate("revisionDate"),
                             resultSet.getInt("idPlane"), resultSet.getString("description"));
                     objects.add(revision);
                 }
@@ -137,7 +137,7 @@ public class RevisionMySQLRepository implements RevisionRepository {
                 stm.setInt(1, id);
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
-                    Revision revision = new Revision(resultSet.getInt("id"), resultSet.getString("revisionDate"),
+                    Revision revision = new Revision(resultSet.getInt("id"), resultSet.getDate("revisionDate"),
                             resultSet.getInt("idPlane"), resultSet.getString("description"));
                     objects.add(revision);
                 }

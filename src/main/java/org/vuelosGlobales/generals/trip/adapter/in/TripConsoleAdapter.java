@@ -11,6 +11,7 @@ import org.vuelosGlobales.generals.trip.domain.TripAirportDTO;
 import org.vuelosGlobales.systemAdministrator.airport.domain.AirportCityDTO;
 import org.vuelosGlobales.systemAdministrator.plane.domain.PlaneStMdDTO;
 
+import java.sql.Date;
 import java.util.List;
 
 public class TripConsoleAdapter {
@@ -35,7 +36,7 @@ public class TripConsoleAdapter {
             switch (choice) {
                 case 1 -> {
                     CuadroDeTexto.dibujarCuadroDeTexto("Registrar viaje", "*");
-                    String tripDate = console.stringNotNull("Fecha del viaje, formado (yyyy-mm-dd): ");
+                    Date tripDate = console.validarFecha("Fecha del viaje, formado (yyyy-mm-dd): ");
                     int priceTrip = console.readInt("Ingrese el precio del viaje: ");
                     showAirports();
                     AirportCityDTO objAirportOrigin = Helpers.transformAndValidateObj(
@@ -102,7 +103,7 @@ public class TripConsoleAdapter {
                             () -> tripService.getTripById(console.readInt("Seleccione el viaje por su ID: "))
                     );
                     CuadroDeTexto.dibujarCuadroDeTexto("Actualizar los datos de un trayecto ", "*");
-                    String newDate = console.stringNotNull("Nueva fecha: ");
+                    Date newDate = console.validarFecha("Nueva fecha: ");
                     String newPreice = console.stringNotNull("Nuevo precio: ");
                     airportSelect.setTripDate(newDate);
                     airportSelect.setPriceTrip(Double.parseDouble(newPreice));

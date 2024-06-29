@@ -157,7 +157,6 @@ public class Menus {
             System.out.println("\t1. Administrador del sistema");
             System.out.println("\t2. Agente de ventas");
             System.out.println("\t3. Técnico en mantenimiento");
-            System.out.println("\t4. Cliente");
             System.out.println("\t5. Salir");
             System.out.println("======================================");
             int choise = console.readInt("Seleccione un opción: ");
@@ -184,9 +183,9 @@ public class Menus {
             System.out.println("\t2.  Gestionar los aeropuertos");
             System.out.println("\t3.  Gestionar aerolíneas");
             System.out.println("\t4.  Gestionar los trayectos y sus escalas");
-            System.out.println("\t5. Gestionar empleados");
-            System.out.println("\t6. Gestionar tripulación");
-            System.out.println("\t7. Gestionar información de roles de la tripulación");
+            System.out.println("\t5.  Gestionar empleados");
+            System.out.println("\t6.  Gestionar tripulación");
+            System.out.println("\t7.  Gestionar información de roles de la tripulación");
             System.out.println("\t8.  Gestionar las tarifas de vuelo");
             System.out.println("\t9.  Gestionar documentos");
             System.out.println("\t10. Gestionar información de fabricantes de aviones");
@@ -238,9 +237,13 @@ public class Menus {
 
     public void optionsSalesAgent(){
         salesAgent: while (true){
-            System.out.println("\t1.  Gestionar los clientes");
-            System.out.println("\t2.  Gestionar reservas");
-            System.out.println("\t3.  Regresar");
+            System.out.println("+-------------------------------+");
+            System.out.println("|     MENU DE AGENTE DE VENTAS  |");
+            System.out.println("+-------------------------------+");
+            System.out.printf("| %-2d. %-24s |\n", 1, "Gestionar los clientes");
+            System.out.printf("| %-2d. %-24s |\n", 2, "Gestionar reservas");
+            System.out.printf("| %-2d. %-24s |\n", 3, "Regresar");
+            System.out.println("+-----------------------------+");
             int choise = console.readInt("Seleccione una opción: ");
             if (choise == 1){
                 customerIn.crudCustomer();

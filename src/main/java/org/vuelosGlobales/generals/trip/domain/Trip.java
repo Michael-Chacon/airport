@@ -1,8 +1,10 @@
 package org.vuelosGlobales.generals.trip.domain;
 
+import java.sql.Date;
+
 public class Trip {
     private int id;
-    private String tripDate;
+    private Date tripDate;
     private double priceTrip;
     private String idOrigin;
     private String idDestination;
@@ -10,7 +12,7 @@ public class Trip {
     public Trip() {
     }
 
-    public Trip(int id, String tripDate, double priceTrip, String idOrigin, String idDestination) {
+    public Trip(int id, Date tripDate, double priceTrip, String idOrigin, String idDestination) {
         this.id = id;
         this.tripDate = tripDate;
         this.priceTrip = priceTrip;
@@ -26,11 +28,11 @@ public class Trip {
         this.id = id;
     }
 
-    public String getTripDate() {
+    public Date getTripDate() {
         return tripDate;
     }
 
-    public void setTripDate(String tripDate) {
+    public void setTripDate(Date tripDate) {
         this.tripDate = tripDate;
     }
 

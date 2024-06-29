@@ -1,7 +1,6 @@
 package org.vuelosGlobales.salesAgent.flightRes.adapter.in;
 
 import org.vuelosGlobales.generals.passenger.domain.Passenger;
-import org.vuelosGlobales.generals.trip.domain.Trip;
 import org.vuelosGlobales.generals.trip.domain.TripAirportDTO;
 import org.vuelosGlobales.salesAgent.customer.domain.Customer;
 import org.vuelosGlobales.salesAgent.flightRes.application.FlightResService;
@@ -28,15 +27,15 @@ public class FlightResConsoleAdapter {
 
     public void crudFlightRes(){
         makeReservation: while (true){
-            System.out.println("====================================");
-            System.out.println("          GESTIÓN DE VUELOS         ");
-            System.out.println("====================================");
-            System.out.println("\t1. Ver los vuelos disponibles");
-            System.out.println("\t2. Hacer reservación");
-            System.out.println("\t3. Ver reservas por clientes");
-            System.out.println("\t4. Cancelar reservación");
-            System.out.println("\t5. Eliminar reservación");
-            System.out.println("\t6. Volver al menú anterior");
+            System.out.println("+--------------------------------+");
+            System.out.println("|           MENU PRINCIPAL       |");
+            System.out.println("+--------------------------------+");
+            System.out.printf("| %-2d. %-26s |\n", 1, "Ver los vuelos disponibles");
+            System.out.printf("| %-2d. %-26s |\n", 2, "Hacer reservación");
+            System.out.printf("| %-2d. %-26s |\n", 3, "Ver reservas por clientes");
+            System.out.printf("| %-2d. %-26s |\n", 4, "Cancelar reservación");
+            System.out.printf("| %-2d. %-26s |\n", 5, "Volver al menú anterior");
+            System.out.println("+--------------------------------+");
             System.out.println("====================================");
             int choise = console.readInt("Seleccione una opción: ");
 
@@ -105,10 +104,8 @@ public class FlightResConsoleAdapter {
                     break;
                 case 3:
                     mostrarClientes();
-                    Customer listadoCliente = seleccionarCliente();
-                    Customer getCustomer = Helpers.transformAndValidateObj(
-                            () -> flightResService.showOneCustomer(console.readInt("Selecciona un cliente por su ID: "))
-                    );
+                    Customer getCustomer = seleccionarCliente();
+
                     reservaPorCliente(getCustomer.getId());
 
                     break;
@@ -215,7 +212,7 @@ public class FlightResConsoleAdapter {
             Fare fare = seleccionarTarifa();
             idTarifa = fare.getId();
         }else{
-            idTarifa = 1;
+            idTarifa = 2;
         }
         // Almacenar datos en tripBookingDetails, para poder crear en passenger, ya que el passanger tiene la llave primaria de tripBookingDetails
         int idTripBooking = reservation.getId();

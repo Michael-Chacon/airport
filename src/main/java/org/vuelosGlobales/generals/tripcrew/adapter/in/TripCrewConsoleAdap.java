@@ -100,13 +100,17 @@ public class TripCrewConsoleAdap {
 
     public void showTripCrew(int idConn){
         List<TripCrewInfoDTO> crew = tripCrewService.getDataTripCrewByConn(idConn);
-        CuadroDeTexto.drawHorizontal(130, "-");
-        System.out.printf("\n| %-35s | %-20s | %-20s | %-40s |%n", "Nombre", "Rol", "Conexión", "Aeropuerto");
-        crew.forEach(data -> {
+        if (crew.isEmpty()){
+            CuadroDeTexto.dibujarCuadroDeTexto("No hay tripulacion asignada", "-");
+        }else{
             CuadroDeTexto.drawHorizontal(130, "-");
-            System.out.printf("\n| %-35s | %-20s | %-20s | %-40s |%n", data.getNameEmployee(), data.getRolEmployee(), data.getConnectionNumber(), data.getAirport());
-        });
-        CuadroDeTexto.drawHorizontal(130, "-");
+            System.out.printf("\n| %-35s | %-20s | %-20s | %-40s |%n", "Nombre", "Rol", "Conexión", "Aeropuerto");
+            crew.forEach(data -> {
+                CuadroDeTexto.drawHorizontal(130, "-");
+                System.out.printf("\n| %-35s | %-20s | %-20s | %-40s |%n", data.getNameEmployee(), data.getRolEmployee(), data.getConnectionNumber(), data.getAirport());
+            });
+            CuadroDeTexto.drawHorizontal(130, "-");
+        }
     }
 
     public void showAirlines(){
@@ -138,10 +142,10 @@ public class TripCrewConsoleAdap {
         List<ConnInfoDTO> connetions = tripCrewService.getAllConectionByTrip(idTrip);
         CuadroDeTexto.dibujarCuadroDeTexto("Listado de conexiones", null);
         CuadroDeTexto.drawHorizontal(100, "-");
-        System.out.printf("\n| %-10s | %-10s | %-12s | %-13s | %-40s |%n", "Id Trip", "Id Conn", "Conn Number", "plates plane", "Aeropuerto");
+        System.out.printf("\n| %-10s | %-12s | %-13s | %-40s |%n", "Id Conn", "Conn Number", "plates plane", "Aeropuerto");
         connetions.forEach(conn -> {
             CuadroDeTexto.drawHorizontal(100, "-");
-            System.out.printf("\n| %-10s | %-10s | %-10s | %-10s | %-40s |%n", conn.getIdTrip(), conn.getIdConn(), conn.getConnNumber(), conn.getPlates(), conn.getNameCityAirport());
+            System.out.printf("\n| %-10s | %-10s | %-10s | %-40s |%n", conn.getIdConn(), conn.getConnNumber(), conn.getPlates(), conn.getNameCityAirport());
         });
         CuadroDeTexto.drawHorizontal(100, "-");
         System.out.println();
@@ -149,14 +153,18 @@ public class TripCrewConsoleAdap {
 
     public void showEmployees(int idAriline){
         List<EmployeeRelationshipDTO> employeeList = tripCrewService.getAllEmployees(true, idAriline);
-        System.out.println("Listado de empleados:");
-        CuadroDeTexto.drawHorizontal(151, "-");
-        System.out.printf("\n| %-11s | %-17s | %-15s | %-16s | %-28s | %-45s |%n", "ID", "NOMBRE", "FECHA", "ROL", "AEROLINEA", "AIRPORT");
-        employeeList.forEach(employee -> {
+        if (employeeList.isEmpty()){
+            CuadroDeTexto.dibujarCuadroDeTexto("No hay tripulacion asignada", "-");
+        }else{
+            System.out.println("Listado de empleados:");
             CuadroDeTexto.drawHorizontal(151, "-");
-            System.out.printf("\n| %-11s | %-17s | %-15s | %-16s | %-28s | %-45s |%n", employee.getId(), employee.getName(), employee.getIngressDate(), employee.getRolName(), employee.getAirlineName(), employee.getAirportName());
-        });
-        CuadroDeTexto.drawHorizontal(151, "-");
+            System.out.printf("\n| %-11s | %-17s | %-15s | %-16s | %-28s | %-45s |%n", "ID", "NOMBRE", "FECHA", "ROL", "AEROLINEA", "AIRPORT");
+            employeeList.forEach(employee -> {
+                CuadroDeTexto.drawHorizontal(151, "-");
+                System.out.printf("\n| %-11s | %-17s | %-15s | %-16s | %-28s | %-45s |%n", employee.getId(), employee.getName(), employee.getIngressDate(), employee.getRolName(), employee.getAirlineName(), employee.getAirportName());
+            });
+            CuadroDeTexto.drawHorizontal(151, "-");
+        }
         System.out.println();
     }
 }

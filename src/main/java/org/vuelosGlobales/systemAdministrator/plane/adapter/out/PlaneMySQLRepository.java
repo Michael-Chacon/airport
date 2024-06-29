@@ -27,7 +27,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, plane.getPlates());
                 stm.setInt(2, plane.getCapacity());
-                stm.setString(3, plane.getFabricationDate());
+                stm.setDate(3, plane.getFabricationDate());
                 stm.setInt(4, plane.getIdAirline());
                 stm.setInt(5, plane.getIdStatus());
                 stm.setInt(6, plane.getIdModel());
@@ -45,7 +45,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, plane.getPlates());
                 stm.setInt(2, plane.getCapacity());
-                stm.setString(3, plane.getFabricationDate());
+                stm.setDate(3, plane.getFabricationDate());
                 stm.setInt(4, plane.getIdAirline());
                 stm.setInt(5, plane.getIdStatus());
                 stm.setInt(6, plane.getIdModel());
@@ -66,7 +66,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
                 try(ResultSet resultSet = stm.executeQuery()){
                     if (resultSet.next()){
                         Plane obj = new Plane(resultSet.getInt("id"), resultSet.getString("plates"),
-                                resultSet.getInt("capacity"), resultSet.getString("fabricationDate"),
+                                resultSet.getInt("capacity"), resultSet.getDate("fabricationDate"),
                                 resultSet.getInt("idAirline"), resultSet.getInt("idStatus"),
                                 resultSet.getInt("idModel"));
                         return Optional.of(obj);
@@ -107,7 +107,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
                     Plane plane = new Plane(resultSet.getInt("id"), resultSet.getString("plates"),
-                            resultSet.getInt("capacity"), resultSet.getString("fabricationDate"),
+                            resultSet.getInt("capacity"), resultSet.getDate("fabricationDate"),
                             resultSet.getInt("idAirline"), resultSet.getInt("idStatus"),
                             resultSet.getInt("idModel"));
                     objects.add(plane);
@@ -147,7 +147,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
                 ResultSet resultSet = stm.executeQuery();
                 while (resultSet.next()){
                     PlaneStMdDTO plane = new PlaneStMdDTO(resultSet.getInt("id"), resultSet.getString("plates"),
-                            resultSet.getInt("capacity"), resultSet.getString("fabricationDate"), resultSet.getString("airline"),
+                            resultSet.getInt("capacity"), resultSet.getDate("fabricationDate"), resultSet.getString("airline"),
                             resultSet.getString("status"), resultSet.getString("model"));
                     objects.add(plane);
                 }
@@ -167,7 +167,7 @@ public class PlaneMySQLRepository implements PlaneRepository {
                 ResultSet resultSet = stm.executeQuery();
                 if (resultSet.next()){
                     PlaneStMdDTO plane = new PlaneStMdDTO(resultSet.getInt("id"), resultSet.getString("plates"),
-                            resultSet.getInt("capacity"), resultSet.getString("fabricationDate"), resultSet.getString("airline"),
+                            resultSet.getInt("capacity"), resultSet.getDate("fabricationDate"), resultSet.getString("airline"),
                             resultSet.getString("status"), resultSet.getString("model"));
                    return Optional.of(plane);
                 }

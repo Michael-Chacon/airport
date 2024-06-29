@@ -1,10 +1,12 @@
 package org.vuelosGlobales.systemAdministrator.plane.domain;
 
+import java.sql.Date;
+
 public class Plane {
     private int id;
     private String plates;
     private int capacity;
-    private String fabricationDate;
+    private Date fabricationDate;
     private int idAirline;
     private int idStatus;
     private int idModel;
@@ -12,7 +14,7 @@ public class Plane {
     public Plane() {
     }
 
-    public Plane(int id, String plates, int capacity, String fabricationDate, int idAirline, int idStatus, int idModel) {
+    public Plane(int id, String plates, int capacity, Date fabricationDate, int idAirline, int idStatus, int idModel) {
         this.id = id;
         this.plates = plates;
         this.capacity = capacity;
@@ -46,11 +48,11 @@ public class Plane {
         this.capacity = capacity;
     }
 
-    public String getFabricationDate() {
+    public Date getFabricationDate() {
         return fabricationDate;
     }
 
-    public void setFabricationDate(String fabricationDate) {
+    public void setFabricationDate(Date fabricationDate) {
         this.fabricationDate = fabricationDate;
     }
 

@@ -10,6 +10,7 @@ import org.vuelosGlobales.shared.Helpers;
 import org.vuelosGlobales.systemAdministrator.plane.application.PlaneService;
 import org.vuelosGlobales.systemAdministrator.plane.domain.PlaneStMdDTO;
 
+import java.sql.Date;
 import java.util.List;
 
 public class PlaneConsoleAdapter {
@@ -48,7 +49,7 @@ public class PlaneConsoleAdapter {
                     int airlineId = airlineSelect.getId();
 //                    String plate = console.stringNotNull("Ingrese la placa del avión: ");
                     int capacity = console.readInt("Cual es la capacidad del avión: ");
-                    String fabreicationDate = console.stringWithLeght("En que fecha se fabricó el avión, formato valido de fecha(YYYY-MM-DD): ", 10);
+                    Date fabreicationDate = console.validarFecha("En que fecha se fabricó el avión, formato valido de fecha(YYYY-MM-DD): ");
 
                     showModel();
                     Model getModel = Helpers.transformAndValidateObj(

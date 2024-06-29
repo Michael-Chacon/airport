@@ -1,15 +1,18 @@
 package org.vuelosGlobales.maintenanceTechnician.revision.domain;
 
+
+import java.sql.Date;
+
 public class Revision {
     private int id;
-    private String revisionDate;
+    private Date revisionDate;
     private int idPlane;
     private String description;
 
     public Revision() {
     }
 
-    public Revision(int id, String revisionDate, int idPlane, String description) {
+    public Revision(int id, Date revisionDate, int idPlane, String description) {
         this.id = id;
         this.revisionDate = revisionDate;
         this.idPlane = idPlane;
@@ -24,11 +27,11 @@ public class Revision {
         this.id = id;
     }
 
-    public String getRevisionDate() {
+    public Date getRevisionDate() {
         return revisionDate;
     }
 
-    public void setRevisionDate(String revisionDate) {
+    public void setRevisionDate(Date revisionDate) {
         this.revisionDate = revisionDate;
     }
 

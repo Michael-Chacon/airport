@@ -1,5 +1,8 @@
 package org.vuelosGlobales.shared;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.sql.Date;
 import java.util.Scanner;
 
 public  class Console {
@@ -68,5 +71,22 @@ public  class Console {
         return option;
     }
 
+    public Date validarFecha(String mensaje) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        Date fecha = null;
+
+        while (fecha == null) {
+            System.out.print(mensaje);
+            String input = scanner.nextLine();
+            try {
+                java.util.Date utilDate = dateFormat.parse(input);
+                fecha = new Date(utilDate.getTime());
+            } catch (ParseException e) {
+                System.out.println("Fecha inválida. Formato correcto: YYYY-MM-DD.");
+            }
+        }
+        return fecha;
+    }
 
 }
