@@ -194,12 +194,11 @@ public class Menus {
 
             if (choise == 1){
                 planeIn.crudPlane();
-            }else if (choise == 2){
+            } else if (choise == 2){
                 airportIn.crudAirport();
-            }else if (choise == 3){
+            } else if (choise == 3){
                 airlineIn.crudAirline();
-            }
-            else if (choise == 4) {
+            } else if (choise == 4) {
                 tripConsoleAdapter.crudTrip();
             } else if (choise == 6) {
                 countryIn.crudCountry();
