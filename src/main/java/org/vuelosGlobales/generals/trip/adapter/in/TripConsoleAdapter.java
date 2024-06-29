@@ -54,21 +54,20 @@ public class TripConsoleAdapter {
                     st.setIdDestination(idDestination);
                     int tripId = tripService.createTrip(st);
 
+                    String nroConexion1 = console.stringNotNull("Ingrese el número del vuelo entre " +objAirportOrigin.getNameCity() + " y " + objAirportDestination.getNameCity() + ": ");
+                    showPlanes();
+                    PlaneStMdDTO planeSelect1 = Helpers.transformAndValidateObj(
+                            () -> tripService.getPlaneById(console.readInt("Selección el avión que despegara en " + objAirportOrigin.getNameCity() + ": "))
+                    );
+                    int idPlane1 = planeSelect1.getId();
+                    Connections connection = new Connections();
+                    connection.setConnectionNumber(nroConexion1);
+                    connection.setIdTrip(tripId);
+                    connection.setIdPlane(idPlane1);
+                    connection.setIdAriport(idDestination);
+                    tripService.createConnecion(connection);
                     String tipoVuelo = console.stringNotNull("¿El vuelo tiene escalas?(y/n): ");
-                    if (tipoVuelo.equals("n")) {
-                        String nroConexion = console.stringNotNull("Ingrese el número de la conexión: ");
-                        showPlanes();
-                        PlaneStMdDTO planeSelect = Helpers.transformAndValidateObj(
-                                () -> tripService.getPlaneById(console.readInt("Selección el avión: "))
-                        );
-                        int idPlane = planeSelect.getId();
-                        Connections connections = new Connections();
-                        connections.setConnectionNumber(nroConexion);
-                        connections.setIdTrip(tripId);
-                        connections.setIdPlane(idPlane);
-                        connections.setIdAriport(idDestination);
-                        tripService.createConnecion(connections);
-                    } else {
+                    if(tipoVuelo.equals("y")) {
                         CuadroDeTexto.dibujarCuadroDeTexto("Registrar conexiones", "*");
                         masconexiones: while (true) {
                             String nroConexion = console.stringNotNull("Ingrese el número de la conexión");

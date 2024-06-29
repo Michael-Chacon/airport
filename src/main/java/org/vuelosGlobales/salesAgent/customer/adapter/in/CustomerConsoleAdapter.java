@@ -64,7 +64,7 @@ public class CustomerConsoleAdapter {
                     CuadroDeTexto.dibujarCuadroDeTexto("Actualizar datos de " + customerSelect.getName(), "*");
 
                     String newName;
-                    String v1 = console.stringNotNull("Quiere cambiar el nombre del cliente? (y/n): ");
+                    String v1 = console.stringNotNull("Quiere cambiar el nombre del cliente? (s/n): ");
                     if (v1.equals("s")){
                         newName = console.stringNotNull("Ingrese el nuevo nombre: ");
                     }else {
@@ -72,7 +72,7 @@ public class CustomerConsoleAdapter {
                     }
 
                     String newLastname;
-                    String v2 = console.stringNotNull("Quiere cambiar el apellido del cliente? (y/n): ");
+                    String v2 = console.stringNotNull("Quiere cambiar el apellido del cliente? (s/n): ");
                     if (v2.equals("s")){
                         newLastname = console.stringNotNull("Ingrese el nuevo apellido: ");
                     }else {
@@ -80,7 +80,7 @@ public class CustomerConsoleAdapter {
                     }
 
                     int newNro;
-                    String v3 = console.stringNotNull("Quiere cambiar el numero de identificacion del cliente? (y/n): ");
+                    String v3 = console.stringNotNull("Quiere cambiar el numero de identificacion del cliente? (s/n): ");
                     if (v3.equals("s")){
                         newNro = console.readInt("Ingrese el nuevo numero de identificacion: ");
                     }else {
@@ -88,7 +88,7 @@ public class CustomerConsoleAdapter {
                     }
 
                     int newAge;
-                    String v4 = console.stringNotNull("Quiere cambiar la edad del cliente? (y/n): ");
+                    String v4 = console.stringNotNull("Quiere cambiar la edad del cliente? (s/n): ");
                     if (v4.equals("s")){
                         newAge = console.readInt("Ingrese el nueva edad del cliente: ");
                     }else {
@@ -96,8 +96,8 @@ public class CustomerConsoleAdapter {
                     }
 
                     int idDocument;
-                    String validate = console.stringNotNull("Quiere cambiar el tipo de documento del cliente? (y/n): ");
-                    if (validate.equals("y")){
+                    String validate = console.stringNotNull("Quiere cambiar el tipo de documento del cliente? (s/n): ");
+                    if (validate.equals("s")){
                         showDocuments();
                         Document getObj = Helpers.transformAndValidateObj(
                                 () -> customerService.getDocumentById(console.readInt("A que país pertenece la cliente, seleccione por el por el id: "))
