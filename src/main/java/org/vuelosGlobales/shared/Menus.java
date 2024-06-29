@@ -174,23 +174,21 @@ public class Menus {
             System.out.println("\t2.  Gestionar los aeropuertos");
             System.out.println("\t3.  Gestionar aerolíneas");
             System.out.println("\t4.  Gestionar los trayectos y sus escalas");
-            System.out.println("\t5.  Gestionar las tarifas");
-            System.out.println("\t6.  Tipo de documento");
-            System.out.println("\t7.  Gestionar información de países");
-            System.out.println("\t8.  Gestionar información de ciudades");
-            System.out.println("\t9.  Gestionar información de fabricantes de aviones");
-            System.out.println("\t10. Gestionar información de modelos de avión");
-            System.out.println("\t11. Gestionar información de estados de un avión");
-            System.out.println("\t12. Gestionar información de roles de la tripulación");
-            System.out.println("\t13. Gestionar empleados");
-            System.out.println("\t14. Gestionar tripulación");
-            System.out.println("\t15. Gestionar tarifas de vuelo");
-            System.out.println("\t16. Regresar al menú principal");
-            System.out.println("\t16. documento");
+            System.out.println("\t5. Gestionar empleados");
+            System.out.println("\t6. Gestionar tripulación");
+            System.out.println("\t7. Gestionar información de roles de la tripulación");
+            System.out.println("\t8.  Gestionar las tarifas de vuelo");
+            System.out.println("\t9.  Gestionar documentos");
+            System.out.println("\t10. Gestionar información de fabricantes de aviones");
+            System.out.println("\t11. Gestionar información de modelos de avión");
+            System.out.println("\t12. Gestionar información de estados de un avión");
+            System.out.println("\t13. Gestionar información de países");
+            System.out.println("\t14. Gestionar información de ciudades");
+            System.out.println("\t15. Regresar al menú principal");
             System.out.println("======================================");
             System.out.print("Seleccione una opción: ");
 
-            int choise = console.readInt("Seleccione un apción: ");
+            int choise = console.readInt("Seleccione un opción: ");
 
             if (choise == 1){
                 planeIn.crudPlane();
@@ -200,27 +198,27 @@ public class Menus {
                 airlineIn.crudAirline();
             } else if (choise == 4) {
                 tripConsoleAdapter.crudTrip();
-            } else if (choise == 6) {
-                countryIn.crudCountry();
-            } else if (choise == 7) {
-                cityIn.crudCity();
-            } else if (choise == 8) {
-                manufacturerIn.crudManufacturer();
-            } else if (choise == 9) {
-                modelIn.crudModel();
-            } else if (choise == 10) {
-                statusIn.crudStatus();
-            } else if (choise == 12) {
-                roleIn.crudRole();
-            } else if (choise == 16) {
-                break menuAdmin;
             } else if (choise == 13) {
-                employeeIn.crudEmployee();
+                countryIn.crudCountry();
             } else if (choise == 14) {
-                tripCrewIn.crew();
+                cityIn.crudCity();
+            } else if (choise == 10) {
+                manufacturerIn.crudManufacturer();
+            } else if (choise == 11) {
+                modelIn.crudModel();
+            } else if (choise == 12) {
+                statusIn.crudStatus();
+            } else if (choise == 7) {
+                roleIn.crudRole();
             } else if (choise == 15) {
+                break menuAdmin;
+            } else if (choise == 5) {
+                employeeIn.crudEmployee();
+            } else if (choise == 6) {
+                tripCrewIn.crew();
+            } else if (choise == 8) {
                 fareIn.crudFares();
-            } else if (choise == 17) {
+            } else if (choise == 9) {
                 documentIn.crudDocument();
             } else {
                 System.out.println("Opción incorrecta");
@@ -233,7 +231,7 @@ public class Menus {
             System.out.println("\t1.  Gestionar los clientes");
             System.out.println("\t2.  No recuerdo");
             System.out.println("\t3.  Regresar");
-            int choise = console.readInt("Seleccione una opcion: ");
+            int choise = console.readInt("Seleccione una opción: ");
             if (choise == 1){
                 customerIn.crudCustomer();
             }
