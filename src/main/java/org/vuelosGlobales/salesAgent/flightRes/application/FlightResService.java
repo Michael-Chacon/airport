@@ -108,4 +108,8 @@ public class FlightResService {
         this.flightResRepository.updateReservation(idReservation);
     }
 
+    public void deleteReservation(int idReservation){
+        this.flightResRepository.delete(idReservation);
+    }
+
 }

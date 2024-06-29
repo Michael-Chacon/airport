@@ -116,10 +116,10 @@ public class FlightResConsoleAdapter {
                     mostrarClientes();
                     Customer getCliente = seleccionarCliente();
                     reservaPorCliente(getCliente.getId());
-                    int idDelete = console.readInt("Seleccione el ID de la reservacion que va a cancelar: ");
+                    int idCacelar = console.readInt("Seleccione el ID de la reservacion que va a cancelar: ");
                     String cancelar = console.yesOrNo("Esta seguro que desea cancelar esta reserva? (y/n): ");
                     if (cancelar.equals("y")){
-                        flightResService.updateStatusReservation(idDelete);
+                        flightResService.updateStatusReservation(idCacelar);
                         CuadroDeTexto.dibujarCuadroDeTexto("La reserva fue cancelada", "*");
                     }else {
                        CuadroDeTexto.dibujarCuadroDeTexto("La acción fue cancelada", "-");
@@ -127,7 +127,18 @@ public class FlightResConsoleAdapter {
                     System.out.println();
                     break;
                 case 5:
-
+                    mostrarClientes();
+                    Customer clienteDelete = seleccionarCliente();
+                    reservaPorCliente(clienteDelete.getId());
+                    int idDelete = console.readInt("Seleccione el ID de la reservacion que va a eliminar: ");
+                    String eliminar = console.yesOrNo("Esta seguro que desea eliminar esta reserva? (y/n): ");
+                    if (eliminar.equals("y")){
+                        flightResService.deleteReservation(idDelete);
+                        CuadroDeTexto.dibujarCuadroDeTexto("La reserva fue eliminada", "*");
+                    }else {
+                        CuadroDeTexto.dibujarCuadroDeTexto("La acción fue cancelada", "-");
+                    }
+                    System.out.println();
                     break;
 
                 case 6:
