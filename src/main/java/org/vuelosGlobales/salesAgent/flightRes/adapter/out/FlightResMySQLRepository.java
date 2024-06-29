@@ -20,17 +20,29 @@ public class FlightResMySQLRepository implements FlightResRepository {
     }
 
     @Override
-    public void save(FlightRes flightRes) {
+    public int save(FlightRes flightRes) {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try (Connection conn = DriverManager.getConnection(url,user, password)){
             String query = "INSERT INTO tripbooking (date, idTrip) VALUES (?)";
-            try (PreparedStatement stm = conn.prepareStatement(query)){
-                stm.setString(1, flightRes.getDate());
-                stm.executeUpdate();
-            }
+            preparedStatement = conn.prepareStatement(query, preparedStatement.RETURN_GENERATED_KEYS);
+                preparedStatement.setString(1, flightRes.getDate());
+                int filasAfectadas = preparedStatement.executeUpdate();
+
+                if (filasAfectadas > 0){
+                    resultSet = preparedStatement.getGeneratedKeys();
+                    if (resultSet.next()){
+                        int idGenerate = resultSet.getInt(1);
+                            return idGenerate;
+                    }
+                }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return 0;
     }
+
+
 
     @Override
     public void update(FlightRes flightRes) {
@@ -97,5 +109,27 @@ public class FlightResMySQLRepository implements FlightResRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public int findPlaneSeats(int idTrip) {
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT p.capacity FROM tripbooking tb " +
+                    "INNER JOIN trip t ON t.id = tb.idTrip " +
+                    "INNER JOIN flightconnection fc ON fc.idTrip = t.id " +
+                    "INNER JOIN plane p ON p.id = fc.idPlane " +
+                    "WHERE fc.idAirport = t.idDestination AND t.id = ?;";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, idTrip);
+                try(ResultSet resultSet = stm.executeQuery()){
+                    if (resultSet.next()){
+                        return resultSet.getInt("capacity");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
     }
 }
