@@ -22,16 +22,14 @@ public class FlightResService {
     private final FlightResRepository flightResRepository;
     private final CustomerRepository customerRepository;
     private final TripRepository tripRepository;
-    private final ConnectionRepository connectionRepository;
     private final FareRepository fareRepository;
     private final PassengerRepository passengerRepository;
     private final DocumentRepository documentRepository;
 
-    public FlightResService(FlightResRepository flightResRepository, CustomerRepository customerRepository, TripRepository tripRepository, ConnectionRepository connectionRepository, FareRepository fareRepository, PassengerRepository passengerRepository, DocumentRepository documentRepository) {
+    public FlightResService(FlightResRepository flightResRepository, CustomerRepository customerRepository, TripRepository tripRepository, FareRepository fareRepository, PassengerRepository passengerRepository, DocumentRepository documentRepository) {
         this.flightResRepository = flightResRepository;
         this.customerRepository = customerRepository;
         this.tripRepository = tripRepository;
-        this.connectionRepository = connectionRepository;
         this.fareRepository = fareRepository;
         this.passengerRepository = passengerRepository;
         this.documentRepository = documentRepository;
@@ -104,6 +102,10 @@ public class FlightResService {
 
     public Optional<ReservationByCustomer> reservation(int idReservaion){
         return this.flightResRepository.reservation(idReservaion);
+    }
+
+    public void updateStatusReservation(int idReservation){
+        this.flightResRepository.updateReservation(idReservation);
     }
 
 }

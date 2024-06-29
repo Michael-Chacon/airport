@@ -35,7 +35,8 @@ public class FlightResConsoleAdapter {
             System.out.println("\t2. Hacer reservación");
             System.out.println("\t3. Ver reservas por clientes");
             System.out.println("\t4. Cancelar reservación");
-            System.out.println("\t5. Volver al menú anterior");
+            System.out.println("\t5. Eliminar reservación");
+            System.out.println("\t6. Volver al menú anterior");
             System.out.println("====================================");
             int choise = console.readInt("Seleccione una opción: ");
 
@@ -112,9 +113,24 @@ public class FlightResConsoleAdapter {
 
                     break;
                 case 4:
-                    System.out.println("\t4. Cancelar reservación");
+                    mostrarClientes();
+                    Customer getCliente = seleccionarCliente();
+                    reservaPorCliente(getCliente.getId());
+                    int idDelete = console.readInt("Seleccione el ID de la reservacion que va a cancelar: ");
+                    String cancelar = console.yesOrNo("Esta seguro que desea cancelar esta reserva? (y/n): ");
+                    if (cancelar.equals("y")){
+                        flightResService.updateStatusReservation(idDelete);
+                        CuadroDeTexto.dibujarCuadroDeTexto("La reserva fue cancelada", "*");
+                    }else {
+                       CuadroDeTexto.dibujarCuadroDeTexto("La acción fue cancelada", "-");
+                    }
+                    System.out.println();
                     break;
                 case 5:
+
+                    break;
+
+                case 6:
                     break makeReservation;
             }
         }
@@ -304,7 +320,7 @@ public class FlightResConsoleAdapter {
         CuadroDeTexto.drawHorizontal(125, "-");
 
         ReservationByCustomer reserva = Helpers.transformAndValidateObj(
-                ()-> flightResService.reservation(console.readInt("Seleccione la reservacion por el ID: "))
+                ()-> flightResService.reservation(console.readInt("\nSeleccione la reservacion por el ID: "))
         );
 
         mostrarTicket(reserva.getIdReservacion(), reserva.getPrice());

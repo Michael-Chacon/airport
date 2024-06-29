@@ -19,6 +19,6 @@ public interface FlightResRepository {
     List<Integer> findReservedSeats(int idTrip);
     List<Ticket> findTicket(int idTripBooking);
     List<ReservationByCustomer> reservationByCustomers(int idCustomer);
-
     Optional<ReservationByCustomer> reservation(int idReservation);
+    void updateReservation(int idReservation);
 }

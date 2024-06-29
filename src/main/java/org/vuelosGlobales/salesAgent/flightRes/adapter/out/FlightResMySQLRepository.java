@@ -264,6 +264,19 @@ public class FlightResMySQLRepository implements FlightResRepository {
         }
         return Optional.empty();
     }
+    @Override
+    public void updateReservation(int idReservation) {
+        try (Connection conn = DriverManager.getConnection(url,user, password)){
+            FareMySQLRepository fareOut = new FareMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+            String query = "UPDATE tripbookingdetail SET status = 'cancelled' WHERE idTripBooking = ?";
+            try (PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, idReservation);
+                stm.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 }

@@ -1,7 +1,5 @@
-
-
-CREATE DATABASE airportxxx;
-USE airportxxx;
+CREATE DATABASE airport;
+USE airport;
 
 CREATE TABLE documenttype(
     id INT AUTO_INCREMENT NOT NULL,

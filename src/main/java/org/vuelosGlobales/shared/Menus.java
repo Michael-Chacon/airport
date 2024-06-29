@@ -17,6 +17,8 @@ import org.vuelosGlobales.generals.manufacturer.application.ManufacturerService;
 import org.vuelosGlobales.generals.model.adapter.in.ModelConsoleAdap;
 import org.vuelosGlobales.generals.model.adapter.out.ModelMySQLRepository;
 import org.vuelosGlobales.generals.model.application.ModelService;
+import org.vuelosGlobales.generals.passenger.adapter.out.PassengerMySQLRepo;
+import org.vuelosGlobales.generals.passenger.domain.Passenger;
 import org.vuelosGlobales.generals.role.adapter.in.RoleConsoleAdap;
 import org.vuelosGlobales.generals.role.adapter.out.RoleMySQLRepository;
 import org.vuelosGlobales.generals.role.application.RoleService;
@@ -36,6 +38,9 @@ import org.vuelosGlobales.salesAgent.customer.adapter.in.CustomerConsoleAdapter;
 import org.vuelosGlobales.salesAgent.customer.adapter.out.CustomerMySQLRepository;
 import org.vuelosGlobales.salesAgent.customer.application.CustomerService;
 import org.vuelosGlobales.salesAgent.customer.domain.Customer;
+import org.vuelosGlobales.salesAgent.flightRes.adapter.in.FlightResConsoleAdapter;
+import org.vuelosGlobales.salesAgent.flightRes.adapter.out.FlightResMySQLRepository;
+import org.vuelosGlobales.salesAgent.flightRes.application.FlightResService;
 import org.vuelosGlobales.systemAdministrator.airline.adapter.in.AirlineConsoleAdap;
 import org.vuelosGlobales.systemAdministrator.airline.adapter.out.AirlineMySQLRepository;
 import org.vuelosGlobales.systemAdministrator.airline.application.AirlineService;
@@ -123,6 +128,11 @@ public class Menus {
         CustomerService customerService = new CustomerService(customerOut, documentOut);
         CustomerConsoleAdapter customerIn = new CustomerConsoleAdapter(customerService);
 
+        PassengerMySQLRepo passengerMySQLRepo = new PassengerMySQLRepo(Constants.URL, Constants.USER, Constants.PASSWORD);
+        // Reservas
+        FlightResMySQLRepository flightOut = new FlightResMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+        FlightResService flightResService = new FlightResService(flightOut, customerOut,tripOut, fareOut, passengerMySQLRepo,documentOut);
+        FlightResConsoleAdapter flightResIn = new FlightResConsoleAdapter(flightResService);
 //        tripCrewIn.crew();
 //        tripConsoleAdapter.crudTrip();
 //        employeeIn.crudEmployee();
@@ -229,11 +239,17 @@ public class Menus {
     public void optionsSalesAgent(){
         salesAgent: while (true){
             System.out.println("\t1.  Gestionar los clientes");
-            System.out.println("\t2.  No recuerdo");
+            System.out.println("\t2.  Gestionar reservas");
             System.out.println("\t3.  Regresar");
             int choise = console.readInt("Seleccione una opción: ");
             if (choise == 1){
                 customerIn.crudCustomer();
+            } else if (choise == 2) {
+                flightResIn.crudFlightRes();
+            } else if (choise == 3) {
+                break salesAgent;
+            }else {
+                System.out.println("Opción inválida");
             }
         }
     }
