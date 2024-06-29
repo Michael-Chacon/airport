@@ -55,5 +55,18 @@ public  class Console {
         return scanner.nextLine();
     }
 
+    public String yesOrNo(String message){
+        String option;
+        while (true){
+            option = this.stringNotNull(message);
+            if (!option.equals("y") && !option.equals("n")){
+                System.out.print("Ingresa una opción valida, ");
+            }else {
+                break;
+            }
+        }
+        return option;
+    }
+
 
 }
