@@ -4,17 +4,15 @@ import org.vuelosGlobales.generals.passenger.domain.Passenger;
 import org.vuelosGlobales.generals.trip.domain.Trip;
 import org.vuelosGlobales.generals.trip.domain.TripAirportDTO;
 import org.vuelosGlobales.salesAgent.customer.domain.Customer;
-import org.vuelosGlobales.salesAgent.customer.domain.CustomerDocuDTO;
 import org.vuelosGlobales.salesAgent.flightRes.application.FlightResService;
 import org.vuelosGlobales.salesAgent.flightRes.domain.FlightRes;
+import org.vuelosGlobales.salesAgent.flightRes.domain.ReservationByCustomer;
 import org.vuelosGlobales.salesAgent.flightRes.domain.Ticket;
 import org.vuelosGlobales.shared.Console;
 import org.vuelosGlobales.shared.CuadroDeTexto;
 import org.vuelosGlobales.shared.Helpers;
 import org.vuelosGlobales.systemAdministrator.document.domain.Document;
 import org.vuelosGlobales.systemAdministrator.fare.domain.Fare;
-import org.vuelosGlobales.systemAdministrator.plane.domain.PlaneStMdDTO;
-import org.w3c.dom.ls.LSOutput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,14 +91,25 @@ public class FlightResConsoleAdapter {
                             passenger.setNroId(nroId);
                             flightResService.createPassenger(passenger);
                             CuadroDeTexto.dibujarCuadroDeTexto("Ticket", "*");
-                            mostrarTicket(idReserva, vuelo);
+                            CuadroDeTexto.drawHorizontal(125, "-");
+                            System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", "ID", "FECHA", "PRECIO", "ORIGEN", "DESTINATION");
+                            CuadroDeTexto.drawHorizontal(125, "-");
+                            System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", vuelo.getId(), vuelo.getTripDate(), vuelo.getPriceTrip(), vuelo.getOrigin(), vuelo.getDestination());
+                            CuadroDeTexto.drawHorizontal(125, "-");
+//                            mostrarTicket(idReserva, vuelo.getPriceTrip());
                         }
                     }
                     CuadroDeTexto.dibujarCuadroDeTexto("Ticket", "*");
-                    mostrarTicket(idReserva, vuelo);
+                    mostrarTicket(idReserva, vuelo.getPriceTrip());
                     break;
                 case 3:
-                    System.out.println("\t3. Ver reservas por clientes");
+                    mostrarClientes();
+                    Customer listadoCliente = seleccionarCliente();
+                    Customer getCustomer = Helpers.transformAndValidateObj(
+                            () -> flightResService.showOneCustomer(console.readInt("Selecciona un cliente por su ID: "))
+                    );
+                    reservaPorCliente(getCustomer.getId());
+
                     break;
                 case 4:
                     System.out.println("\t4. Cancelar reservación");
@@ -264,13 +273,7 @@ public class FlightResConsoleAdapter {
     }
 
 
-    public void mostrarTicket(int idReservacion, TripAirportDTO vuelo){
-
-        CuadroDeTexto.drawHorizontal(125, "-");
-        System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", "ID", "FECHA", "PRECIO", "ORIGEN", "DESTINATION");
-        CuadroDeTexto.drawHorizontal(125, "-");
-        System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", vuelo.getId(), vuelo.getTripDate(), vuelo.getPriceTrip(), vuelo.getOrigin(), vuelo.getDestination());
-        CuadroDeTexto.drawHorizontal(125, "-");
+    public void mostrarTicket(int idReservacion, double precio){
         System.out.println("\n---- Pasajeros ----");
         List<Ticket> tickets = flightResService.getTicketByReservation(idReservacion);
         Double priceFare = 0D;
@@ -283,11 +286,27 @@ public class FlightResConsoleAdapter {
         }
         CuadroDeTexto.drawHorizontal(130, "-");
         System.out.println();
-        double costoVuelo = vuelo.getPriceTrip() * tickets.size();
+        double costoVuelo = precio * tickets.size();
         double total = costoVuelo + priceFare;
         System.out.println("Total a pagar: " + total);
 
 
     }
 
+    public void reservaPorCliente(int idCliente){
+        List<ReservationByCustomer> reservas = flightResService.reservationByCustomer(idCliente);
+        CuadroDeTexto.drawHorizontal(125, "-");
+        System.out.printf("\n| %-15s | %-11s | %-10s | %-40s | %-40s |%n", "Id reservasion", "Fecha", "Precio", "Origen", "Destino");
+        reservas.forEach(vuelo -> {
+            CuadroDeTexto.drawHorizontal(125, "-");
+            System.out.printf("\n| %-15s | %-11s | %-10s | %-40s | %-40s |%n", vuelo.getIdReservacion(), vuelo.getDate(), vuelo.getPrice(), vuelo.getOrigin(), vuelo.getDestination());
+        });
+        CuadroDeTexto.drawHorizontal(125, "-");
+
+        ReservationByCustomer reserva = Helpers.transformAndValidateObj(
+                ()-> flightResService.reservation(console.readInt("Seleccione la reservacion por el ID: "))
+        );
+
+        mostrarTicket(reserva.getIdReservacion(), reserva.getPrice());
+    }
 }

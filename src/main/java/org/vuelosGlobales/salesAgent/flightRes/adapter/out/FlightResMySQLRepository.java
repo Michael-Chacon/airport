@@ -1,6 +1,7 @@
 package org.vuelosGlobales.salesAgent.flightRes.adapter.out;
 
 import org.vuelosGlobales.salesAgent.flightRes.domain.FlightRes;
+import org.vuelosGlobales.salesAgent.flightRes.domain.ReservationByCustomer;
 import org.vuelosGlobales.salesAgent.flightRes.domain.Ticket;
 import org.vuelosGlobales.salesAgent.flightRes.infrastructure.FlightResRepository;
 import org.vuelosGlobales.shared.Constants;
@@ -207,4 +208,62 @@ public class FlightResMySQLRepository implements FlightResRepository {
         }
         return tickets;
     }
+
+    @Override
+    public List<ReservationByCustomer> reservationByCustomers(int idCustomer){
+        List<ReservationByCustomer> objects= new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT tb.id AS 'id_reservacion', t.tripDate, t.priceTrip, CONCAT_WS(' - ', co.name, ao.name) as 'origen', CONCAT_WS(' - ', cd.name, ad.name) as 'destino' FROM tripbookingdetail tbd " +
+                    "INNER JOIN tripbooking tb ON tb.id = tbd.idTripBooking " +
+                    "INNER JOIN trip t ON t.id = tb.idTrip " +
+                    "INNER JOIN airport ao on ao.id = t.idOrigin " +
+                    "INNER JOIN city co on co.id = ao.idCity " +
+                    "INNER JOIN airport ad on ad.id = t.idDestination " +
+                    "INNER JOIN city cd on cd.id = ad.idCity " +
+                    "WHERE tbd.idCustomers = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, idCustomer);
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    ReservationByCustomer flightRes = new ReservationByCustomer(resultSet.getInt("id_reservacion"),
+                            resultSet.getString("tripDate"),
+                            resultSet.getDouble("priceTrip"), resultSet.getString("origen"),
+                            resultSet.getString("destino"));
+                    objects.add(flightRes);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return objects;
+    }
+
+    public Optional<ReservationByCustomer> reservation(int idReservation){
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT tb.id AS 'id_reservacion', t.tripDate, t.priceTrip, CONCAT_WS(' - ', co.name, ao.name) as 'origen', CONCAT_WS(' - ', cd.name, ad.name) as 'destino' FROM tripbookingdetail tbd " +
+                    "INNER JOIN tripbooking tb ON tb.id = tbd.idTripBooking " +
+                    "INNER JOIN trip t ON t.id = tb.idTrip " +
+                    "INNER JOIN airport ao on ao.id = t.idOrigin " +
+                    "INNER JOIN city co on co.id = ao.idCity " +
+                    "INNER JOIN airport ad on ad.id = t.idDestination " +
+                    "INNER JOIN city cd on cd.id = ad.idCity " +
+                    "WHERE tbd.idTripBooking = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, idReservation);
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    ReservationByCustomer flightRes = new ReservationByCustomer(resultSet.getInt("id_reservacion"),
+                            resultSet.getString("tripDate"),
+                            resultSet.getDouble("priceTrip"), resultSet.getString("origen"),
+                            resultSet.getString("destino"));
+                    return Optional.of(flightRes);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
+    }
+
+
 }

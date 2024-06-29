@@ -8,6 +8,7 @@ import org.vuelosGlobales.generals.trip.infrastructure.TripRepository;
 import org.vuelosGlobales.salesAgent.customer.domain.Customer;
 import org.vuelosGlobales.salesAgent.customer.infrastructure.CustomerRepository;
 import org.vuelosGlobales.salesAgent.flightRes.domain.FlightRes;
+import org.vuelosGlobales.salesAgent.flightRes.domain.ReservationByCustomer;
 import org.vuelosGlobales.salesAgent.flightRes.domain.Ticket;
 import org.vuelosGlobales.salesAgent.flightRes.infrastructure.FlightResRepository;
 import org.vuelosGlobales.systemAdministrator.document.domain.Document;
@@ -96,4 +97,13 @@ public class FlightResService {
     public List<Ticket> getTicketByReservation(int idReservation){
         return flightResRepository.findTicket(idReservation);
     }
+
+    public List<ReservationByCustomer> reservationByCustomer(int idCustomer){
+        return this.flightResRepository.reservationByCustomers(idCustomer);
+    }
+
+    public Optional<ReservationByCustomer> reservation(int idReservaion){
+        return this.flightResRepository.reservation(idReservaion);
+    }
+
 }
