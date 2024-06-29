@@ -34,7 +34,8 @@ public class FlightResConsoleAdapter {
             System.out.printf("| %-2d. %-26s |\n", 2, "Hacer reservación");
             System.out.printf("| %-2d. %-26s |\n", 3, "Ver reservas por clientes");
             System.out.printf("| %-2d. %-26s |\n", 4, "Cancelar reservación");
-            System.out.printf("| %-2d. %-26s |\n", 5, "Volver al menú anterior");
+            System.out.printf("| %-2d. %-26s |\n", 5, "Eliminar reservación");
+            System.out.printf("| %-2d. %-26s |\n", 6, "Volver al menú anterior");
             System.out.println("+--------------------------------+");
             System.out.println("====================================");
             int choise = console.readInt("Seleccione una opción: ");
