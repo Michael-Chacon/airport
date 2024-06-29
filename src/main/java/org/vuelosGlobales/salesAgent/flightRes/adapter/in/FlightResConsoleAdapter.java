@@ -7,11 +7,16 @@ import org.vuelosGlobales.salesAgent.customer.domain.Customer;
 import org.vuelosGlobales.salesAgent.customer.domain.CustomerDocuDTO;
 import org.vuelosGlobales.salesAgent.flightRes.application.FlightResService;
 import org.vuelosGlobales.salesAgent.flightRes.domain.FlightRes;
+import org.vuelosGlobales.salesAgent.flightRes.domain.Ticket;
 import org.vuelosGlobales.shared.Console;
 import org.vuelosGlobales.shared.CuadroDeTexto;
 import org.vuelosGlobales.shared.Helpers;
+import org.vuelosGlobales.systemAdministrator.document.domain.Document;
 import org.vuelosGlobales.systemAdministrator.fare.domain.Fare;
+import org.vuelosGlobales.systemAdministrator.plane.domain.PlaneStMdDTO;
+import org.w3c.dom.ls.LSOutput;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FlightResConsoleAdapter {
@@ -45,33 +50,54 @@ public class FlightResConsoleAdapter {
                     Customer cliente = seleccionarCliente();
                     mostrarViajes();
                     TripAirportDTO vuelo = seleccionarVuelo();
+                    int asientosAvion = flightResService.showAmountSeats(vuelo.getId());
                     int idReserva = generarReserva(vuelo.getId());
+                    //Obtener todos los datos de la reserva que vamos de crear
                     FlightRes reservation = Helpers.transformAndValidateObj(
                             () -> flightResService.showOneFlightBooking(idReserva)
                     );
+
                     List<Fare> fares = flightResService.showAllFares();
+//                  Crear reservación para el cliente seleccionado
+                    List<Integer> asientosReservadosC = flightResService.getReservedSeats(vuelo.getId());
+                    Passenger datosCliente = new Passenger();
+                    datosCliente.setName(cliente.getName());
+                    datosCliente.setLastName(cliente.getLastName());
+                    datosCliente.setNroId(cliente.getNroId());
+                    int seatC = seleccionarAsiento(asientosAvion, asientosReservadosC);
+                    datosCliente.setSeat(seatC);
+                    datosCliente.setIdDocument(cliente.getIdDocument());
+                    int idDetalleReserva = generarDetalleDeReserva(fares, reservation, cliente, vuelo);
+                    datosCliente.setIdTripBookingDetails(idDetalleReserva);
+                    flightResService.createPassenger(datosCliente);
 
                     String masPasajero = console.yesOrNo("Viajas con alguien más? (y/n): ");
-                    if (masPasajero.equals("n")){
-                        Passenger passenger = new Passenger();
-                        String equipaje = console.yesOrNo("Llevas equipaje? (y/n): ");
-                        int idTarifa;
-                        if (equipaje.equals("y")){
-                            mostrarTarifas(fares);
-                            Fare fare = seleccionarTarifa();
-                            idTarifa = fare.getId();
-                        }else{
-                            idTarifa = 1;
-                        }
-                        
-
-
-                    }else{
+                    if (masPasajero.equals("y")){
                         int cantidadPasajeros = console.readInt("Cuantas personas van a viajar con usted? ");
                         for (int i = 1; i <= cantidadPasajeros; i++){
-
+                            Passenger passenger = new Passenger();
+                            List<Integer> asientosReservadosP = flightResService.getReservedSeats(vuelo.getId());
+                            String name = console.stringNotNull("Nombre del pasajero " + i + ": ");
+                            String lastName = console.stringNotNull("Apellidos del pasajero " + i + ": ");
+                            int age = console.readInt("Edad del pasajero " + i + ": ");
+                            int idDocument = obtenerTipoDocumento();
+                            int nroId = console.readInt("Ingrese el número de documento: ");
+                            int seatP = seleccionarAsiento(asientosAvion, asientosReservadosP);
+                            int idDetalleReservaP = generarDetalleDeReserva(fares, reservation, cliente, vuelo);
+                            passenger.setIdTripBookingDetails(idDetalleReservaP);
+                            passenger.setSeat(seatP);
+                            passenger.setName(name);
+                            passenger.setLastName(lastName);
+                            passenger.setAge(age);
+                            passenger.setIdDocument(idDocument);
+                            passenger.setNroId(nroId);
+                            flightResService.createPassenger(passenger);
+                            CuadroDeTexto.dibujarCuadroDeTexto("Ticket", "*");
+                            mostrarTicket(idReserva, vuelo);
                         }
                     }
+                    CuadroDeTexto.dibujarCuadroDeTexto("Ticket", "*");
+                    mostrarTicket(idReserva, vuelo);
                     break;
                 case 3:
                     System.out.println("\t3. Ver reservas por clientes");
@@ -143,6 +169,125 @@ public class FlightResConsoleAdapter {
         return Helpers.transformAndValidateObj(
                 () -> flightResService.showOneFare(console.readInt("Seleccione el ID de la tarifa: "))
         );
+    }
+
+    public int generarDetalleDeReserva(List<Fare> fares, FlightRes reservation, Customer cliente, TripAirportDTO vuelo){
+        String equipaje = console.yesOrNo("Llevas equipaje? (y/n): ");
+        int idTarifa;
+        if (equipaje.equals("y")){
+            mostrarTarifas(fares);
+            Fare fare = seleccionarTarifa();
+            idTarifa = fare.getId();
+        }else{
+            idTarifa = 1;
+        }
+        // Almacenar datos en tripBookingDetails, para poder crear en passenger, ya que el passanger tiene la llave primaria de tripBookingDetails
+        int idTripBooking = reservation.getId();
+        int idCustomer = cliente.getId();
+        int idFare = idTarifa;
+        String status = "active";
+
+        return flightResService.getIdTripBookingDetail(idTripBooking, idCustomer, idFare, status);
+    }
+
+    public int obtenerTipoDocumento(){
+        List<Document> documents = flightResService.showDocuments();
+        System.out.println("Documentos registrados:");
+        CuadroDeTexto.drawHorizontal(33, "-");
+        System.out.printf("\n| %-4s | %-20s |%n", "ID", "NOMBRE");
+        documents.forEach(document -> {
+            CuadroDeTexto.drawHorizontal(33, "-");
+            System.out.printf("\n| %-4s | %-20s |%n", document.getId(), document.getName());
+        });
+        CuadroDeTexto.drawHorizontal(33, "-");
+        System.out.println();
+
+        Document idDocument = Helpers.transformAndValidateObj(
+                () -> flightResService.getOnedocument(console.readInt("Seleccione el tipo de documento por el ID: "))
+        );
+        return idDocument.getId();
+    }
+
+    public List<Integer> ObteneAsientosReservados(int idTrip){
+        return flightResService.getReservedSeats(idTrip);
+    }
+
+    public int seleccionarAsiento(int totalAsientos, List<Integer> asientosReservados){
+        List<Integer> capacityPlane = new ArrayList<>();
+        for (int i = 1; i <= totalAsientos; i++){
+            capacityPlane.add(i);
+        }
+
+        CuadroDeTexto.dibujarCuadroDeTexto("Asientos disponibles", "*");
+        int count = 0;
+        int pasillo = 0;
+        for (int i = 1; i <= totalAsientos; i++){
+          if (asientosReservados.contains(i)) {
+                System.out.print(" X ");
+            } else {
+                System.out.print(String.format("%3d", i));
+            }
+            count++;
+            pasillo++;
+
+            if (pasillo == 3) {
+                System.out.print(" ___ "); // Simular el pasillo
+            }
+            if (pasillo == 6){
+                pasillo = 0;
+            }
+            if (count % 6 == 0) {
+                System.out.println();
+            }
+        }
+
+        if (count % 6 != 0) {
+            System.out.println();
+        }
+
+
+        int seatSelect;
+        while (true){
+            int seat = console.readInt("seleccione un asiento: ");
+            if (seat > totalAsientos){
+                System.out.println("El asiento ingresado no existe, ");
+            }else {
+                if (asientosReservados.contains(seat)){
+                    System.out.println("El asiento seleccionado ya esta reservado, ");
+                }else {
+                    seatSelect = seat;
+                    break;
+                }
+            }
+        }
+        return seatSelect;
+    }
+
+
+    public void mostrarTicket(int idReservacion, TripAirportDTO vuelo){
+
+        CuadroDeTexto.drawHorizontal(125, "-");
+        System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", "ID", "FECHA", "PRECIO", "ORIGEN", "DESTINATION");
+        CuadroDeTexto.drawHorizontal(125, "-");
+        System.out.printf("\n| %-5s | %-11s | %-10s | %-40s | %-40s |%n", vuelo.getId(), vuelo.getTripDate(), vuelo.getPriceTrip(), vuelo.getOrigin(), vuelo.getDestination());
+        CuadroDeTexto.drawHorizontal(125, "-");
+        System.out.println("\n---- Pasajeros ----");
+        List<Ticket> tickets = flightResService.getTicketByReservation(idReservacion);
+        Double priceFare = 0D;
+        CuadroDeTexto.drawHorizontal(130, "-");
+        System.out.println(String.format("\n| %-4s | %-20s | %-20s | %-17s | %-10s | %-25s | %-15s |", "ID", "Nombre", "Apellidos", "Documento", "Puesto", "Tarifa", "Valor tarifa"));
+        for(Ticket ticket : tickets) {
+            priceFare += ticket.getValue();
+            CuadroDeTexto.drawHorizontal(130, "-");
+            System.out.println(String.format("\n| %-4s | %-20s | %-20s | %-17s | %-10s | %-25s | %-15s |", ticket.getIdReserva(), ticket.getName(), ticket.getLastName(), ticket.getNroId(), ticket.getSeat(), ticket.getDescriptionFare(), ticket.getValue()));
+        }
+        CuadroDeTexto.drawHorizontal(130, "-");
+        System.out.println();
+        double costoVuelo = vuelo.getPriceTrip() * tickets.size();
+        double total = costoVuelo + priceFare;
+        System.out.println("Total a pagar: " + total);
+
+
     }
 
 }

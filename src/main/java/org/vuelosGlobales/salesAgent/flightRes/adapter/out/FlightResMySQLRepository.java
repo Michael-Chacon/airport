@@ -1,7 +1,10 @@
 package org.vuelosGlobales.salesAgent.flightRes.adapter.out;
 
 import org.vuelosGlobales.salesAgent.flightRes.domain.FlightRes;
+import org.vuelosGlobales.salesAgent.flightRes.domain.Ticket;
 import org.vuelosGlobales.salesAgent.flightRes.infrastructure.FlightResRepository;
+import org.vuelosGlobales.shared.Constants;
+import org.vuelosGlobales.systemAdministrator.fare.adapter.out.FareMySQLRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,9 +27,10 @@ public class FlightResMySQLRepository implements FlightResRepository {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "INSERT INTO tripbooking (date, idTrip) VALUES (?)";
+            String query = "INSERT INTO tripbooking (date, idTrip) VALUES (CURRENT_DATE,?)";
             preparedStatement = conn.prepareStatement(query, preparedStatement.RETURN_GENERATED_KEYS);
-                preparedStatement.setString(1, flightRes.getDate());
+//                preparedStatement.setString(1, flightRes.getDate());
+                preparedStatement.setInt(1, flightRes.getIdTrip());
                 int filasAfectadas = preparedStatement.executeUpdate();
 
                 if (filasAfectadas > 0){
@@ -42,16 +46,42 @@ public class FlightResMySQLRepository implements FlightResRepository {
         return 0;
     }
 
+    @Override
+    public int saveDetailTripbooking(int idTripbooking, int idCustomer, int idFare, String status){
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try (Connection conn = DriverManager.getConnection(url,user, password)){
+            String query = "INSERT INTO tripbookingdetail (idTripBooking, idCustomers, idFares, status) VALUES (?,?,?,?)";
+            preparedStatement = conn.prepareStatement(query, preparedStatement.RETURN_GENERATED_KEYS);
+//                preparedStatement.setString(1, flightRes.getDate());
+            preparedStatement.setInt(1, idTripbooking);
+            preparedStatement.setInt(2, idCustomer);
+            preparedStatement.setInt(3, idFare);
+            preparedStatement.setString(4, status);
+            int filasAfectadas = preparedStatement.executeUpdate();
 
+            if (filasAfectadas > 0){
+                resultSet = preparedStatement.getGeneratedKeys();
+                if (resultSet.next()){
+                    int idGenerate = resultSet.getInt(1);
+                    return idGenerate;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
 
     @Override
     public void update(FlightRes flightRes) {
         try (Connection conn = DriverManager.getConnection(url,user, password)){
-            String query = "UPDATE tripbooking SET date = ?, idTrip = ? WHERE id = ?";
+            FareMySQLRepository fareOut = new FareMySQLRepository(Constants.URL, Constants.USER, Constants.PASSWORD);
+            String query = "UPDATE tripbooking SET date = CURRENT_DATE, idTrip = ? WHERE id = ?";
             try (PreparedStatement stm = conn.prepareStatement(query)){
                 stm.setString(1, flightRes.getDate());
                 stm.setInt(2, flightRes.getIdTrip());
-                stm.setInt(2, flightRes.getId());
+                stm.setInt(3, flightRes.getId());
                 stm.executeUpdate();
             }
         } catch (SQLException e) {
@@ -131,5 +161,50 @@ public class FlightResMySQLRepository implements FlightResRepository {
             throw new RuntimeException(e);
         }
         return 0;
+    }
+
+    @Override
+    public List<Integer> findReservedSeats(int idTrip) {
+        List<Integer> seats = new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT p.seat FROM tripbooking tb " +
+                    "INNER JOIN tripbookingdetail tbd ON tb.id = tbd.idTripBooking " +
+                    "INNER JOIN passenger p ON p.idTripBookingDetails = tbd.id " +
+                    "WHERE tb.idTrip = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, idTrip);
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    seats.add(resultSet.getInt("seat"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return seats;
+    }
+
+    @Override
+    public List<Ticket> findTicket(int idTripBooking) {
+        List<Ticket> tickets = new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, user, password)){
+            String query = "SELECT tbd.idTripBooking AS 'reservation', p.name, p.lastName, p.nroId AS 'nrpPass', p.seat, ff.description, ff.value FROM passenger p " +
+                    "INNER JOIN tripbookingdetail tbd ON tbd.id = p.idTripBookingDetails " +
+                    "INNER JOIN flightfare ff ON ff.id = tbd.idFares " +
+                    "WHERE tbd.idTripBooking = ?";
+            try(PreparedStatement stm = conn.prepareStatement(query)){
+                stm.setInt(1, idTripBooking);
+                ResultSet resultSet = stm.executeQuery();
+                while (resultSet.next()){
+                    Ticket ticket = new Ticket(resultSet.getInt("reservation"), resultSet.getString("name"),
+                            resultSet.getString("lastName"), resultSet.getInt("nrpPass"), resultSet.getInt("seat"),
+                            resultSet.getString("description"), resultSet.getDouble("value"));
+                    tickets.add(ticket);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return tickets;
     }
 }

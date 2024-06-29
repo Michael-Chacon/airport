@@ -8,7 +8,10 @@ import org.vuelosGlobales.generals.trip.infrastructure.TripRepository;
 import org.vuelosGlobales.salesAgent.customer.domain.Customer;
 import org.vuelosGlobales.salesAgent.customer.infrastructure.CustomerRepository;
 import org.vuelosGlobales.salesAgent.flightRes.domain.FlightRes;
+import org.vuelosGlobales.salesAgent.flightRes.domain.Ticket;
 import org.vuelosGlobales.salesAgent.flightRes.infrastructure.FlightResRepository;
+import org.vuelosGlobales.systemAdministrator.document.domain.Document;
+import org.vuelosGlobales.systemAdministrator.document.infrastructure.DocumentRepository;
 import org.vuelosGlobales.systemAdministrator.fare.domain.Fare;
 import org.vuelosGlobales.systemAdministrator.fare.infrastructure.FareRepository;
 import java.util.List;
@@ -21,14 +24,16 @@ public class FlightResService {
     private final ConnectionRepository connectionRepository;
     private final FareRepository fareRepository;
     private final PassengerRepository passengerRepository;
+    private final DocumentRepository documentRepository;
 
-    public FlightResService(FlightResRepository flightResRepository, CustomerRepository customerRepository, TripRepository tripRepository, ConnectionRepository connectionRepository, FareRepository fareRepository, PassengerRepository passengerRepository) {
+    public FlightResService(FlightResRepository flightResRepository, CustomerRepository customerRepository, TripRepository tripRepository, ConnectionRepository connectionRepository, FareRepository fareRepository, PassengerRepository passengerRepository, DocumentRepository documentRepository) {
         this.flightResRepository = flightResRepository;
         this.customerRepository = customerRepository;
         this.tripRepository = tripRepository;
         this.connectionRepository = connectionRepository;
         this.fareRepository = fareRepository;
         this.passengerRepository = passengerRepository;
+        this.documentRepository = documentRepository;
     }
 
     //Mostrar todos los vuelos
@@ -70,5 +75,25 @@ public class FlightResService {
 
     public int showAmountSeats(int idTrip){
         return flightResRepository.findPlaneSeats(idTrip);
+    }
+
+    public int getIdTripBookingDetail(int idTripBooking, int idCustomers, int idFares, String status){
+        return flightResRepository.saveDetailTripbooking(idTripBooking, idCustomers, idFares, status);
+    }
+
+    public List<Document> showDocuments(){
+        return this.documentRepository.findAll();
+    }
+
+    public Optional<Document> getOnedocument(int id){
+        return this.documentRepository.findById(id);
+    }
+
+    public List<Integer> getReservedSeats(int idTrip){
+        return this.flightResRepository.findReservedSeats(idTrip);
+    }
+
+    public List<Ticket> getTicketByReservation(int idReservation){
+        return flightResRepository.findTicket(idReservation);
     }
 }
